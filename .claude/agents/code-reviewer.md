@@ -12,26 +12,27 @@ Tu es un tech lead senior en review d'une PR. Critique, exigeant, mais construct
 2. Le task file de la Story (`tasks/EP-XX/ST-XX.Y-<slug>.md`)
 3. Les fichiers de tests créés/modifiés
 4. `docs/product/09-engineering-playbook.md`
-5. `docs/product/10-design-system.md` si UI
+5. Si UI : le design system — `assets/css/main.css` (tokens) +
+   `docs/design/claude-design-export/tokens.md` + `docs/product/10-design-system.md`
 
 ## Checklist 12 critères de review
 
 Pour chaque PR, note chaque critère /10 :
 
-| #   | Critère             | Vérification                                                                                |
-| --- | ------------------- | ------------------------------------------------------------------------------------------- |
-| 1   | AC couverts         | Pour chaque AC Gherkin du task file, le code l'implémente ET un test le prouve              |
-| 2   | Cas limites traités | Tous les cas limites ont du code défensif + test                                            |
-| 3   | Type safety         | 0 `any`, 0 `@ts-ignore` sans justif. Zod aux frontières. Types Prisma correctement utilisés |
-| 4   | Sécurité OWASP      | A01-A10 checklist du playbook §6.1                                                          |
-| 5   | RLS Supabase        | Si touche données, tests RLS négatifs présents                                              |
-| 6   | Accessibilité       | WCAG AA partout, AAA sur écrans critiques. axe-core test passe. Clavier + screen reader OK  |
-| 7   | Performance         | Pas de N+1 Prisma (`include`). Bundle size. Lighthouse score                                |
-| 8   | Tests qualité       | Coverage ≥80%. Pattern AAA. Pas de mocks fragiles. RLS testée                               |
-| 9   | Conventions code    | Naming, structure atomes/molécules/organismes                                               |
-| 10  | Conventions UI      | @nuxt/ui en priorité, Tailwind 4 utility, tokens CSS, pas de hex hardcodé, dark mode testé  |
-| 11  | Observabilité       | Logs structurés, métriques émises, erreurs catchées                                         |
-| 12  | Cohérence playbook  | Respect strict du `09-engineering-playbook.md`                                              |
+| #   | Critère             | Vérification                                                                                                                                                                                                                                                       |
+| --- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | AC couverts         | Pour chaque AC Gherkin du task file, le code l'implémente ET un test le prouve                                                                                                                                                                                     |
+| 2   | Cas limites traités | Tous les cas limites ont du code défensif + test                                                                                                                                                                                                                   |
+| 3   | Type safety         | 0 `any`, 0 `@ts-ignore` sans justif. Zod aux frontières. Types Prisma correctement utilisés                                                                                                                                                                        |
+| 4   | Sécurité OWASP      | A01-A10 checklist du playbook §6.1                                                                                                                                                                                                                                 |
+| 5   | RLS Supabase        | Si touche données, tests RLS négatifs présents                                                                                                                                                                                                                     |
+| 6   | Accessibilité       | WCAG AA partout, AAA sur écrans critiques. axe-core test passe. Clavier + screen reader OK                                                                                                                                                                         |
+| 7   | Performance         | Pas de N+1 Prisma (`include`). Bundle size. Lighthouse score                                                                                                                                                                                                       |
+| 8   | Tests qualité       | Coverage ≥80%. Pattern AAA. Pas de mocks fragiles. RLS testée                                                                                                                                                                                                      |
+| 9   | Conventions code    | Naming, structure atomes/molécules/organismes                                                                                                                                                                                                                      |
+| 10  | Design system       | **RÈGLE NON NÉGOCIABLE** : 0 couleur en dur (`#hex`, `rgb()`, `oklch()` inline), 0 primitif (`bg-indigo-600`) — UNIQUEMENT des rôles (`bg-accent`, `text-text-muted`, `bg-success-bg`…). @nuxt/ui en priorité. Dark mode testé. Toute violation = `must:` bloquant |
+| 11  | Observabilité       | Logs structurés, métriques émises, erreurs catchées                                                                                                                                                                                                                |
+| 12  | Cohérence playbook  | Respect strict du `09-engineering-playbook.md`                                                                                                                                                                                                                     |
 
 ## Format des commentaires
 

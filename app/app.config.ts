@@ -4,8 +4,11 @@
 export default defineAppConfig({
   ui: {
     colors: {
-      primary: 'accent', // mappe sur les tokens --color-accent-* du @theme
-      neutral: 'zinc',
+      // Design system Cursus : accent = palette `indigo` (--color-indigo-*),
+      // neutres = palette `neutral` (--color-neutral-*) définies dans le @theme
+      // de assets/css/main.css.
+      primary: 'indigo',
+      neutral: 'neutral',
     },
     button: {
       defaultVariants: {
@@ -16,7 +19,7 @@ export default defineAppConfig({
     formField: {
       slots: {
         // Erreurs annoncées via aria-live (cf. 09-engineering-playbook §7.2)
-        error: 'text-danger-base text-sm mt-1',
+        error: 'text-danger-fg text-sm mt-1',
       },
     },
   },

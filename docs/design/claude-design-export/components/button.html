@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Button — Cursus Design System</title>
+    <!-- Référence statique extraite de Claude Design « Design system Cursus ».
+         Source de vérité runtime : @nuxt/ui v4 <UButton> + assets/css/main.css. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css"
+    />
+    <link rel="stylesheet" href="./_tokens.css" />
+    <style>
+      body {
+        padding: 32px;
+      }
+      .b {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: none;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background var(--duration-instant) var(--ease-out),
+          opacity var(--duration-instant);
+      }
+      .b-primary {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: var(--shadow-xs);
+      }
+      .b-primary:hover {
+        background: var(--accent-hover);
+      }
+      .b-secondary {
+        background: var(--bg-surface);
+        color: var(--text-default);
+        border: 1px solid var(--border-default);
+      }
+      .b-secondary:hover {
+        background: var(--bg-hover);
+      }
+      .b-ghost {
+        background: transparent;
+        color: var(--text-default);
+      }
+      .b-ghost:hover {
+        background: var(--bg-hover);
+      }
+      .b-danger {
+        background: var(--danger-solid);
+        color: #fff;
+      }
+      .b-md {
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .b-sm {
+        height: 30px;
+        padding: 0 12px;
+        border-radius: 7px;
+        font-size: 12.5px;
+      }
+      .b-lg {
+        height: 46px;
+        padding: 0 22px;
+        border-radius: 9px;
+        font-size: 15px;
+      }
+      .b[disabled] {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .card {
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        background: var(--bg-surface);
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 760px;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border-subtle);
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="font-size: 25px; color: var(--text-strong); margin: 0 0 6px">Button</h1>
+    <p style="color: var(--text-muted); margin: 0 0 22px; max-width: 620px">
+      Verbes d'action. Primary indigo, secondary outline, ghost, danger. Tailles sm / md / lg. État
+      loading sans spinner global. Touch target ≥ 44px sur lg.
+    </p>
+    <div class="card">
+      <div class="ds-row">
+        <button class="b b-primary b-md"><i class="ti ti-send"></i>Soumettre</button>
+        <button class="b b-secondary b-md"><i class="ti ti-user-plus"></i>Inviter</button>
+        <button class="b b-ghost b-md">Annuler</button>
+        <button class="b b-danger b-md"><i class="ti ti-trash"></i>Supprimer</button>
+        <button class="b b-primary b-md" disabled>
+          <i class="ti ti-loader-2" style="animation: spin 0.8s linear infinite"></i>Validation…
+        </button>
+      </div>
+      <div class="divider"></div>
+      <div class="ds-row">
+        <button class="b b-primary b-sm">sm</button>
+        <button class="b b-primary b-md">md</button>
+        <button class="b b-primary b-lg">lg</button>
+        <span style="font-size: 12.5px; color: var(--text-subtle)">touch target ≥ 44px sur lg</span>
+      </div>
+    </div>
+  </body>
+</html>

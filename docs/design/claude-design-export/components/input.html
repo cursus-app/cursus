@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Input · Textarea · Select — Cursus Design System</title>
+    <!-- Référence statique extraite de Claude Design « Design system Cursus ».
+         Source de vérité runtime : @nuxt/ui v4 <UInput>/<UTextarea>/<UFormField>. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css"
+    />
+    <link rel="stylesheet" href="./_tokens.css" />
+    <style>
+      body {
+        padding: 32px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        max-width: 760px;
+      }
+      @media (max-width: 680px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .card {
+        border: 1px solid var(--border-subtle);
+        border-radius: 12px;
+        background: var(--bg-surface);
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-default);
+        margin-bottom: 6px;
+      }
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 12px;
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        background: var(--bg-app);
+      }
+      .field.focus {
+        border: 1.5px solid var(--accent);
+        box-shadow: var(--shadow-md);
+      }
+      .field.error {
+        border: 1.5px solid var(--danger-solid);
+      }
+      .field i {
+        font-size: 17px;
+        color: var(--text-muted);
+      }
+      .field input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 14px;
+        color: var(--text-default);
+        font-family: inherit;
+      }
+      .field input.mono {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+      }
+      .hint {
+        margin: 6px 0 0;
+        font-size: 12px;
+        color: var(--text-subtle);
+      }
+      .hint.accent {
+        color: var(--accent-text);
+      }
+      .hint.err {
+        color: var(--danger-fg);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-default);
+        border-radius: 8px;
+        background: var(--bg-app);
+        font-family: inherit;
+        font-size: 13.5px;
+        color: var(--text-default);
+        resize: vertical;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="font-size: 25px; color: var(--text-strong); margin: 0 0 22px">
+      Input · Textarea · Select
+    </h1>
+    <div class="grid">
+      <div class="card">
+        <div>
+          <label>URL du repo</label>
+          <div class="field">
+            <i class="ti ti-brand-github"></i>
+            <input class="mono" value="github.com/lea/semaine-04" />
+          </div>
+          <p class="hint">Le harnais clone ce repo à chaque soumission.</p>
+        </div>
+        <div>
+          <label>Email <span style="font-weight: 400; color: var(--text-subtle)">(focus)</span></label>
+          <div class="field focus">
+            <i class="ti ti-mail" style="color: var(--accent)"></i>
+            <input value="lea@cursus.dev" />
+          </div>
+          <p class="hint accent">État focus — ring indigo, AAA sur login.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div>
+          <label>URL du repo <span style="font-weight: 400; color: var(--text-subtle)">(erreur)</span></label>
+          <div class="field error">
+            <i class="ti ti-link" style="color: var(--danger-solid)"></i>
+            <input class="mono" value="https://mon-site.fr" />
+          </div>
+          <p class="hint err">
+            <i class="ti ti-alert-circle"></i>Cette URL ne semble pas être un repo GitHub.
+          </p>
+        </div>
+        <div>
+          <label>Note de soumission <span style="font-weight: 400; color: var(--text-subtle)">(optionnel)</span></label>
+          <textarea rows="3" placeholder="Ce que tu veux signaler au formateur…"></textarea>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

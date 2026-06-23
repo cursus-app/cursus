@@ -26,43 +26,50 @@
    DESIGN TOKENS (Light + Dark via prefers-color-scheme)
    ============================================================ */
 :root {
-  --bg: #ffffff;
-  --bg-soft: #fafbff;
-  --bg-elev: #ffffff;
-  --fg: #0a0a13;
-  --fg-muted: #555870;
-  --fg-subtle: #7a7d92;
-  --border: #e8e8f0;
-  --border-strong: #cfd0dd;
-  --brand: #4f46e5;
-  --brand-hover: #4338ca;
-  --brand-soft: #eef0ff;
-  --brand-fg: #ffffff;
-  --teal: #14b8a6;
-  --amber: #f59e0b;
-  --rose: #f43f5e;
-  --emerald: #10b981;
-  --shadow-card: 0 4px 12px -2px rgba(15,15,40,.05), 0 14px 30px -10px rgba(15,15,40,.08);
-  --shadow-glow: 0 10px 40px -10px rgba(79,70,229,.45);
-  --shadow-mockup: 0 30px 60px -20px rgba(79,70,229,.25), 0 20px 40px -20px rgba(0,0,0,.15);
+  /* Tokens alignés sur le design system Cursus (assets/css/main.css) — OKLCH.
+     Le design system n'a qu'UN accent (indigo) ; teal/amber/rose/emerald sont
+     mappés sur les sémantiques info/warning/danger/success. */
+  --bg: oklch(0.99 0.003 268);
+  --bg-soft: oklch(0.985 0.003 268);
+  --bg-elev: oklch(1 0 268);
+  --fg: oklch(0.19 0.008 268);
+  --fg-muted: oklch(0.48 0.009 268);
+  --fg-subtle: oklch(0.71 0.008 268);
+  --border: oklch(0.93 0.005 268);
+  --border-strong: oklch(0.88 0.006 268);
+  --brand: oklch(0.55 0.22 264);
+  --brand-hover: oklch(0.488 0.198 264);
+  --brand-soft: oklch(0.97 0.018 264);
+  --brand-fg: oklch(1 0 268);
+  --teal: oklch(0.6 0.125 240); /* → info */
+  --amber: oklch(0.7 0.135 75); /* → warning */
+  --rose: oklch(0.56 0.18 25); /* → danger */
+  --emerald: oklch(0.56 0.115 155); /* → success */
+  --shadow-card: 0 4px 12px -2px oklch(0.13 0.02 268 / .06), 0 14px 30px -10px oklch(0.13 0.02 268 / .08);
+  --shadow-glow: 0 10px 40px -10px oklch(0.55 0.22 264 / .40);
+  --shadow-mockup: 0 30px 60px -20px oklch(0.55 0.22 264 / .22), 0 20px 40px -20px oklch(0.13 0.02 268 / .15);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0a0a13;
-    --bg-soft: #11121d;
-    --bg-elev: #161826;
-    --fg: #f6f6fa;
-    --fg-muted: #a8aabb;
-    --fg-subtle: #7a7d92;
-    --border: #1f2030;
-    --border-strong: #2a2c3d;
-    --brand: #818cf8;
-    --brand-hover: #a5b4fc;
-    --brand-soft: rgba(129,140,248,.12);
-    --brand-fg: #0a0a13;
-    --shadow-card: 0 4px 12px -2px rgba(0,0,0,.3), 0 14px 30px -10px rgba(0,0,0,.4);
-    --shadow-glow: 0 10px 40px -10px rgba(129,140,248,.35);
-    --shadow-mockup: 0 30px 60px -20px rgba(129,140,248,.20), 0 20px 40px -20px rgba(0,0,0,.6);
+    --bg: oklch(0.13 0.008 268);
+    --bg-soft: oklch(0.165 0.009 268);
+    --bg-elev: oklch(0.19 0.009 268);
+    --fg: oklch(0.975 0.004 268);
+    --fg-muted: oklch(0.66 0.009 268);
+    --fg-subtle: oklch(0.5 0.009 268);
+    --border: oklch(0.25 0.01 268);
+    --border-strong: oklch(0.31 0.011 268);
+    --brand: oklch(0.605 0.205 264);
+    --brand-hover: oklch(0.685 0.17 264);
+    --brand-soft: oklch(0.3 0.09 264 / .35);
+    --brand-fg: oklch(1 0 268);
+    --teal: oklch(0.66 0.12 240);
+    --amber: oklch(0.76 0.13 75);
+    --rose: oklch(0.62 0.18 25);
+    --emerald: oklch(0.64 0.12 155);
+    --shadow-card: 0 4px 12px -2px oklch(0 0 0 / .3), 0 14px 30px -10px oklch(0 0 0 / .4);
+    --shadow-glow: 0 10px 40px -10px oklch(0.605 0.205 264 / .35);
+    --shadow-mockup: 0 30px 60px -20px oklch(0.605 0.205 264 / .20), 0 20px 40px -20px oklch(0 0 0 / .6);
   }
 }
 
@@ -272,9 +279,9 @@ p { color: var(--fg-muted); }
   border-radius: 999px;
   opacity: .8;
 }
-.mockup-dot.r { background: #ef4444; }
-.mockup-dot.y { background: #f59e0b; }
-.mockup-dot.g { background: #10b981; }
+.mockup-dot.r { background: var(--rose); }
+.mockup-dot.y { background: var(--amber); }
+.mockup-dot.g { background: var(--emerald); }
 .mockup-url {
   margin-left: 12px;
   font-family: 'JetBrains Mono', monospace;
@@ -289,7 +296,7 @@ p { color: var(--fg-muted); }
 .avatar {
   width: 30px; height: 30px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #818cf8, #4338ca);
+  background: linear-gradient(135deg, oklch(0.685 0.17 264), oklch(0.488 0.198 264));
   color: white;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.7rem; font-weight: 600;
@@ -323,16 +330,11 @@ p { color: var(--fg-muted); }
 .mockup-table td:first-child { text-align: left; padding-left: 14px; font-weight: 500; }
 .mockup-table td:last-child { font-family: 'JetBrains Mono', monospace; font-weight: 600; padding-right: 14px; }
 .cell { display: inline-block; width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; line-height: 22px; }
-.cell-done { background: rgba(16,185,129,.15); color: #059669; }
-.cell-prog { background: rgba(79,70,229,.15); color: var(--brand); }
-.cell-warn { background: rgba(245,158,11,.20); color: #b45309; }
-.cell-fail { background: rgba(244,63,94,.15); color: #be123c; }
+.cell-done { background: color-mix(in oklch, var(--emerald) 15%, transparent); color: var(--emerald); }
+.cell-prog { background: color-mix(in oklch, var(--brand) 15%, transparent); color: var(--brand); }
+.cell-warn { background: color-mix(in oklch, var(--amber) 20%, transparent); color: var(--amber); }
+.cell-fail { background: color-mix(in oklch, var(--rose) 15%, transparent); color: var(--rose); }
 .cell-empty { background: var(--bg-soft); }
-@media (prefers-color-scheme: dark) {
-  .cell-done { color: #34d399; }
-  .cell-warn { color: #fbbf24; }
-  .cell-fail { color: #fb7185; }
-}
 
 .alert-bar {
   margin-top: 16px;
@@ -546,7 +548,7 @@ p { color: var(--fg-muted); }
   color: white;
   flex-shrink: 0;
 }
-.persona-avatar.brand { background: linear-gradient(135deg, #818cf8, #4338ca); }
+.persona-avatar.brand { background: linear-gradient(135deg, oklch(0.685 0.17 264), oklch(0.488 0.198 264)); }
 .persona-avatar.teal { background: linear-gradient(135deg, var(--teal), var(--emerald)); }
 .persona-name { font-weight: 600; font-size: 1.05rem; }
 .persona-role { font-size: 0.85rem; color: var(--fg-muted); margin-top: 2px; }

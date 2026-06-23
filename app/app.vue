@@ -8,7 +8,7 @@ useHead({
 </script>
 
 <template>
-  <NuxtLoadingIndicator color="var(--color-accent-600)" />
+  <NuxtLoadingIndicator color="var(--accent)" />
   <UApp>
     <NuxtLayout>
       <NuxtPage />
