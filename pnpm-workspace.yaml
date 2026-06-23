@@ -1,0 +1,12 @@
+# Workspace pnpm — single-package au MVP.
+# Si on splitte un jour (packages/ui, packages/harness-types, etc.),
+# référencer les sous-packages ici.
+packages:
+  - '.'
+
+# Catalogues de versions partagées (Nuxt 4 friendly).
+# Sert si on ajoute des packages dans `packages/*` plus tard.
+catalog:
+  vue: ^3.5.0
+  zod: ^3.23.0
+  typescript: ^5.6.0

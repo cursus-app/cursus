@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 100" role="img" aria-label="Cursus" fill="currentColor">
+  <title>Cursus</title>
+  <desc>Logo Cursus monochrome — utilise currentColor pour s'adapter au contexte.</desc>
+
+  <!-- Icon -->
+  <g transform="translate(10, 10)">
+    <circle cx="40" cy="40" r="32" fill="none"
+            stroke="currentColor" stroke-opacity="0.25" stroke-width="8" />
+
+    <path d="M 40 8
+             A 32 32 0 1 0 67.71 56"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="8"
+          stroke-linecap="round" />
+
+    <path d="M 26 41 L 36 51 L 56 31"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="7"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(105, 0)">
+    <text x="0" y="65"
+          font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+          font-size="42"
+          font-weight="600"
+          letter-spacing="-1.5"
+          fill="currentColor">Cursus</text>
+  </g>
+</svg>

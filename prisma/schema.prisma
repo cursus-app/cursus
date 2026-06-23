@@ -1,0 +1,498 @@
+// ============================================================================
+// Cursus — Prisma schema (déclaratif).
+//
+// Conventions :
+//  - TypeScript : camelCase (userId, createdAt)
+//  - PostgreSQL : snake_case via @map / @@map  (cf. 09-engineering-playbook §12.3)
+//  - Enums : SCREAMING_SNAKE_CASE  (cf. §12.3)
+//  - Soft delete via `deletedAt` sur les tables sensibles (User, Submission…)
+//  - Timestamps systématiques (createdAt / updatedAt via @updatedAt)
+//  - Relations onDelete: Restrict par défaut (cf. §13.1) — Cascade justifié au cas par cas.
+//
+// Sources : 04-architecture-fonctionnelle.md §"Modèle de données",
+//           07-stack-tech.md §3 (config Prisma 7).
+// ============================================================================
+
+generator client {
+  provider        = "prisma-client-js"
+  // Depuis Prisma 7, `driverAdapters` est stable et n'a plus besoin d'être
+  // déclaré en preview feature (warning "Preview feature deprecated").
+  previewFeatures = ["typedSql", "fullTextSearchPostgres"]
+}
+
+// Note : depuis Prisma 7, les URLs (url, directUrl, shadowDatabaseUrl) sont
+// déplacées dans `prisma.config.ts` à la racine du repo. Le datasource ne
+// déclare plus que le provider.
+// Cf. https://pris.ly/d/config-datasource
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// IDENTITY & ACCESS
+// ============================================================================
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  globalRole   UserRole?  @map("global_role")
+  githubHandle String?    @unique @map("github_handle")
+  fullName     String?    @map("full_name")
+  avatarUrl    String?    @map("avatar_url")
+  bio          String?    @db.Text
+  locale       String     @default("fr")
+  timezone     String     @default("Europe/Paris")
+  xpTotal      Int        @default(0) @map("xp_total")
+  isPublic     Boolean    @default(false) @map("is_public")
+  publicSlug   String?    @unique @map("public_slug")
+  twoFaEnabled Boolean    @default(false) @map("two_fa_enabled")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  deletedAt    DateTime?  @map("deleted_at")
+
+  memberships       Membership[]
+  submissions       Submission[]
+  quizAttempts      QuizAttempt[]
+  badges            UserBadge[]
+  notifications     Notification[]
+  alertsAsUser      Alert[]              @relation("AlertUser")
+  alertsResolved    Alert[]              @relation("AlertResolvedBy")
+  invitesSent       Invitation[]         @relation("InvitationInvitedBy")
+  auditLogs         AuditLog[]
+  overridesAuthored Submission[]         @relation("SubmissionOverriddenBy")
+
+  @@map("users")
+  // NB : email / githubHandle / publicSlug sont @unique → Postgres crée déjà un
+  // index pour la contrainte unique, inutile de le dupliquer via @@index.
+  @@index([deletedAt])
+}
+
+model Invitation {
+  id            String           @id @default(uuid()) @db.Uuid
+  email         String
+  token         String           @unique
+  role          UserRole
+  cohorteId     String?          @map("cohorte_id") @db.Uuid
+  invitedById   String           @map("invited_by_id") @db.Uuid
+  expiresAt     DateTime         @map("expires_at")
+  acceptedAt    DateTime?        @map("accepted_at")
+  revokedAt     DateTime?        @map("revoked_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+
+  invitedBy User      @relation("InvitationInvitedBy", fields: [invitedById], references: [id], onDelete: Restrict)
+  cohorte   Cohorte?  @relation(fields: [cohorteId], references: [id], onDelete: SetNull)
+
+  @@map("invitations")
+  // token est @unique → index déjà créé par la contrainte. email n'est PAS unique
+  // (plusieurs invitations possibles par adresse) → on garde son index.
+  @@index([email])
+  @@index([expiresAt])
+}
+
+// ============================================================================
+// CURSUS BUILDER
+// ============================================================================
+
+model Cursus {
+  id             String      @id @default(uuid()) @db.Uuid
+  title          String
+  slug           String      @unique
+  domain         String
+  level          CursusLevel @default(BEGINNER)
+  durationWeeks  Int         @map("duration_weeks")
+  description    String?     @db.Text
+  prerequisites  String?     @db.Text
+  status         CursusStatus @default(DRAFT)
+  ownerId        String      @map("owner_id") @db.Uuid
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  versions CursusVersion[]
+  modules  Module[]
+
+  @@map("cursus")
+  // slug est @unique → index déjà créé par la contrainte.
+  @@index([status])
+  @@index([ownerId])
+}
+
+model CursusVersion {
+  id           String   @id @default(uuid()) @db.Uuid
+  cursusId     String   @map("cursus_id") @db.Uuid
+  version      Int
+  snapshotJson Json     @map("snapshot_json")
+  publishedAt  DateTime @default(now()) @map("published_at")
+
+  cursus    Cursus    @relation(fields: [cursusId], references: [id], onDelete: Cascade)
+  cohortes  Cohorte[]
+
+  @@map("cursus_versions")
+  @@unique([cursusId, version])
+  @@index([cursusId])
+}
+
+model Module {
+  id                  String   @id @default(uuid()) @db.Uuid
+  cursusId            String   @map("cursus_id") @db.Uuid
+  week                Int
+  title               String
+  objectives          String   @db.Text
+  resourcesJson       Json     @map("resources_json")
+  deliverableSpecJson Json     @map("deliverable_spec_json")
+  // Relation 1-1 avec Quiz : un module a au plus un quiz et un quiz appartient
+  // à au plus un module (back-reference `Quiz.module` singleton). Le `@unique`
+  // sur quizId est requis par Prisma pour valider la relation 1-1.
+  quizId              String?  @unique @map("quiz_id") @db.Uuid
+  // Relation N-1 avec Badge : un badge peut être attribué à plusieurs modules
+  // (ex. "Premier commit signé" peut concerner plusieurs livrables). On NE
+  // met PAS `@unique` ici, et `Badge.modules` est un tableau côté retour.
+  badgeId             String?  @map("badge_id") @db.Uuid
+  xpReward            Int      @default(100) @map("xp_reward")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  cursus      Cursus       @relation(fields: [cursusId], references: [id], onDelete: Cascade)
+  quiz        Quiz?        @relation(fields: [quizId], references: [id], onDelete: SetNull)
+  badge       Badge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
+  submissions Submission[]
+
+  @@map("modules")
+  @@unique([cursusId, week])
+  @@index([cursusId])
+  @@index([badgeId])
+}
+
+// ============================================================================
+// COHORTE & MEMBERSHIP
+// ============================================================================
+
+model Cohorte {
+  id              String        @id @default(uuid()) @db.Uuid
+  cursusVersionId String        @map("cursus_version_id") @db.Uuid
+  name            String
+  startDate       DateTime      @db.Date @map("start_date")
+  endDate         DateTime      @db.Date @map("end_date")
+  rhythm          CohorteRhythm @default(WEEKLY)
+  status          CohorteStatus @default(DRAFT)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+  archivedAt      DateTime?     @map("archived_at")
+
+  cursusVersion CursusVersion @relation(fields: [cursusVersionId], references: [id], onDelete: Restrict)
+  memberships   Membership[]
+  invitations   Invitation[]
+
+  @@map("cohortes")
+  @@index([cursusVersionId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model Membership {
+  id         String           @id @default(uuid()) @db.Uuid
+  userId     String           @map("user_id") @db.Uuid
+  cohorteId  String           @map("cohorte_id") @db.Uuid
+  role       MembershipRole
+  joinedAt   DateTime         @default(now()) @map("joined_at")
+  leftAt     DateTime?        @map("left_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohorte Cohorte @relation(fields: [cohorteId], references: [id], onDelete: Cascade)
+
+  @@map("memberships")
+  @@unique([userId, cohorteId])
+  @@index([userId])
+  @@index([cohorteId])
+  @@index([role])
+}
+
+// ============================================================================
+// PROGRESS TRACKING — SUBMISSIONS & HARNESS
+// ============================================================================
+
+model Submission {
+  id              String           @id @default(uuid()) @db.Uuid
+  userId          String           @map("user_id") @db.Uuid
+  moduleId        String           @map("module_id") @db.Uuid
+  repoUrl         String           @map("repo_url")
+  deployUrl       String?          @map("deploy_url")
+  notes           String?          @db.Text
+  status          SubmissionStatus @default(PENDING)
+  attemptNumber   Int              @default(1) @map("attempt_number")
+  submittedAt     DateTime         @default(now()) @map("submitted_at")
+  validatedAt     DateTime?        @map("validated_at")
+  overriddenById  String?          @map("overridden_by_id") @db.Uuid
+  overrideReason  String?          @db.Text @map("override_reason")
+
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  module        Module       @relation(fields: [moduleId], references: [id], onDelete: Restrict)
+  overriddenBy  User?        @relation("SubmissionOverriddenBy", fields: [overriddenById], references: [id], onDelete: SetNull)
+  harnessRuns   HarnessRun[]
+
+  @@map("submissions")
+  @@index([userId, status])
+  @@index([moduleId])
+  @@index([submittedAt])
+}
+
+model HarnessRun {
+  id                  String       @id @default(uuid()) @db.Uuid
+  submissionId        String       @map("submission_id") @db.Uuid
+  githubRunId         String?      @unique @map("github_run_id")
+  githubWorkflowUrl   String?      @map("github_workflow_url")
+  status              HarnessStatus @default(QUEUED)
+  startedAt           DateTime?    @map("started_at")
+  finishedAt          DateTime?    @map("finished_at")
+  checksJson          Json?        @map("checks_json")
+  errorMessage        String?      @db.Text @map("error_message")
+  createdAt           DateTime     @default(now()) @map("created_at")
+
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@map("harness_runs")
+  @@index([submissionId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// QUIZ
+// ============================================================================
+
+model Quiz {
+  id            String   @id @default(uuid()) @db.Uuid
+  title         String
+  questionsJson Json     @map("questions_json")
+  passingScore  Int      @default(70) @map("passing_score")
+  randomize     Boolean  @default(true)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  module   Module?
+  attempts QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizAttempt {
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  quizId      String   @map("quiz_id") @db.Uuid
+  answersJson Json     @map("answers_json")
+  score       Int
+  passed      Boolean
+  attemptedAt DateTime @default(now()) @map("attempted_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_attempts")
+  @@index([userId])
+  @@index([quizId])
+  @@index([attemptedAt])
+}
+
+// ============================================================================
+// GAMIFICATION — BADGES
+// ============================================================================
+
+model Badge {
+  id           String   @id @default(uuid()) @db.Uuid
+  code         String   @unique
+  name         String
+  description  String   @db.Text
+  iconUrl      String?  @map("icon_url")
+  criteriaJson Json     @map("criteria_json")
+  xpReward     Int      @default(50) @map("xp_reward")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Back-reference de la relation N-1 avec Module (un badge peut être attribué
+  // à plusieurs modules — pluriel volontaire). Cf. Module.badgeId.
+  modules   Module[]
+  awardedTo UserBadge[]
+
+  @@map("badges")
+  // code est @unique → index déjà créé par la contrainte.
+}
+
+model UserBadge {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String   @map("user_id") @db.Uuid
+  badgeId       String   @map("badge_id") @db.Uuid
+  awardedAt     DateTime @default(now()) @map("awarded_at")
+  awardedByRule String?  @map("awarded_by_rule")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@map("user_badges")
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@index([badgeId])
+}
+
+// ============================================================================
+// ALERTES & NOTIFICATIONS
+// ============================================================================
+
+model Alert {
+  id           String       @id @default(uuid()) @db.Uuid
+  userId       String       @map("user_id") @db.Uuid
+  kind         AlertKind
+  severity     AlertSeverity @default(MEDIUM)
+  sourceType   String?      @map("source_type")
+  sourceId     String?      @map("source_id") @db.Uuid
+  context      Json?
+  createdAt    DateTime     @default(now()) @map("created_at")
+  resolvedAt   DateTime?    @map("resolved_at")
+  resolvedById String?      @map("resolved_by_id") @db.Uuid
+
+  user       User  @relation("AlertUser", fields: [userId], references: [id], onDelete: Cascade)
+  resolvedBy User? @relation("AlertResolvedBy", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@map("alerts")
+  @@index([userId, resolvedAt])
+  @@index([kind])
+  @@index([createdAt])
+}
+
+model Notification {
+  id          String              @id @default(uuid()) @db.Uuid
+  userId      String              @map("user_id") @db.Uuid
+  type        NotificationType
+  payloadJson Json                @map("payload_json")
+  readAt      DateTime?           @map("read_at")
+  createdAt   DateTime            @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([userId, readAt])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// AUDIT & FEATURE FLAGS
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(uuid()) @db.Uuid
+  actorId     String?  @map("actor_id") @db.Uuid
+  action      String
+  entityType  String   @map("entity_type")
+  entityId    String?  @map("entity_id") @db.Uuid
+  diff        Json?
+  metadata    Json?
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @db.Text @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+  @@index([actorId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model FeatureFlag {
+  id          String   @id @default(uuid()) @db.Uuid
+  key         String   @unique
+  description String?  @db.Text
+  enabled     Boolean  @default(false)
+  rolloutPct  Int      @default(0) @map("rollout_pct")
+  audience    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("feature_flags")
+  // key est @unique → index déjà créé par la contrainte.
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  STAGIAIRE
+  FORMATEUR_PRINCIPAL
+  CO_FORMATEUR
+  ADMIN
+}
+
+enum MembershipRole {
+  STAGIAIRE
+  FORMATEUR_PRINCIPAL
+  CO_FORMATEUR
+}
+
+enum CursusLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CursusStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CohorteRhythm {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum CohorteStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum SubmissionStatus {
+  PENDING
+  RUNNING
+  VALIDATED
+  VALIDATED_OVERRIDE
+  FAILED
+  TIMEOUT
+  BLOCKED
+}
+
+enum HarnessStatus {
+  QUEUED
+  RUNNING
+  SUCCESS
+  FAILURE
+  TIMEOUT
+  CANCELLED
+}
+
+enum AlertKind {
+  SUBMISSION_LATE
+  QUIZ_REPEATEDLY_FAILED
+  SUBMISSION_REPEATEDLY_FAILED
+  STAGIAIRE_BLOCKED
+  PROGRESS_STALLED
+  CAPSTONE_OVERDUE
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum NotificationType {
+  INVITATION
+  SUBMISSION_VALIDATED
+  SUBMISSION_FAILED
+  ALERT_RAISED
+  BADGE_AWARDED
+  CAPSTONE_EVALUATED
+  CERTIFICATE_ISSUED
+  WEEKLY_DIGEST
+}

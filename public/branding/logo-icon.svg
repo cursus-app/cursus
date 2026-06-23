@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Cursus icon">
+  <title>Cursus</title>
+  <desc>Icône Cursus : cercle de progression et coche de validation.</desc>
+
+  <defs>
+    <linearGradient id="cursus-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="oklch(0.62 0.20 264)" />
+      <stop offset="100%" stop-color="oklch(0.50 0.24 270)" />
+    </linearGradient>
+  </defs>
+
+  <!-- Subtle track ring -->
+  <circle cx="50" cy="50" r="40" fill="none"
+          stroke="oklch(0.55 0.22 264)" stroke-opacity="0.15" stroke-width="10" />
+
+  <!-- Progress arc ~75% -->
+  <path d="M 50 10
+           A 40 40 0 1 0 84.64 70"
+        fill="none"
+        stroke="url(#cursus-icon-grad)"
+        stroke-width="10"
+        stroke-linecap="round" />
+
+  <!-- Checkmark -->
+  <path d="M 32 51 L 45 64 L 70 38"
+        fill="none"
+        stroke="oklch(0.55 0.22 264)"
+        stroke-width="9"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>

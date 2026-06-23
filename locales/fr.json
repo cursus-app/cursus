@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Cursus",
+    "tagline": "Le parcours de stage tech, structuré et validé."
+  },
+  "common": {
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "magicLink": "Recevoir un lien magique",
+    "githubLogin": "Continuer avec GitHub"
+  },
+  "errors": {
+    "generic": "Quelque chose s'est mal passé.",
+    "notFound": "Page introuvable.",
+    "unauthorized": "Tu n'as pas accès à cette ressource.",
+    "supportRef": "Référence support"
+  }
+}

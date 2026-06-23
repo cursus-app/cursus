@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+.nuxt/
+.output/
+.nitro/
+dist/
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.npm
+
+# Env files (NEVER commit)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+!.env.example
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/.env
+.prisma/
+
+# Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+.vitest-cache/
+
+# Storybook
+storybook-static/
+
+# Misc
+.cache/
+.parcel-cache/
+*.tsbuildinfo
+.turbo/
+_tmp_*
+*.tmp
+
+# Local task tracking (peut contenir des notes privées)
+.tasks-local-notes/
+
+# Secrets
+*.pem
+*.key
+secrets/

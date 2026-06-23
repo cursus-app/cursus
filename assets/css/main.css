@@ -1,0 +1,209 @@
+/* ===========================================================================
+ * Cursus — Tailwind CSS v4 (CSS-first config).
+ * Design tokens : cf. 10-design-system.md.
+ *
+ * Tokens exposés en variables CSS via @theme — consommables par Tailwind
+ * (text-text-base, bg-bg-subtle, ...) ET par @nuxt/ui (color-primary).
+ * =========================================================================== */
+
+@import 'tailwindcss';
+
+/* @nuxt/ui v4 — preset (importé après tailwindcss pour overrider correctement) */
+@import '@nuxt/ui';
+
+/* ---------------------------------------------------------------------------
+ * Design tokens — Light mode (default).
+ * Couleurs : OKLCH pour gamut wide + interpolation perceptive correcte.
+ * --------------------------------------------------------------------------- */
+@theme {
+  /* --- Surfaces ------------------------------------------------------------- */
+  --color-bg-base: oklch(1 0 0); /* white */
+  --color-bg-subtle: oklch(0.985 0 0); /* zinc-50 */
+  --color-bg-muted: oklch(0.967 0.001 286.4); /* zinc-100 */
+  --color-bg-emphasis: oklch(0.21 0.006 285.9); /* zinc-900 */
+
+  /* --- Texte ---------------------------------------------------------------- */
+  --color-text-base: oklch(0.21 0.006 285.9); /* zinc-900 */
+  --color-text-muted: oklch(0.442 0.017 285.8); /* zinc-600 */
+  --color-text-subtle: oklch(0.705 0.015 286.1); /* zinc-400 */
+  --color-text-inverse: oklch(0.985 0 0); /* zinc-50 */
+
+  /* --- Bordures ------------------------------------------------------------- */
+  --color-border-subtle: oklch(0.92 0.004 286.3); /* zinc-200 */
+  --color-border-base: oklch(0.871 0.006 286.3); /* zinc-300 */
+  --color-border-strong: oklch(0.552 0.016 285.9); /* zinc-500 */
+
+  /* --- Accent (indigo) ------------------------------------------------------ */
+  --color-accent-50: oklch(0.962 0.018 272.3);
+  --color-accent-100: oklch(0.93 0.034 272.8);
+  --color-accent-200: oklch(0.87 0.065 274);
+  --color-accent-300: oklch(0.785 0.115 274.7);
+  --color-accent-400: oklch(0.673 0.182 276.9);
+  --color-accent-500: oklch(0.585 0.233 277.1);
+  --color-accent-600: oklch(0.511 0.262 276.9); /* primary */
+  --color-accent-700: oklch(0.457 0.24 277);
+  --color-accent-800: oklch(0.398 0.195 277.4);
+  --color-accent-900: oklch(0.359 0.144 278.7);
+  --color-accent-950: oklch(0.257 0.09 281.3);
+
+  /* --- Sémantiques ---------------------------------------------------------- */
+  --color-success-base: oklch(0.65 0.17 152.5); /* emerald-600 */
+  --color-success-subtle: oklch(0.95 0.05 152.5);
+  --color-warning-base: oklch(0.7 0.17 60); /* amber-600 */
+  --color-warning-subtle: oklch(0.96 0.07 90);
+  --color-danger-base: oklch(0.58 0.22 27); /* red-600 */
+  --color-danger-subtle: oklch(0.94 0.06 22);
+  --color-info-base: oklch(0.68 0.14 230); /* sky-500 */
+  --color-info-subtle: oklch(0.96 0.04 230);
+
+  /* --- Focus ring (toujours visible — a11y) -------------------------------- */
+  --color-focus-ring: oklch(0.585 0.233 277.1); /* accent-500 */
+
+  /* --- Typographie ---------------------------------------------------------- */
+  --font-sans:
+    'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  --font-mono:
+    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+
+  /* --- Spacing (4-point grid) ----------------------------------------------- */
+  --spacing: 0.25rem;
+
+  /* --- Radius --------------------------------------------------------------- */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* --- Ombres (discrètes) --------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+  /* --- Z-index échelle explicite -------------------------------------------- */
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-overlay: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
+
+  /* --- Durées d'animation --------------------------------------------------- */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 500ms;
+}
+
+/* ---------------------------------------------------------------------------
+ * Dark mode — override des tokens via @variant.
+ * On utilise la classe .dark sur <html> (cf. nuxt-color-mode).
+ * --------------------------------------------------------------------------- */
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-bg-base: oklch(0.141 0.005 285.8);
+  --color-bg-subtle: oklch(0.21 0.006 285.9);
+  --color-bg-muted: oklch(0.27 0.006 286);
+  --color-bg-emphasis: oklch(0.985 0 0);
+
+  --color-text-base: oklch(0.985 0 0);
+  --color-text-muted: oklch(0.705 0.015 286.1);
+  --color-text-subtle: oklch(0.552 0.016 285.9);
+  --color-text-inverse: oklch(0.21 0.006 285.9);
+
+  --color-border-subtle: oklch(0.27 0.006 286);
+  --color-border-base: oklch(0.37 0.013 286);
+  --color-border-strong: oklch(0.705 0.015 286.1);
+
+  --color-success-subtle: oklch(0.27 0.07 152);
+  --color-warning-subtle: oklch(0.3 0.1 70);
+  --color-danger-subtle: oklch(0.3 0.1 27);
+  --color-info-subtle: oklch(0.27 0.08 230);
+}
+
+/* ---------------------------------------------------------------------------
+ * Base layer — defaults globaux.
+ * --------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    color-scheme: light dark;
+  }
+
+  html {
+    @apply antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-bg-base font-sans text-text-base;
+  }
+
+  /* Focus visible toujours présent (a11y) — cf. 10-design-system §0 */
+  :focus-visible {
+    @apply ring-2 ring-offset-2 outline-none;
+    outline-color: var(--color-focus-ring);
+    --tw-ring-color: var(--color-focus-ring);
+    --tw-ring-offset-color: var(--color-bg-base);
+  }
+
+  /* Respect prefers-reduced-motion — cf. 10-design-system §4.4 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Skeleton shimmer — utilitaire commun.
+ * --------------------------------------------------------------------------- */
+@layer utilities {
+  .skeleton {
+    @apply relative overflow-hidden bg-bg-muted;
+  }
+
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+}

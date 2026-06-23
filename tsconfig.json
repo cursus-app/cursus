@@ -1,0 +1,17 @@
+{
+  // Nuxt 4 : le tsconfig racine ne fait QUE référencer les 4 contextes générés
+  // par `nuxt prepare` (app / server / shared / node). Chacun embarque ses propres
+  // globals d'auto-imports (computed, defineEventHandler, …), ce qu'un tsconfig
+  // « plat » qui mélange les contextes ne peut pas fournir.
+  //
+  // Les compilerOptions stricts du projet sont définis dans nuxt.config.ts
+  // (typescript.tsConfig) afin d'être propagés à CHAQUE contexte.
+  // Cf. https://nuxt.com/docs/guide/concepts/typescript
+  "files": [],
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.shared.json" },
+    { "path": "./.nuxt/tsconfig.node.json" }
+  ]
+}

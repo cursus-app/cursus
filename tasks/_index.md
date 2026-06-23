@@ -1,0 +1,419 @@
+# tasks/\_index.md — Vue d'ensemble navigable
+
+> **158 tâches** (24 Epics + 134 Stories) synchronisées depuis JIRA project `CUR`. Tous les liens ci-dessous sont cliquables pour ouvrir chaque fichier task.
+
+---
+
+## 📊 Stats globales
+
+| Métrique                  |  Valeur |
+| ------------------------- | ------: |
+| Total fichiers            | **158** |
+| Epics                     |  **24** |
+| Stories                   | **134** |
+| Story points (MVP + v1.x) | **367** |
+
+### Répartition par statut
+
+| Status         | Count |
+| -------------- | ----: |
+| ⚪ pending     |   134 |
+| 🟡 in_progress |     0 |
+| 🔵 review      |     0 |
+| ✅ done        |     0 |
+| 🔴 blocked     |     0 |
+| ⏹️ cancelled   |     0 |
+
+### Répartition par sprint
+
+| Sprint   | Stories | Story points | Focus                                        |
+| -------- | ------: | -----------: | -------------------------------------------- |
+| **0**    |       1 |            5 | Spike harnais (3 jours)                      |
+| **1**    |      33 |           77 | Fondations + Identity + transverses RGPD/Obs |
+| **2**    |      15 |           48 | Cursus Builder + Cohorte                     |
+| **3**    |      20 |           67 | Parcours stagiaire + Harness core + Notifs   |
+| **4**    |      22 |           54 | Dashboards + Quiz + Gamif + Command Palette  |
+| **5**    |      12 |           33 | Capstone + Portfolio + Certificat            |
+| **6**    |       4 |            7 | Pilote 3 semaines                            |
+| **v1.1** |      27 |           76 | AI Assist, Integrations, Admin, RGPD avancé  |
+
+---
+
+## 🏷️ Légende
+
+- **Status** : ⚪ pending · 🟡 in_progress · 🔵 review · ✅ done · 🔴 blocked · ⏹️ cancelled
+- **Priorité** : 🔥 highest · ⬆️ high · ➡️ medium · ⬇️ low
+- **Tier** : 🎯 core (MVP) · ✨ premium · 🚀 differentiator
+- **Size** : XS=1pt · S=2pts · M=3pts · L=5pts · XL=8pts · XXL=13pts (Fibonacci)
+
+---
+
+## 🗂️ Récapitulatif des 24 Epics
+
+| Epic                                                    | JIRA                                                        |       Tier        |                                    Sprint                                     | Stories | Points | Fichier                                              |
+| ------------------------------------------------------- | ----------------------------------------------------------- | :---------------: | :---------------------------------------------------------------------------: | :-----: | :----: | ---------------------------------------------------- |
+| **EP-01** Fondations techniques & DevOps                | [CUR-1](https://ousmanesadjad.atlassian.net/browse/CUR-1)   |      🎯 core      |                              Sprint 0 + Sprint 1                              |    7    |   18   | [`EP-01-fondations/`](./EP-01-fondations/)           |
+| **EP-02** Identity & Access                             | [CUR-2](https://ousmanesadjad.atlassian.net/browse/CUR-2)   |      🎯 core      |                              Sprint 1 + Sprint 2                              |    6    |   19   | [`EP-02-identity/`](./EP-02-identity/)               |
+| **EP-03** Cursus Builder                                | [CUR-3](https://ousmanesadjad.atlassian.net/browse/CUR-3)   |      🎯 core      |                              Sprint 2 + Sprint 3                              |    8    |   26   | [`EP-03-cursus/`](./EP-03-cursus/)                   |
+| **EP-04** Cohorte & Enrôlement                          | [CUR-4](https://ousmanesadjad.atlassian.net/browse/CUR-4)   |      🎯 core      |                                   Sprint 2                                    |    4    |   11   | [`EP-04-cohorte/`](./EP-04-cohorte/)                 |
+| **EP-05** Parcours stagiaire (semaine type)             | [CUR-5](https://ousmanesadjad.atlassian.net/browse/CUR-5)   |      🎯 core      |                    Sprint 3 (ST-05.4 et 05.5 en Sprint 4)                     |    5    |   13   | [`EP-05-parcours/`](./EP-05-parcours/)               |
+| **EP-06** Harness de validation                         | [CUR-6](https://ousmanesadjad.atlassian.net/browse/CUR-6)   |      🎯 core      |                              Sprint 3 + Sprint 4                              |    6    |   24   | [`EP-06-harness/`](./EP-06-harness/)                 |
+| **EP-07** Quiz                                          | [CUR-7](https://ousmanesadjad.atlassian.net/browse/CUR-7)   |      🎯 core      |                                   Sprint 4                                    |    3    |   8    | [`EP-07-quiz/`](./EP-07-quiz/)                       |
+| **EP-08** Progress Tracking & Alertes                   | [CUR-8](https://ousmanesadjad.atlassian.net/browse/CUR-8)   |      🎯 core      |                              Sprint 3 + Sprint 4                              |    4    |   12   | [`EP-08-progress/`](./EP-08-progress/)               |
+| **EP-09** Capstone & Soutenance                         | [CUR-9](https://ousmanesadjad.atlassian.net/browse/CUR-9)   |      🎯 core      |                                       5                                       |    4    |   10   | [`EP-09-capstone/`](./EP-09-capstone/)               |
+| **EP-10** Portfolio & Certification                     | [CUR-10](https://ousmanesadjad.atlassian.net/browse/CUR-10) |      🎯 core      |                                       5                                       |    4    |   14   | [`EP-10-portfolio/`](./EP-10-portfolio/)             |
+| **EP-11** Gamification (XP & Badges)                    | [CUR-11](https://ousmanesadjad.atlassian.net/browse/CUR-11) |    ✨ premium     |                                       4                                       |    3    |   7    | [`EP-11-gamif/`](./EP-11-gamif/)                     |
+| **EP-12** Notifications                                 | [CUR-12](https://ousmanesadjad.atlassian.net/browse/CUR-12) |      🎯 core      |                                       3                                       |    5    |   12   | [`EP-12-notifs/`](./EP-12-notifs/)                   |
+| **EP-13** Dashboards                                    | [CUR-13](https://ousmanesadjad.atlassian.net/browse/CUR-13) |      🎯 core      |                                       3                                       |    3    |   11   | [`EP-13-dashboards/`](./EP-13-dashboards/)           |
+| **EP-14** Admin & Reporting (v1.1)                      | [CUR-14](https://ousmanesadjad.atlassian.net/browse/CUR-14) |      🎯 core      |                                     v1.1                                      |    5    |   12   | [`EP-14-admin/`](./EP-14-admin/)                     |
+| **EP-15** Conformité sécurité RGPD                      | [CUR-15](https://ousmanesadjad.atlassian.net/browse/CUR-15) |      🎯 core      |    Transverse (CGU + RLS au MVP, autres en v1.1 avant ouverture publique)     |    8    |   16   | [`EP-15-rgpd/`](./EP-15-rgpd/)                       |
+| **EP-16** Observabilité & QA                            | [CUR-16](https://ousmanesadjad.atlassian.net/browse/CUR-16) |      🎯 core      | Transverse (ST-16.1, 16.2 dès S1 ; ST-16.4, 16.5, 16.6 en S5 ; reste en v1.1) |   10    |   22   | [`EP-16-observabilite/`](./EP-16-observabilite/)     |
+| **EP-17** Pilote & déploiement                          | [CUR-17](https://ousmanesadjad.atlassian.net/browse/CUR-17) |      🎯 core      |                 Sprint 5 + Sprint 6 (pilote en semaines 6-8)                  |    7    |   14   | [`EP-17-pilote/`](./EP-17-pilote/)                   |
+| **EP-18** Design System & Motion (Premium)              | [CUR-18](https://ousmanesadjad.atlassian.net/browse/CUR-18) |    ✨ premium     |              Sprint 1 → Sprint 4 (en parallèle des Epics métier)              |    8    |   25   | [`EP-18-design-system/`](./EP-18-design-system/)     |
+| **EP-19** Internationalisation FR + EN                  | [CUR-19](https://ousmanesadjad.atlassian.net/browse/CUR-19) |    ✨ premium     |                              Sprint 1 → Sprint 4                              |    6    |   15   | [`EP-19-i18n/`](./EP-19-i18n/)                       |
+| **EP-20** Command Palette & Search global               | [CUR-20](https://ousmanesadjad.atlassian.net/browse/CUR-20) |    ✨ premium     |                                   Sprint 4                                    |    6    |   14   | [`EP-20-command-palette/`](./EP-20-command-palette/) |
+| **EP-21** AI Assist (Differentiator v1.1)               | [CUR-21](https://ousmanesadjad.atlassian.net/browse/CUR-21) | 🚀 differentiator |                                     v1.1                                      |    6    |   21   | [`EP-21-ai-assist/`](./EP-21-ai-assist/)             |
+| **EP-22** Integrations & Webhooks (Differentiator v1.1) | [CUR-22](https://ousmanesadjad.atlassian.net/browse/CUR-22) | 🚀 differentiator |                                     v1.1                                      |    6    |   17   | [`EP-22-integrations/`](./EP-22-integrations/)       |
+| **EP-23** Premium Reporting (Differentiator v1.2)       | [CUR-23](https://ousmanesadjad.atlassian.net/browse/CUR-23) | 🚀 differentiator |                                     v1.2                                      |    5    |   14   | [`EP-23-reporting/`](./EP-23-reporting/)             |
+| **EP-24** PWA & Offline lite (Premium v1.2)             | [CUR-24](https://ousmanesadjad.atlassian.net/browse/CUR-24) |    ✨ premium     |                                     v1.2                                      |    5    |   12   | [`EP-24-pwa/`](./EP-24-pwa/)                         |
+
+---
+
+## 📚 Détails par Epic — 134 Stories
+
+> Toutes les stories ci-dessous sont des liens cliquables vers leur fichier task complet.
+
+### 🎯 EP-01 — Fondations techniques & DevOps
+
+📋 [Epic JIRA `CUR-1`](https://ousmanesadjad.atlassian.net/browse/CUR-1) · 📁 [Dossier `EP-01-fondations/`](./EP-01-fondations/) · 📄 [Description Epic](./EP-01-fondations/EP-01.md) · **7 stories · 18 pts · Sprint 0 + Sprint 1**
+
+| Status | Story                                                                | JIRA                                                        | Sprint | Priorité | Pts | Titre                                        |
+| :----: | -------------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | -------------------------------------------- |
+|   ⚪   | [`ST-01.1`](./EP-01-fondations/ST-01.1-bootstrap.md)                 | [CUR-25](https://ousmanesadjad.atlassian.net/browse/CUR-25) |   1    |    🔥    |  2  | Bootstrap projet Nuxt 4 + Supabase + Prisma  |
+|   ⚪   | [`ST-01.2`](./EP-01-fondations/ST-01.2-pipeline-cicd.md)             | [CUR-26](https://ousmanesadjad.atlassian.net/browse/CUR-26) |   1    |    🔥    |  2  | Pipeline CI/CD GitHub Actions                |
+|   ⚪   | [`ST-01.3`](./EP-01-fondations/ST-01.3-deploiement-vercel.md)        | [CUR-27](https://ousmanesadjad.atlassian.net/browse/CUR-27) |   1    |    🔥    |  3  | Déploiement preview & prod sur Vercel        |
+|   ⚪   | [`ST-01.4`](./EP-01-fondations/ST-01.4-schema-db-prisma.md)          | [CUR-28](https://ousmanesadjad.atlassian.net/browse/CUR-28) |   1    |    🔥    |  3  | Schéma DB initial + Prisma migrations        |
+|   ⚪   | [`ST-01.5`](./EP-01-fondations/ST-01.5-adr-stack-technique.md)       | [CUR-29](https://ousmanesadjad.atlassian.net/browse/CUR-29) |   1    |    🔥    |  1  | ADR-001 Stack technique                      |
+|   ⚪   | [`ST-01.6`](./EP-01-fondations/ST-01.6-spike-poc-harness.md)         | [CUR-30](https://ousmanesadjad.atlassian.net/browse/CUR-30) |   0    |    🔥    |  5  | Spike PoC harnais GitHub Actions             |
+|   ⚪   | [`ST-01.7`](./EP-01-fondations/ST-01.7-observabilite-sentry-pino.md) | [CUR-31](https://ousmanesadjad.atlassian.net/browse/CUR-31) |   1    |    🔥    |  2  | Setup observabilité minimale (Sentry + Pino) |
+
+### 🎯 EP-02 — Identity & Access
+
+📋 [Epic JIRA `CUR-2`](https://ousmanesadjad.atlassian.net/browse/CUR-2) · 📁 [Dossier `EP-02-identity/`](./EP-02-identity/) · 📄 [Description Epic](./EP-02-identity/EP-02.md) · **6 stories · 19 pts · Sprint 1 + Sprint 2**
+
+| Status | Story                                                            | JIRA                                                        | Sprint | Priorité | Pts | Titre                                     |
+| :----: | ---------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ----------------------------------------- |
+|   ⚪   | [`ST-02.1`](./EP-02-identity/ST-02.1-auth-email-mdp.md)          | [CUR-32](https://ousmanesadjad.atlassian.net/browse/CUR-32) |   1    |    🔥    |  3  | Auth email + mdp avec validation forte    |
+|   ⚪   | [`ST-02.2`](./EP-02-identity/ST-02.2-magic-link-invitation.md)   | [CUR-33](https://ousmanesadjad.atlassian.net/browse/CUR-33) |   1    |    🔥    |  3  | Magic link (invitation token JWT signé)   |
+|   ⚪   | [`ST-02.3`](./EP-02-identity/ST-02.3-oauth-github-stagiaires.md) | [CUR-34](https://ousmanesadjad.atlassian.net/browse/CUR-34) |   1    |    🔥    |  3  | OAuth GitHub stagiaires (obligatoire)     |
+|   ⚪   | [`ST-02.4`](./EP-02-identity/ST-02.4-rbac-rls-supabase.md)       | [CUR-35](https://ousmanesadjad.atlassian.net/browse/CUR-35) |   1    |    🔥    |  5  | Système de rôles (RBAC) avec RLS Supabase |
+|   ⚪   | [`ST-02.5`](./EP-02-identity/ST-02.5-2fa-totp-premium.md)        | [CUR-36](https://ousmanesadjad.atlassian.net/browse/CUR-36) |   1    |    ⬆️    |  3  | 2FA TOTP (Premium MVP)                    |
+|   ⚪   | [`ST-02.6`](./EP-02-identity/ST-02.6-gestion-profil.md)          | [CUR-37](https://ousmanesadjad.atlassian.net/browse/CUR-37) |   1    |    ⬆️    |  2  | Gestion profil utilisateur                |
+
+### 🎯 EP-03 — Cursus Builder
+
+📋 [Epic JIRA `CUR-3`](https://ousmanesadjad.atlassian.net/browse/CUR-3) · 📁 [Dossier `EP-03-cursus/`](./EP-03-cursus/) · 📄 [Description Epic](./EP-03-cursus/EP-03.md) · **8 stories · 26 pts · Sprint 2 + Sprint 3**
+
+| Status | Story                                                             | JIRA                                                        | Sprint | Priorité | Pts | Titre                                               |
+| :----: | ----------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | --------------------------------------------------- |
+|   ⚪   | [`ST-03.1`](./EP-03-cursus/ST-03.1-crud-cursus.md)                | [CUR-38](https://ousmanesadjad.atlassian.net/browse/CUR-38) |   2    |    🔥    |  3  | CRUD cursus avec brouillon/publié/archivé           |
+|   ⚪   | [`ST-03.2`](./EP-03-cursus/ST-03.2-edition-modules-drag-drop.md)  | [CUR-39](https://ousmanesadjad.atlassian.net/browse/CUR-39) |   2    |    🔥    |  5  | Édition modules avec drag-and-drop                  |
+|   ⚪   | [`ST-03.3`](./EP-03-cursus/ST-03.3-gestion-ressources.md)         | [CUR-40](https://ousmanesadjad.atlassian.net/browse/CUR-40) |   2    |    🔥    |  3  | Gestion ressources d'un module                      |
+|   ⚪   | [`ST-03.4`](./EP-03-cursus/ST-03.4-specification-livrable.md)     | [CUR-41](https://ousmanesadjad.atlassian.net/browse/CUR-41) |   2    |    🔥    |  5  | Spécification livrable hebdo + critères harnais     |
+|   ⚪   | [`ST-03.5`](./EP-03-cursus/ST-03.5-versionning-cursus.md)         | [CUR-42](https://ousmanesadjad.atlassian.net/browse/CUR-42) |   2    |    ⬆️    |  3  | Versionning cursus (snapshot par version)           |
+|   ⚪   | [`ST-03.6`](./EP-03-cursus/ST-03.6-clonage-cursus.md)             | [CUR-43](https://ousmanesadjad.atlassian.net/browse/CUR-43) |   2    |    ➡️    |  2  | Clonage cursus                                      |
+|   ⚪   | [`ST-03.7`](./EP-03-cursus/ST-03.7-import-roadmap-sh.md)          | [CUR-44](https://ousmanesadjad.atlassian.net/browse/CUR-44) |   2    |    ⬆️    |  3  | Import depuis roadmap.sh (avec recherche juridique) |
+|   ⚪   | [`ST-03.8`](./EP-03-cursus/ST-03.8-previsualisation-stagiaire.md) | [CUR-45](https://ousmanesadjad.atlassian.net/browse/CUR-45) |   2    |    ➡️    |  2  | Prévisualisation cursus en mode stagiaire           |
+
+### 🎯 EP-04 — Cohorte & Enrôlement
+
+📋 [Epic JIRA `CUR-4`](https://ousmanesadjad.atlassian.net/browse/CUR-4) · 📁 [Dossier `EP-04-cohorte/`](./EP-04-cohorte/) · 📄 [Description Epic](./EP-04-cohorte/EP-04.md) · **4 stories · 11 pts · Sprint 2**
+
+| Status | Story                                                            | JIRA                                                        | Sprint | Priorité | Pts | Titre                                             |
+| :----: | ---------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------------------- |
+|   ⚪   | [`ST-04.1`](./EP-04-cohorte/ST-04.1-crud-cohorte.md)             | [CUR-46](https://ousmanesadjad.atlassian.net/browse/CUR-46) |   2    |    🔥    |  3  | CRUD cohorte avec cycle de vie                    |
+|   ⚪   | [`ST-04.2`](./EP-04-cohorte/ST-04.2-invitation-stagiaires.md)    | [CUR-47](https://ousmanesadjad.atlassian.net/browse/CUR-47) |   2    |    🔥    |  3  | Invitation stagiaires (single + bulk CSV)         |
+|   ⚪   | [`ST-04.3`](./EP-04-cohorte/ST-04.3-attribution-coformateurs.md) | [CUR-48](https://ousmanesadjad.atlassian.net/browse/CUR-48) |   2    |    ⬆️    |  2  | Attribution co-formateurs (globaux ou par module) |
+|   ⚪   | [`ST-04.4`](./EP-04-cohorte/ST-04.4-echeancier-decalage.md)      | [CUR-49](https://ousmanesadjad.atlassian.net/browse/CUR-49) |   2    |    ⬆️    |  3  | Échéancier et décalage de planning                |
+
+### 🎯 EP-05 — Parcours stagiaire (semaine type)
+
+📋 [Epic JIRA `CUR-5`](https://ousmanesadjad.atlassian.net/browse/CUR-5) · 📁 [Dossier `EP-05-parcours/`](./EP-05-parcours/) · 📄 [Description Epic](./EP-05-parcours/EP-05.md) · **5 stories · 13 pts · Sprint 3 (ST-05.4 et 05.5 en Sprint 4)**
+
+| Status | Story                                                                        | JIRA                                                        | Sprint | Priorité | Pts | Titre                                                 |
+| :----: | ---------------------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ----------------------------------------------------- |
+|   ⚪   | [`ST-05.1`](./EP-05-parcours/ST-05.1-page-cette-semaine.md)                  | [CUR-50](https://ousmanesadjad.atlassian.net/browse/CUR-50) |   3    |    🔥    |  3  | Page "Cette semaine" avec timeline + compte à rebours |
+|   ⚪   | [`ST-05.2`](./EP-05-parcours/ST-05.2-soumission-livrable-rapport-harnais.md) | [CUR-51](https://ousmanesadjad.atlassian.net/browse/CUR-51) |   3    |    🔥    |  3  | Soumission livrable + rapport harnais temps réel      |
+|   ⚪   | [`ST-05.3`](./EP-05-parcours/ST-05.3-bouton-je-suis-bloque.md)               | [CUR-52](https://ousmanesadjad.atlassian.net/browse/CUR-52) |   3    |    🔥    |  2  | Bouton "Je suis bloqué" (escalade ciblée)             |
+|   ⚪   | [`ST-05.4`](./EP-05-parcours/ST-05.4-historique-soumissions.md)              | [CUR-53](https://ousmanesadjad.atlassian.net/browse/CUR-53) |   3    |    ⬆️    |  2  | Historique de mes soumissions                         |
+|   ⚪   | [`ST-05.5`](./EP-05-parcours/ST-05.5-onboarding-interactif-premium.md)       | [CUR-54](https://ousmanesadjad.atlassian.net/browse/CUR-54) |   4    |    ⬆️    |  3  | Onboarding interactif premium (product tour)          |
+
+### 🎯 EP-06 — Harness de validation
+
+📋 [Epic JIRA `CUR-6`](https://ousmanesadjad.atlassian.net/browse/CUR-6) · 📁 [Dossier `EP-06-harness/`](./EP-06-harness/) · 📄 [Description Epic](./EP-06-harness/EP-06.md) · **6 stories · 24 pts · Sprint 3 + Sprint 4**
+
+| Status | Story                                                                     | JIRA                                                        | Sprint | Priorité | Pts | Titre                                                |
+| :----: | ------------------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ---------------------------------------------------- |
+|   ⚪   | [`ST-06.1`](./EP-06-harness/ST-06.1-github-app-worker.md)                 | [CUR-55](https://ousmanesadjad.atlassian.net/browse/CUR-55) |   3    |    🔥    |  5  | GitHub App + Worker déclenchement workflow           |
+|   ⚪   | [`ST-06.2`](./EP-06-harness/ST-06.2-bibliotheque-checks-reutilisables.md) | [CUR-56](https://ousmanesadjad.atlassian.net/browse/CUR-56) |   3    |    🔥    |  8  | Bibliothèque checks réutilisables                    |
+|   ⚪   | [`ST-06.3`](./EP-06-harness/ST-06.3-rapport-harnais-lisible.md)           | [CUR-57](https://ousmanesadjad.atlassian.net/browse/CUR-57) |   3    |    🔥    |  3  | Rapport harnais lisible (cartes par check)           |
+|   ⚪   | [`ST-06.4`](./EP-06-harness/ST-06.4-notification-temps-reel.md)           | [CUR-58](https://ousmanesadjad.atlassian.net/browse/CUR-58) |   3    |    🔥    |  3  | Notification temps réel résultat (Supabase Realtime) |
+|   ⚪   | [`ST-06.5`](./EP-06-harness/ST-06.5-override-manuel-formateur.md)         | [CUR-59](https://ousmanesadjad.atlassian.net/browse/CUR-59) |   3    |    🔥    |  2  | Override manuel par formateur                        |
+|   ⚪   | [`ST-06.6`](./EP-06-harness/ST-06.6-queue-inngest-jobs-harness.md)        | [CUR-60](https://ousmanesadjad.atlassian.net/browse/CUR-60) |   4    |    🔥    |  3  | Queue Inngest pour jobs Harness                      |
+
+### 🎯 EP-07 — Quiz
+
+📋 [Epic JIRA `CUR-7`](https://ousmanesadjad.atlassian.net/browse/CUR-7) · 📁 [Dossier `EP-07-quiz/`](./EP-07-quiz/) · 📄 [Description Epic](./EP-07-quiz/EP-07.md) · **3 stories · 8 pts · Sprint 4**
+
+| Status | Story                                                       | JIRA                                                        | Sprint | Priorité | Pts | Titre                                |
+| :----: | ----------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------ |
+|   ⚪   | [`ST-07.1`](./EP-07-quiz/ST-07.1-creation-quiz-builder.md)  | [CUR-61](https://ousmanesadjad.atlassian.net/browse/CUR-61) |   4    |    ⬆️    |  3  | Création de quiz dans builder cursus |
+|   ⚪   | [`ST-07.2`](./EP-07-quiz/ST-07.2-passage-quiz-stagiaire.md) | [CUR-62](https://ousmanesadjad.atlassian.net/browse/CUR-62) |   4    |    ⬆️    |  3  | Passage quiz par stagiaire           |
+|   ⚪   | [`ST-07.3`](./EP-07-quiz/ST-07.3-stats-agregees-quiz.md)    | [CUR-63](https://ousmanesadjad.atlassian.net/browse/CUR-63) |   4    |    ➡️    |  2  | Stats agrégées quiz pour formateur   |
+
+### 🎯 EP-08 — Progress Tracking & Alertes
+
+📋 [Epic JIRA `CUR-8`](https://ousmanesadjad.atlassian.net/browse/CUR-8) · 📁 [Dossier `EP-08-progress/`](./EP-08-progress/) · 📄 [Description Epic](./EP-08-progress/EP-08.md) · **4 stories · 12 pts · Sprint 3 + Sprint 4**
+
+| Status | Story                                                                   | JIRA                                                        | Sprint | Priorité | Pts | Titre                                            |
+| :----: | ----------------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------------------ |
+|   ⚪   | [`ST-08.1`](./EP-08-progress/ST-08.1-machine-etats-progression.md)      | [CUR-64](https://ousmanesadjad.atlassian.net/browse/CUR-64) |   3    |    🔥    |  3  | Machine à états progression (stagiaire × module) |
+|   ⚪   | [`ST-08.2`](./EP-08-progress/ST-08.2-job-nocturne-detection-alertes.md) | [CUR-65](https://ousmanesadjad.atlassian.net/browse/CUR-65) |   3    |    🔥    |  3  | Job nocturne détection alertes                   |
+|   ⚪   | [`ST-08.3`](./EP-08-progress/ST-08.3-gestion-alertes-formateur.md)      | [CUR-66](https://ousmanesadjad.atlassian.net/browse/CUR-66) |   3    |    🔥    |  3  | Gestion alertes côté formateur                   |
+|   ⚪   | [`ST-08.4`](./EP-08-progress/ST-08.4-audit-log-unifie.md)               | [CUR-67](https://ousmanesadjad.atlassian.net/browse/CUR-67) |   4    |    ⬆️    |  3  | Audit log unifié des changements                 |
+
+### 🎯 EP-09 — Capstone & Soutenance
+
+📋 [Epic JIRA `CUR-9`](https://ousmanesadjad.atlassian.net/browse/CUR-9) · 📁 [Dossier `EP-09-capstone/`](./EP-09-capstone/) · 📄 [Description Epic](./EP-09-capstone/EP-09.md) · **4 stories · 10 pts · Sprint 5**
+
+| Status | Story                                                             | JIRA                                                        | Sprint | Priorité | Pts | Titre                                   |
+| :----: | ----------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | --------------------------------------- |
+|   ⚪   | [`ST-09.1`](./EP-09-capstone/ST-09.1-deblocage-soumission.md)     | [CUR-68](https://ousmanesadjad.atlassian.net/browse/CUR-68) |   5    |    ⬆️    |  3  | Déblocage + soumission capstone         |
+|   ⚪   | [`ST-09.2`](./EP-09-capstone/ST-09.2-planification-soutenance.md) | [CUR-69](https://ousmanesadjad.atlassian.net/browse/CUR-69) |   5    |    ⬆️    |  2  | Planification soutenance                |
+|   ⚪   | [`ST-09.3`](./EP-09-capstone/ST-09.3-grille-evaluation.md)        | [CUR-70](https://ousmanesadjad.atlassian.net/browse/CUR-70) |   5    |    ⬆️    |  3  | Grille évaluation + notation soutenance |
+|   ⚪   | [`ST-09.4`](./EP-09-capstone/ST-09.4-retentative-capstone.md)     | [CUR-71](https://ousmanesadjad.atlassian.net/browse/CUR-71) |   5    |    ⬆️    |  2  | Re-tentative capstone                   |
+
+### 🎯 EP-10 — Portfolio & Certification
+
+📋 [Epic JIRA `CUR-10`](https://ousmanesadjad.atlassian.net/browse/CUR-10) · 📁 [Dossier `EP-10-portfolio/`](./EP-10-portfolio/) · 📄 [Description Epic](./EP-10-portfolio/EP-10.md) · **4 stories · 14 pts · Sprint 5**
+
+| Status | Story                                                          | JIRA                                                        | Sprint | Priorité | Pts | Titre                                 |
+| :----: | -------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------- |
+|   ⚪   | [`ST-10.1`](./EP-10-portfolio/ST-10.1-profil-public.md)        | [CUR-72](https://ousmanesadjad.atlassian.net/browse/CUR-72) |   5    |    ⬆️    |  3  | Profil public stagiaire               |
+|   ⚪   | [`ST-10.2`](./EP-10-portfolio/ST-10.2-certificat-pdf-signe.md) | [CUR-73](https://ousmanesadjad.atlassian.net/browse/CUR-73) |   5    |    ⬆️    |  5  | Génération certificat PDF signé       |
+|   ⚪   | [`ST-10.3`](./EP-10-portfolio/ST-10.3-page-verification.md)    | [CUR-74](https://ousmanesadjad.atlassian.net/browse/CUR-74) |   5    |    ⬆️    |  3  | Page publique vérification certificat |
+|   ⚪   | [`ST-10.4`](./EP-10-portfolio/ST-10.4-persona-recruteur.md)    | [CUR-75](https://ousmanesadjad.atlassian.net/browse/CUR-75) |   5    |    ⬆️    |  3  | Persona Recruteur — design dédié      |
+
+### ✨ EP-11 — Gamification (XP & Badges)
+
+📋 [Epic JIRA `CUR-11`](https://ousmanesadjad.atlassian.net/browse/CUR-11) · 📁 [Dossier `EP-11-gamif/`](./EP-11-gamif/) · 📄 [Description Epic](./EP-11-gamif/EP-11.md) · **3 stories · 7 pts · Sprint 4**
+
+| Status | Story                                                | JIRA                                                        | Sprint | Priorité | Pts | Titre                                    |
+| :----: | ---------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ---------------------------------------- |
+|   ⚪   | [`ST-11.1`](./EP-11-gamif/ST-11.1-xp-automatique.md) | [CUR-76](https://ousmanesadjad.atlassian.net/browse/CUR-76) |   4    |    ⬆️    |  2  | Attribution XP automatique               |
+|   ⚪   | [`ST-11.2`](./EP-11-gamif/ST-11.2-systeme-badges.md) | [CUR-77](https://ousmanesadjad.atlassian.net/browse/CUR-77) |   4    |    ⬆️    |  3  | Système badges (règles JSON + déblocage) |
+|   ⚪   | [`ST-11.3`](./EP-11-gamif/ST-11.3-feed-cohorte.md)   | [CUR-78](https://ousmanesadjad.atlassian.net/browse/CUR-78) |   5    |    ⬆️    |  2  | Feed cohorte (positif uniquement)        |
+
+### 🎯 EP-12 — Notifications
+
+📋 [Epic JIRA `CUR-12`](https://ousmanesadjad.atlassian.net/browse/CUR-12) · 📁 [Dossier `EP-12-notifs/`](./EP-12-notifs/) · 📄 [Description Epic](./EP-12-notifs/EP-12.md) · **5 stories · 12 pts · Sprint 3**
+
+| Status | Story                                                     | JIRA                                                        | Sprint | Priorité | Pts | Titre                           |
+| :----: | --------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ------------------------------- |
+|   ⚪   | [`ST-12.1`](./EP-12-notifs/ST-12.1-centre-in-app.md)      | [CUR-79](https://ousmanesadjad.atlassian.net/browse/CUR-79) |   3    |    🔥    |  2  | Centre notifications in-app     |
+|   ⚪   | [`ST-12.2`](./EP-12-notifs/ST-12.2-emails-resend.md)      | [CUR-80](https://ousmanesadjad.atlassian.net/browse/CUR-80) |   3    |    🔥    |  3  | Emails transactionnels (Resend) |
+|   ⚪   | [`ST-12.3`](./EP-12-notifs/ST-12.3-digest-formateur.md)   | [CUR-81](https://ousmanesadjad.atlassian.net/browse/CUR-81) |   4    |    ⬆️    |  2  | Digest quotidien formateur      |
+|   ⚪   | [`ST-12.4`](./EP-12-notifs/ST-12.4-web-push-pwa.md)       | [CUR-82](https://ousmanesadjad.atlassian.net/browse/CUR-82) |   4    |    ⬆️    |  3  | Web Push (PWA prep) — Premium   |
+|   ⚪   | [`ST-12.5`](./EP-12-notifs/ST-12.5-preferences-notifs.md) | [CUR-83](https://ousmanesadjad.atlassian.net/browse/CUR-83) |   4    |    ⬆️    |  2  | Préférences notifications fines |
+
+### 🎯 EP-13 — Dashboards
+
+📋 [Epic JIRA `CUR-13`](https://ousmanesadjad.atlassian.net/browse/CUR-13) · 📁 [Dossier `EP-13-dashboards/`](./EP-13-dashboards/) · 📄 [Description Epic](./EP-13-dashboards/EP-13.md) · **3 stories · 11 pts · Sprint 3**
+
+| Status | Story                                                                  | JIRA                                                        | Sprint | Priorité | Pts | Titre                                         |
+| :----: | ---------------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | --------------------------------------------- |
+|   ⚪   | [`ST-13.1`](./EP-13-dashboards/ST-13.1-dashboard-stagiaire.md)         | [CUR-84](https://ousmanesadjad.atlassian.net/browse/CUR-84) |   3    |    🔥    |  3  | Dashboard stagiaire (sections personnalisées) |
+|   ⚪   | [`ST-13.2`](./EP-13-dashboards/ST-13.2-dashboard-formateur-heatmap.md) | [CUR-85](https://ousmanesadjad.atlassian.net/browse/CUR-85) |   3    |    🔥    |  5  | Dashboard formateur — vue cohorte (heatmap)   |
+|   ⚪   | [`ST-13.3`](./EP-13-dashboards/ST-13.3-fiche-stagiaire-360.md)         | [CUR-86](https://ousmanesadjad.atlassian.net/browse/CUR-86) |   4    |    🔥    |  3  | Fiche stagiaire détaillée (vue 360)           |
+
+### 🎯 EP-14 — Admin & Reporting (v1.1)
+
+📋 [Epic JIRA `CUR-14`](https://ousmanesadjad.atlassian.net/browse/CUR-14) · 📁 [Dossier `EP-14-admin/`](./EP-14-admin/) · 📄 [Description Epic](./EP-14-admin/EP-14.md) · **5 stories · 12 pts · Sprint v1.1**
+
+| Status | Story                                                          | JIRA                                                        | Sprint | Priorité | Pts | Titre                        |
+| :----: | -------------------------------------------------------------- | ----------------------------------------------------------- | :----: | :------: | :-: | ---------------------------- |
+|   ⚪   | [`ST-14.1`](./EP-14-admin/ST-14.1-gestion-users-admin.md)      | [CUR-87](https://ousmanesadjad.atlassian.net/browse/CUR-87) |  v1.1  |    ➡️    |  3  | Gestion utilisateurs admin   |
+|   ⚪   | [`ST-14.2`](./EP-14-admin/ST-14.2-export-reporting-csv.md)     | [CUR-88](https://ousmanesadjad.atlassian.net/browse/CUR-88) |  v1.1  |    ➡️    |  2  | Export reporting CSV         |
+|   ⚪   | [`ST-14.3`](./EP-14-admin/ST-14.3-branding-template-certif.md) | [CUR-89](https://ousmanesadjad.atlassian.net/browse/CUR-89) |  v1.1  |    ➡️    |  2  | Branding template certificat |
+|   ⚪   | [`ST-14.4`](./EP-14-admin/ST-14.4-audit-log-explorer.md)       | [CUR-90](https://ousmanesadjad.atlassian.net/browse/CUR-90) |  v1.1  |    ➡️    |  3  | Audit log explorer UI        |
+|   ⚪   | [`ST-14.5`](./EP-14-admin/ST-14.5-page-admin-monitoring.md)    | [CUR-91](https://ousmanesadjad.atlassian.net/browse/CUR-91) |  v1.1  |    ➡️    |  2  | Page admin monitoring        |
+
+### 🎯 EP-15 — Conformité sécurité RGPD
+
+📋 [Epic JIRA `CUR-15`](https://ousmanesadjad.atlassian.net/browse/CUR-15) · 📁 [Dossier `EP-15-rgpd/`](./EP-15-rgpd/) · 📄 [Description Epic](./EP-15-rgpd/EP-15.md) · **8 stories · 16 pts · Sprint Transverse (CGU + RLS au MVP, autres en v1.1 avant ouverture publique)**
+
+| Status | Story                                                              | JIRA                                                        | Sprint | Priorité | Pts | Titre                               |
+| :----: | ------------------------------------------------------------------ | ----------------------------------------------------------- | :----: | :------: | :-: | ----------------------------------- |
+|   ⚪   | [`ST-15.1`](./EP-15-rgpd/ST-15.1-export-donnees-perso.md)          | [CUR-92](https://ousmanesadjad.atlassian.net/browse/CUR-92) |   1    |    ⬆️    |  2  | Export données personnelles         |
+|   ⚪   | [`ST-15.2`](./EP-15-rgpd/ST-15.2-droit-oubli.md)                   | [CUR-93](https://ousmanesadjad.atlassian.net/browse/CUR-93) |   1    |    ⬆️    |  3  | Droit à l'oubli                     |
+|   ⚪   | [`ST-15.3`](./EP-15-rgpd/ST-15.3-cgu-politique-confidentialite.md) | [CUR-94](https://ousmanesadjad.atlassian.net/browse/CUR-94) |   1    |    🔥    |  2  | CGU + Politique confidentialité     |
+|   ⚪   | [`ST-15.4`](./EP-15-rgpd/ST-15.4-mdp-verrouillage-compte.md)       | [CUR-95](https://ousmanesadjad.atlassian.net/browse/CUR-95) |   1    |    🔥    |  2  | Politique mdp + verrouillage compte |
+|   ⚪   | [`ST-15.5`](./EP-15-rgpd/ST-15.5-cookies-banner.md)                | [CUR-96](https://ousmanesadjad.atlassian.net/browse/CUR-96) |   1    |    ⬆️    |  1  | Cookies banner conformité           |
+|   ⚪   | [`ST-15.6`](./EP-15-rgpd/ST-15.6-audit-rls-exhaustif.md)           | [CUR-97](https://ousmanesadjad.atlassian.net/browse/CUR-97) |   1    |    🔥    |  3  | Audit RLS exhaustif                 |
+|   ⚪   | [`ST-15.7`](./EP-15-rgpd/ST-15.7-runbook-incident-securite.md)     | [CUR-98](https://ousmanesadjad.atlassian.net/browse/CUR-98) |   1    |    ⬆️    |  2  | Plan réponse incident sécurité      |
+|   ⚪   | [`ST-15.8`](./EP-15-rgpd/ST-15.8-politique-retention.md)           | [CUR-99](https://ousmanesadjad.atlassian.net/browse/CUR-99) |   1    |    ⬆️    |  1  | Politique rétention                 |
+
+### 🎯 EP-16 — Observabilité & QA
+
+📋 [Epic JIRA `CUR-16`](https://ousmanesadjad.atlassian.net/browse/CUR-16) · 📁 [Dossier `EP-16-observabilite/`](./EP-16-observabilite/) · 📄 [Description Epic](./EP-16-observabilite/EP-16.md) · **10 stories · 22 pts · Sprint Transverse (ST-16.1, 16.2 dès S1 ; ST-16.4, 16.5, 16.6 en S5 ; reste en v1.1)**
+
+| Status | Story                                                                     | JIRA                                                          | Sprint | Priorité | Pts | Titre                                        |
+| :----: | ------------------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | -------------------------------------------- |
+|   ⚪   | [`ST-16.1`](./EP-16-observabilite/ST-16.1-logs-structures-pino.md)        | [CUR-100](https://ousmanesadjad.atlassian.net/browse/CUR-100) |   1    |    🔥    |  0  | Logs structurés Pino                         |
+|   ⚪   | [`ST-16.10`](./EP-16-observabilite/ST-16.10-storybook-chromatic.md)       | [CUR-109](https://ousmanesadjad.atlassian.net/browse/CUR-109) |   1    |    ⬆️    |  3  | Storybook + Chromatic                        |
+|   ⚪   | [`ST-16.2`](./EP-16-observabilite/ST-16.2-sentry-frontend-backend.md)     | [CUR-101](https://ousmanesadjad.atlassian.net/browse/CUR-101) |   1    |    🔥    |  0  | Sentry frontend + backend                    |
+|   ⚪   | [`ST-16.3`](./EP-16-observabilite/ST-16.3-metriques-produit-plausible.md) | [CUR-102](https://ousmanesadjad.atlassian.net/browse/CUR-102) |   1    |    ⬆️    |  2  | Métriques produit (Plausible/PostHog)        |
+|   ⚪   | [`ST-16.4`](./EP-16-observabilite/ST-16.4-tests-e2e-playwright.md)        | [CUR-103](https://ousmanesadjad.atlassian.net/browse/CUR-103) |   1    |    🔥    |  5  | Tests E2E Playwright (5 parcours critiques)  |
+|   ⚪   | [`ST-16.5`](./EP-16-observabilite/ST-16.5-tests-integration-harnais.md)   | [CUR-104](https://ousmanesadjad.atlassian.net/browse/CUR-104) |   1    |    🔥    |  3  | Tests intégration harnais sur repos fixtures |
+|   ⚪   | [`ST-16.6`](./EP-16-observabilite/ST-16.6-lighthouse-ci-perf-budget.md)   | [CUR-105](https://ousmanesadjad.atlassian.net/browse/CUR-105) |   1    |    ⬆️    |  2  | Lighthouse CI + perf budget                  |
+|   ⚪   | [`ST-16.7`](./EP-16-observabilite/ST-16.7-alertes-operationnelles.md)     | [CUR-106](https://ousmanesadjad.atlassian.net/browse/CUR-106) |   1    |    🔥    |  2  | Alertes opérationnelles                      |
+|   ⚪   | [`ST-16.8`](./EP-16-observabilite/ST-16.8-dashboard-ops-grafana.md)       | [CUR-107](https://ousmanesadjad.atlassian.net/browse/CUR-107) |   1    |    ➡️    |  3  | Dashboard ops Grafana                        |
+|   ⚪   | [`ST-16.9`](./EP-16-observabilite/ST-16.9-runbook-incident.md)            | [CUR-108](https://ousmanesadjad.atlassian.net/browse/CUR-108) |   1    |    ⬆️    |  2  | Runbook incident                             |
+
+### 🎯 EP-17 — Pilote & déploiement
+
+📋 [Epic JIRA `CUR-17`](https://ousmanesadjad.atlassian.net/browse/CUR-17) · 📁 [Dossier `EP-17-pilote/`](./EP-17-pilote/) · 📄 [Description Epic](./EP-17-pilote/EP-17.md) · **7 stories · 14 pts · Sprint 5 + Sprint 6 (pilote en semaines 6-8)**
+
+| Status | Story                                                             | JIRA                                                          | Sprint | Priorité | Pts | Titre                                    |
+| :----: | ----------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | ---------------------------------------- |
+|   ⚪   | [`ST-17.1`](./EP-17-pilote/ST-17.1-recrutement-cohorte-pilote.md) | [CUR-110](https://ousmanesadjad.atlassian.net/browse/CUR-110) |   5    |    🔥    |  2  | Recrutement cohorte pilote               |
+|   ⚪   | [`ST-17.2`](./EP-17-pilote/ST-17.2-preparation-cursus-pilote.md)  | [CUR-111](https://ousmanesadjad.atlassian.net/browse/CUR-111) |   5    |    🔥    |  3  | Préparation cursus pilote                |
+|   ⚪   | [`ST-17.3`](./EP-17-pilote/ST-17.3-pre-vol-tests-internes.md)     | [CUR-112](https://ousmanesadjad.atlassian.net/browse/CUR-112) |   5    |    🔥    |  2  | Pré-vol tests internes 2 jours           |
+|   ⚪   | [`ST-17.4`](./EP-17-pilote/ST-17.4-lancement-accompagnement.md)   | [CUR-113](https://ousmanesadjad.atlassian.net/browse/CUR-113) |   6    |    🔥    |  3  | Lancement + accompagnement 3 semaines    |
+|   ⚪   | [`ST-17.5`](./EP-17-pilote/ST-17.5-mesure-metriques-retro.md)     | [CUR-114](https://ousmanesadjad.atlassian.net/browse/CUR-114) |   6    |    🔥    |  2  | Mesure métriques + rétrospective         |
+|   ⚪   | [`ST-17.6`](./EP-17-pilote/ST-17.6-decision-go-nogo.md)           | [CUR-115](https://ousmanesadjad.atlassian.net/browse/CUR-115) |   6    |    🔥    |  1  | Décision Go/No-Go v1.0 + plan ajustement |
+|   ⚪   | [`ST-17.7`](./EP-17-pilote/ST-17.7-communication-officielle.md)   | [CUR-116](https://ousmanesadjad.atlassian.net/browse/CUR-116) |   6    |    ⬆️    |  1  | Communication officielle                 |
+
+### ✨ EP-18 — Design System & Motion (Premium)
+
+📋 [Epic JIRA `CUR-18`](https://ousmanesadjad.atlassian.net/browse/CUR-18) · 📁 [Dossier `EP-18-design-system/`](./EP-18-design-system/) · 📄 [Description Epic](./EP-18-design-system/EP-18.md) · **8 stories · 25 pts · Sprint 1 → Sprint 4 (en parallèle des Epics métier)**
+
+| Status | Story                                                                | JIRA                                                          | Sprint | Priorité | Pts | Titre                                      |
+| :----: | -------------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------------ |
+|   ⚪   | [`ST-18.1`](./EP-18-design-system/ST-18.1-design-tokens.md)          | [CUR-117](https://ousmanesadjad.atlassian.net/browse/CUR-117) |   1    |    🔥    |  2  | Design tokens                              |
+|   ⚪   | [`ST-18.2`](./EP-18-design-system/ST-18.2-setup-ui-lib.md)           | [CUR-118](https://ousmanesadjad.atlassian.net/browse/CUR-118) |   1    |    🔥    |  3  | Setup UI lib (@nuxt/ui ou custom Tailwind) |
+|   ⚪   | [`ST-18.3`](./EP-18-design-system/ST-18.3-atomes-storybook.md)       | [CUR-119](https://ousmanesadjad.atlassian.net/browse/CUR-119) |   2    |    🔥    |  5  | Atomes composants + Storybook              |
+|   ⚪   | [`ST-18.4`](./EP-18-design-system/ST-18.4-molecules-composants.md)   | [CUR-120](https://ousmanesadjad.atlassian.net/browse/CUR-120) |   3    |    🔥    |  5  | Molécules composants                       |
+|   ⚪   | [`ST-18.5`](./EP-18-design-system/ST-18.5-dark-light-mode.md)        | [CUR-121](https://ousmanesadjad.atlassian.net/browse/CUR-121) |   2    |    🔥    |  3  | Dark / Light mode                          |
+|   ⚪   | [`ST-18.6`](./EP-18-design-system/ST-18.6-motion-design.md)          | [CUR-122](https://ousmanesadjad.atlassian.net/browse/CUR-122) |   3    |    ⬆️    |  3  | Motion design                              |
+|   ⚪   | [`ST-18.7`](./EP-18-design-system/ST-18.7-skeleton-loaders.md)       | [CUR-123](https://ousmanesadjad.atlassian.net/browse/CUR-123) |   4    |    ⬆️    |  2  | Skeleton loaders sur écrans clés           |
+|   ⚪   | [`ST-18.8`](./EP-18-design-system/ST-18.8-empty-states-illustres.md) | [CUR-124](https://ousmanesadjad.atlassian.net/browse/CUR-124) |   4    |    ⬆️    |  2  | Empty states illustrés (10 écrans)         |
+
+### ✨ EP-19 — Internationalisation FR + EN
+
+📋 [Epic JIRA `CUR-19`](https://ousmanesadjad.atlassian.net/browse/CUR-19) · 📁 [Dossier `EP-19-i18n/`](./EP-19-i18n/) · 📄 [Description Epic](./EP-19-i18n/EP-19.md) · **6 stories · 15 pts · Sprint 1 → Sprint 4**
+
+| Status | Story                                                               | JIRA                                                          | Sprint | Priorité | Pts | Titre                                   |
+| :----: | ------------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | --------------------------------------- |
+|   ⚪   | [`ST-19.1`](./EP-19-i18n/ST-19.1-setup-nuxtjs-i18n.md)              | [CUR-125](https://ousmanesadjad.atlassian.net/browse/CUR-125) |   1    |    ⬆️    |  2  | Setup @nuxtjs/i18n                      |
+|   ⚪   | [`ST-19.2`](./EP-19-i18n/ST-19.2-extraction-strings-ui.md)          | [CUR-126](https://ousmanesadjad.atlassian.net/browse/CUR-126) |   2    |    ⬆️    |  3  | Extraction strings UI dans locales/     |
+|   ⚪   | [`ST-19.3`](./EP-19-i18n/ST-19.3-traduction-en-initiale.md)         | [CUR-127](https://ousmanesadjad.atlassian.net/browse/CUR-127) |   3    |    ⬆️    |  3  | Traduction EN initiale                  |
+|   ⚪   | [`ST-19.4`](./EP-19-i18n/ST-19.4-i18n-cote-serveur.md)              | [CUR-128](https://ousmanesadjad.atlassian.net/browse/CUR-128) |   3    |    ⬆️    |  3  | i18n côté serveur                       |
+|   ⚪   | [`ST-19.5`](./EP-19-i18n/ST-19.5-detection-navigateur-selecteur.md) | [CUR-129](https://ousmanesadjad.atlassian.net/browse/CUR-129) |   4    |    ⬆️    |  2  | Détection navigateur + sélecteur langue |
+|   ⚪   | [`ST-19.6`](./EP-19-i18n/ST-19.6-lint-no-hardcoded-strings.md)      | [CUR-130](https://ousmanesadjad.atlassian.net/browse/CUR-130) |   4    |    ➡️    |  2  | Lint rule — aucune string codée en dur  |
+
+### ✨ EP-20 — Command Palette & Search global
+
+📋 [Epic JIRA `CUR-20`](https://ousmanesadjad.atlassian.net/browse/CUR-20) · 📁 [Dossier `EP-20-command-palette/`](./EP-20-command-palette/) · 📄 [Description Epic](./EP-20-command-palette/EP-20.md) · **6 stories · 14 pts · Sprint 4**
+
+| Status | Story                                                                     | JIRA                                                          | Sprint | Priorité | Pts | Titre                                 |
+| :----: | ------------------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------- |
+|   ⚪   | [`ST-20.1`](./EP-20-command-palette/ST-20.1-setup-command-palette.md)     | [CUR-131](https://ousmanesadjad.atlassian.net/browse/CUR-131) |   4    |    ⬆️    |  3  | Setup Command Palette                 |
+|   ⚪   | [`ST-20.2`](./EP-20-command-palette/ST-20.2-index-searchable.md)          | [CUR-132](https://ousmanesadjad.atlassian.net/browse/CUR-132) |   4    |    ⬆️    |  3  | Index searchable                      |
+|   ⚪   | [`ST-20.3`](./EP-20-command-palette/ST-20.3-actions-contextuelles.md)     | [CUR-133](https://ousmanesadjad.atlassian.net/browse/CUR-133) |   4    |    ⬆️    |  2  | Actions contextuelles dans la palette |
+|   ⚪   | [`ST-20.4`](./EP-20-command-palette/ST-20.4-postgres-fts.md)              | [CUR-134](https://ousmanesadjad.atlassian.net/browse/CUR-134) |   4    |    ⬆️    |  3  | Recherche globale Postgres FTS        |
+|   ⚪   | [`ST-20.5`](./EP-20-command-palette/ST-20.5-shortcuts-clavier-globaux.md) | [CUR-135](https://ousmanesadjad.atlassian.net/browse/CUR-135) |   4    |    ⬆️    |  2  | Shortcuts clavier globaux             |
+|   ⚪   | [`ST-20.6`](./EP-20-command-palette/ST-20.6-aide-integree-palette.md)     | [CUR-136](https://ousmanesadjad.atlassian.net/browse/CUR-136) |   4    |    ➡️    |  1  | Aide intégrée dans la palette         |
+
+### 🚀 EP-21 — AI Assist (Differentiator v1.1)
+
+📋 [Epic JIRA `CUR-21`](https://ousmanesadjad.atlassian.net/browse/CUR-21) · 📁 [Dossier `EP-21-ai-assist/`](./EP-21-ai-assist/) · 📄 [Description Epic](./EP-21-ai-assist/EP-21.md) · **6 stories · 21 pts · Sprint v1.1**
+
+| Status | Story                                                             | JIRA                                                          | Sprint | Priorité | Pts | Titre                                  |
+| :----: | ----------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | -------------------------------------- |
+|   ⚪   | [`ST-21.1`](./EP-21-ai-assist/ST-21.1-generation-quiz-module.md)  | [CUR-137](https://ousmanesadjad.atlassian.net/browse/CUR-137) |  v1.1  |    ➡️    |  5  | Génération assistée quiz depuis module |
+|   ⚪   | [`ST-21.2`](./EP-21-ai-assist/ST-21.2-resume-rapport-harnais.md)  | [CUR-138](https://ousmanesadjad.atlassian.net/browse/CUR-138) |  v1.1  |    ➡️    |  3  | Résumé intelligent rapport harnais     |
+|   ⚪   | [`ST-21.3`](./EP-21-ai-assist/ST-21.3-suggestion-ressources.md)   | [CUR-139](https://ousmanesadjad.atlassian.net/browse/CUR-139) |  v1.1  |    ➡️    |  3  | Suggestion auto ressources             |
+|   ⚪   | [`ST-21.4`](./EP-21-ai-assist/ST-21.4-detection-patterns-quiz.md) | [CUR-140](https://ousmanesadjad.atlassian.net/browse/CUR-140) |  v1.1  |    ➡️    |  5  | Détection patterns résultats quiz      |
+|   ⚪   | [`ST-21.5`](./EP-21-ai-assist/ST-21.5-garde-fous-ia.md)           | [CUR-141](https://ousmanesadjad.atlassian.net/browse/CUR-141) |  v1.1  |    ➡️    |  3  | Garde-fous IA                          |
+|   ⚪   | [`ST-21.6`](./EP-21-ai-assist/ST-21.6-metriques-usage-cout.md)    | [CUR-142](https://ousmanesadjad.atlassian.net/browse/CUR-142) |  v1.1  |    ➡️    |  2  | Métriques usage IA + coût              |
+
+### 🚀 EP-22 — Integrations & Webhooks (Differentiator v1.1)
+
+📋 [Epic JIRA `CUR-22`](https://ousmanesadjad.atlassian.net/browse/CUR-22) · 📁 [Dossier `EP-22-integrations/`](./EP-22-integrations/) · 📄 [Description Epic](./EP-22-integrations/EP-22.md) · **6 stories · 17 pts · Sprint v1.1**
+
+| Status | Story                                                                    | JIRA                                                          | Sprint | Priorité | Pts | Titre                           |
+| :----: | ------------------------------------------------------------------------ | ------------------------------------------------------------- | :----: | :------: | :-: | ------------------------------- |
+|   ⚪   | [`ST-22.1`](./EP-22-integrations/ST-22.1-connecteur-slack.md)            | [CUR-143](https://ousmanesadjad.atlassian.net/browse/CUR-143) |  v1.1  |    ➡️    |  3  | Connecteur Slack                |
+|   ⚪   | [`ST-22.2`](./EP-22-integrations/ST-22.2-connecteur-discord.md)          | [CUR-144](https://ousmanesadjad.atlassian.net/browse/CUR-144) |  v1.1  |    ➡️    |  3  | Connecteur Discord              |
+|   ⚪   | [`ST-22.3`](./EP-22-integrations/ST-22.3-connecteur-ms-teams.md)         | [CUR-145](https://ousmanesadjad.atlassian.net/browse/CUR-145) |  v1.1  |    ➡️    |  3  | Connecteur MS Teams             |
+|   ⚪   | [`ST-22.4`](./EP-22-integrations/ST-22.4-integration-google-calendar.md) | [CUR-146](https://ousmanesadjad.atlassian.net/browse/CUR-146) |  v1.1  |    ➡️    |  3  | Intégration Google Calendar     |
+|   ⚪   | [`ST-22.5`](./EP-22-integrations/ST-22.5-webhooks-sortants.md)           | [CUR-147](https://ousmanesadjad.atlassian.net/browse/CUR-147) |  v1.1  |    ➡️    |  3  | Webhooks sortants configurables |
+|   ⚪   | [`ST-22.6`](./EP-22-integrations/ST-22.6-ui-config-integrations.md)      | [CUR-148](https://ousmanesadjad.atlassian.net/browse/CUR-148) |  v1.1  |    ➡️    |  2  | UI configuration intégrations   |
+
+### 🚀 EP-23 — Premium Reporting (Differentiator v1.2)
+
+📋 [Epic JIRA `CUR-23`](https://ousmanesadjad.atlassian.net/browse/CUR-23) · 📁 [Dossier `EP-23-reporting/`](./EP-23-reporting/) · 📄 [Description Epic](./EP-23-reporting/EP-23.md) · **5 stories · 14 pts · Sprint v1.2**
+
+| Status | Story                                                                | JIRA                                                          | Sprint | Priorité | Pts | Titre                        |
+| :----: | -------------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | ---------------------------- |
+|   ⚪   | [`ST-23.1`](./EP-23-reporting/ST-23.1-graphes-evolution-cohorte.md)  | [CUR-149](https://ousmanesadjad.atlassian.net/browse/CUR-149) |  v1.1  |    ➡️    |  3  | Graphes évolution cohorte    |
+|   ⚪   | [`ST-23.2`](./EP-23-reporting/ST-23.2-heatmap-activite.md)           | [CUR-150](https://ousmanesadjad.atlassian.net/browse/CUR-150) |  v1.1  |    ➡️    |  3  | Heatmap activité cohorte     |
+|   ⚪   | [`ST-23.3`](./EP-23-reporting/ST-23.3-comparaison-inter-cohortes.md) | [CUR-151](https://ousmanesadjad.atlassian.net/browse/CUR-151) |  v1.1  |    ➡️    |  3  | Comparaison inter-cohortes   |
+|   ⚪   | [`ST-23.4`](./EP-23-reporting/ST-23.4-export-pdf-rapports.md)        | [CUR-152](https://ousmanesadjad.atlassian.net/browse/CUR-152) |  v1.1  |    ➡️    |  3  | Export PDF rapports          |
+|   ⚪   | [`ST-23.5`](./EP-23-reporting/ST-23.5-rapport-annuel-formateur.md)   | [CUR-153](https://ousmanesadjad.atlassian.net/browse/CUR-153) |  v1.1  |    ➡️    |  2  | Rapport annuel par formateur |
+
+### ✨ EP-24 — PWA & Offline lite (Premium v1.2)
+
+📋 [Epic JIRA `CUR-24`](https://ousmanesadjad.atlassian.net/browse/CUR-24) · 📁 [Dossier `EP-24-pwa/`](./EP-24-pwa/) · 📄 [Description Epic](./EP-24-pwa/EP-24.md) · **5 stories · 12 pts · Sprint v1.2**
+
+| Status | Story                                                           | JIRA                                                          | Sprint | Priorité | Pts | Titre                                 |
+| :----: | --------------------------------------------------------------- | ------------------------------------------------------------- | :----: | :------: | :-: | ------------------------------------- |
+|   ⚪   | [`ST-24.1`](./EP-24-pwa/ST-24.1-manifest-pwa-install.md)        | [CUR-154](https://ousmanesadjad.atlassian.net/browse/CUR-154) |  v1.1  |    ⬇️    |  2  | Manifest PWA + install prompt         |
+|   ⚪   | [`ST-24.2`](./EP-24-pwa/ST-24.2-service-worker-swr.md)          | [CUR-155](https://ousmanesadjad.atlassian.net/browse/CUR-155) |  v1.1  |    ⬇️    |  3  | Service worker stale-while-revalidate |
+|   ⚪   | [`ST-24.3`](./EP-24-pwa/ST-24.3-lecture-modules-offline.md)     | [CUR-156](https://ousmanesadjad.atlassian.net/browse/CUR-156) |  v1.1  |    ⬇️    |  3  | Lecture modules en offline lite       |
+|   ⚪   | [`ST-24.4`](./EP-24-pwa/ST-24.4-soumission-differee-offline.md) | [CUR-157](https://ousmanesadjad.atlassian.net/browse/CUR-157) |  v1.1  |    ⬇️    |  3  | Soumission différée offline           |
+|   ⚪   | [`ST-24.5`](./EP-24-pwa/ST-24.5-indicateur-etat-reseau.md)      | [CUR-158](https://ousmanesadjad.atlassian.net/browse/CUR-158) |  v1.1  |    ⬇️    |  1  | Indicateur état réseau                |
+
+---
+
+## ⚡ Commandes Claude Code
+
+```bash
+# Audit qualité des 158 task files (checklist 12 critères)
+/audit-tasks
+
+# Vue d'ensemble dynamique en temps réel
+/status
+
+# Démarrer une story spécifique (lecture + branche + impl + tests + PR)
+/start-task ST-01.6
+
+# Enchaîner toutes les stories d'un sprint en autonomie
+/start-sprint 1
+
+# Re-sync depuis JIRA (pull les modifs faites en ligne)
+/sync-jira pull
+```
+
+---
+
+## 🚀 Chemin recommandé d'attaque
+
+1. **Sprint 0 — Spike harnais** (3 jours) : `/start-task ST-01.6` → valide l'hypothèse #1 du produit. Si Go, ADR-002 commit, on enchaîne.
+2. **Sprint 1** (1-2 semaines, 33 stories) : `/start-sprint 1` → fondations + Identity + transverses. L'agent travaille 6-10h en background.
+3. **Sprint 2-5** (4-5 semaines) : itérer sprint par sprint. Pause humaine entre chaque pour reviewer les bloquages.
+4. **Sprint 6+** : pilote en conditions réelles avec 3-5 stagiaires.
+5. **v1.1+** : enrichissements post-MVP (AI Assist, Integrations, Admin).
+
+Détail jour-par-jour : voir [`_workflow.md`](./_workflow.md).
