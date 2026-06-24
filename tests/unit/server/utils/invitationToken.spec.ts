@@ -51,8 +51,11 @@ describe('server/utils/invitationToken', () => {
     );
     const token = await signInvitationToken(PAYLOAD, 7);
     // Altérer les 5 derniers caractères de la signature (3e segment)
-    const [header, claims, sig] = token.split('.');
-    const tampered = `${header}.${claims}.${sig!.slice(0, -5)}XXXXX`;
+    const parts = token.split('.');
+    const header = parts[0] ?? '';
+    const claims = parts[1] ?? '';
+    const sig = parts[2] ?? '';
+    const tampered = `${header}.${claims}.${sig.slice(0, -5)}XXXXX`;
 
     await expect(verifyInvitationToken(tampered)).rejects.toThrow();
   });

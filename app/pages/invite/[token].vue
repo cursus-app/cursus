@@ -73,7 +73,9 @@ function getErrorMessage(key: string): string {
 
 /** Libellé lisible du rôle */
 const roleLabel = computed(() => {
-  if (!invitation.value) return '';
+  if (!invitation.value) {
+    return '';
+  }
   return invitation.value.role === 'CO_FORMATEUR' ? 'Co-formateur' : 'Stagiaire';
 });
 </script>
