@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import CBadge from './CBadge.vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import CBadge from './CBadge.vue';
 
 const meta: Meta<typeof CBadge> = {
   title: 'Atoms/Badge',
@@ -25,10 +25,10 @@ const meta: Meta<typeof CBadge> = {
     },
   },
   args: { variant: 'default', size: 'md' },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
@@ -36,7 +36,7 @@ export const Default: Story = {
     setup: () => ({ args }),
     template: '<CBadge v-bind="args">Brouillon</CBadge>',
   }),
-}
+};
 
 export const Success: Story = {
   args: { variant: 'success' },
@@ -45,7 +45,7 @@ export const Success: Story = {
     setup: () => ({ args }),
     template: '<CBadge v-bind="args">Validé</CBadge>',
   }),
-}
+};
 
 export const Warning: Story = {
   args: { variant: 'warning' },
@@ -54,7 +54,7 @@ export const Warning: Story = {
     setup: () => ({ args }),
     template: '<CBadge v-bind="args">En attente</CBadge>',
   }),
-}
+};
 
 export const Danger: Story = {
   args: { variant: 'danger' },
@@ -63,7 +63,7 @@ export const Danger: Story = {
     setup: () => ({ args }),
     template: '<CBadge v-bind="args">Rejeté</CBadge>',
   }),
-}
+};
 
 export const Info: Story = {
   args: { variant: 'info' },
@@ -72,7 +72,7 @@ export const Info: Story = {
     setup: () => ({ args }),
     template: '<CBadge v-bind="args">Info</CBadge>',
   }),
-}
+};
 
 export const AllVariants: Story = {
   parameters: { controls: { disable: true } },
@@ -88,7 +88,7 @@ export const AllVariants: Story = {
       </div>
     `,
   }),
-}
+};
 
 export const AllSizes: Story = {
   parameters: { controls: { disable: true } },
@@ -101,4 +101,4 @@ export const AllSizes: Story = {
       </div>
     `,
   }),
-}
+};

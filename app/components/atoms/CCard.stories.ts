@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import CCard from './CCard.vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import CCard from './CCard.vue';
 
 const meta: Meta<typeof CCard> = {
   title: 'Atoms/Card',
@@ -18,10 +18,10 @@ const meta: Meta<typeof CCard> = {
     },
   },
   args: { padding: 'md' },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
@@ -34,7 +34,7 @@ export const Default: Story = {
       </CCard>
     `,
   }),
-}
+};
 
 export const WithTitle: Story = {
   render: (args) => ({
@@ -50,7 +50,7 @@ export const WithTitle: Story = {
       </CCard>
     `,
   }),
-}
+};
 
 export const AllPaddings: Story = {
   parameters: { controls: { disable: true } },
@@ -64,4 +64,4 @@ export const AllPaddings: Story = {
       </div>
     `,
   }),
-}
+};

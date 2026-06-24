@@ -12,12 +12,12 @@
  */
 
 interface Props {
-  modelValue?: string | null
-  placeholder?: string | null
-  disabled?: boolean
-  error?: string | null
-  label?: string | null
-  type?: string
+  modelValue?: string | null;
+  placeholder?: string | null;
+  disabled?: boolean;
+  error?: string | null;
+  label?: string | null;
+  type?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,17 +27,14 @@ const props = withDefaults(defineProps<Props>(), {
   error: null,
   label: null,
   disabled: false,
-})
+});
 
-const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
 </script>
 
 <template>
   <div class="flex flex-col gap-1.5">
-    <label
-      v-if="props.label"
-      class="text-sm font-medium text-text-strong"
-    >
+    <label v-if="props.label" class="text-sm font-medium text-text-strong">
       {{ props.label }}
     </label>
     <input
@@ -49,21 +46,16 @@ const emit = defineEmits<{ 'update:modelValue': [value: string] }>()
       :aria-describedby="props.error ? 'input-error' : undefined"
       :class="[
         'flex w-full rounded-lg border bg-surface px-3 py-2 text-sm text-text-default',
-        'placeholder:text-text-subtle transition-colors',
-        'focus:outline-none focus:ring-2 focus:ring-ring',
-        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'transition-colors placeholder:text-text-subtle',
+        'focus:ring-2 focus:ring-ring focus:outline-none',
+        'disabled:cursor-not-allowed disabled:opacity-50',
         props.error
           ? 'border-danger-solid focus:ring-danger-solid/20'
           : 'border-border-subtle hover:border-border-default',
       ]"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-    >
-    <p
-      v-if="props.error"
-      id="input-error"
-      role="alert"
-      class="text-xs text-danger-fg"
-    >
+    />
+    <p v-if="props.error" id="input-error" role="alert" class="text-xs text-danger-fg">
       {{ props.error }}
     </p>
   </div>

@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/vue3'
-import '../assets/css/main.css'
+import type { Preview } from '@storybook/vue3';
+import '../assets/css/main.css';
 
 const preview: Preview = {
   parameters: {
@@ -38,18 +38,18 @@ const preview: Preview = {
   },
   decorators: [
     (story, context) => {
-      const theme = (context.globals['theme'] ?? 'light') as string
+      const theme = (context.globals['theme'] ?? 'light') as string;
       return {
         setup() {
-          return { theme }
+          return { theme };
         },
         template: `<div
           :class="theme === 'dark' ? 'dark bg-app' : 'bg-app'"
           style="min-height: 100vh; padding: 1.5rem; box-sizing: border-box;"
         ><story /></div>`,
-      }
+      };
     },
   ],
-}
+};
 
-export default preview
+export default preview;

@@ -18,8 +18,8 @@
  * Le composant réel reste `app/components/molecules/CookieNoticeBanner.vue`.
  */
 
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import { defineComponent, ref } from 'vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { defineComponent, ref } from 'vue';
 
 // Composant de prévisualisation locale (fidèle visuellement, sans Nuxt runtime)
 const CookieNoticeBannerPreview = defineComponent({
@@ -28,15 +28,15 @@ const CookieNoticeBannerPreview = defineComponent({
     visible: { type: Boolean, default: true },
   },
   setup(props) {
-    const dismissed = ref(false)
-    const isVisible = ref(props.visible)
+    const dismissed = ref(false);
+    const isVisible = ref(props.visible);
 
     function dismiss() {
-      dismissed.value = true
-      isVisible.value = false
+      dismissed.value = true;
+      isVisible.value = false;
     }
 
-    return { isVisible, dismissed, dismiss }
+    return { isVisible, dismissed, dismiss };
   },
   template: `
     <div style="position: relative; min-height: 80px;">
@@ -81,7 +81,7 @@ const CookieNoticeBannerPreview = defineComponent({
       </p>
     </div>
   `,
-})
+});
 
 const meta: Meta = {
   title: 'Molecules/CookieNoticeBanner',
@@ -112,10 +112,10 @@ Pour supprimer cette limitation, extraire une version UI pure dans
     },
   },
   args: { visible: true },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
@@ -123,7 +123,7 @@ export const Default: Story = {
     setup: () => ({ args }),
     template: '<CookieNoticeBannerPreview v-bind="args" />',
   }),
-}
+};
 
 export const Hidden: Story = {
   args: { visible: false },
@@ -132,4 +132,4 @@ export const Hidden: Story = {
     setup: () => ({ args }),
     template: '<CookieNoticeBannerPreview v-bind="args" />',
   }),
-}
+};

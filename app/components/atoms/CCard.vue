@@ -6,17 +6,17 @@
  */
 
 interface Props {
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
-const { padding = 'md' } = defineProps<Props>()
+const { padding = 'md' } = defineProps<Props>();
 
 const paddingClasses: Record<NonNullable<Props['padding']>, string> = {
   none: '',
   sm: 'p-3',
   md: 'p-6',
   lg: 'p-8',
-}
+};
 </script>
 
 <template>

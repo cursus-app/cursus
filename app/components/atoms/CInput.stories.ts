@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import CInput from './CInput.vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import CInput from './CInput.vue';
 
 const meta: Meta<typeof CInput> = {
   title: 'Atoms/Input',
@@ -12,7 +12,7 @@ const meta: Meta<typeof CInput> = {
     modelValue: { control: 'text', description: 'Valeur du champ (v-model)' },
     label: { control: 'text', description: 'Label affiché au-dessus du champ' },
     placeholder: { control: 'text', description: 'Texte placeholder' },
-    error: { control: 'text', description: 'Message d\'erreur (vide = pas d\'erreur)' },
+    error: { control: 'text', description: "Message d'erreur (vide = pas d'erreur)" },
     disabled: { control: 'boolean', description: 'Désactive le champ' },
     type: {
       control: 'select',
@@ -28,16 +28,16 @@ const meta: Meta<typeof CInput> = {
     type: 'text',
     error: null,
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const WithValue: Story = {
   args: { modelValue: 'stagiaire@cursus.app' },
-}
+};
 
 export const WithError: Story = {
   args: {
@@ -45,7 +45,7 @@ export const WithError: Story = {
     modelValue: 'bad-email',
     error: 'Format email invalide',
   },
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -53,7 +53,7 @@ export const Disabled: Story = {
     modelValue: 'read@only.com',
     disabled: true,
   },
-}
+};
 
 export const Password: Story = {
   args: {
@@ -62,7 +62,7 @@ export const Password: Story = {
     type: 'password',
     modelValue: null,
   },
-}
+};
 
 export const AllStates: Story = {
   parameters: { controls: { disable: true } },
@@ -77,4 +77,4 @@ export const AllStates: Story = {
       </div>
     `,
   }),
-}
+};

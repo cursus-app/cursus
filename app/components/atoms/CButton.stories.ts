@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3-vite'
-import CButton from './CButton.vue'
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import CButton from './CButton.vue';
 
 const meta: Meta<typeof CButton> = {
   title: 'Atoms/Button',
@@ -38,10 +38,10 @@ const meta: Meta<typeof CButton> = {
     disabled: false,
     loading: false,
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   render: (args) => ({
@@ -49,7 +49,7 @@ export const Primary: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Continuer</CButton>',
   }),
-}
+};
 
 export const Secondary: Story = {
   args: { variant: 'secondary' },
@@ -58,7 +58,7 @@ export const Secondary: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Annuler</CButton>',
   }),
-}
+};
 
 export const Ghost: Story = {
   args: { variant: 'ghost' },
@@ -67,7 +67,7 @@ export const Ghost: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Voir plus</CButton>',
   }),
-}
+};
 
 export const Danger: Story = {
   args: { variant: 'danger' },
@@ -76,7 +76,7 @@ export const Danger: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Supprimer</CButton>',
   }),
-}
+};
 
 export const Loading: Story = {
   args: { loading: true },
@@ -85,7 +85,7 @@ export const Loading: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Chargement...</CButton>',
   }),
-}
+};
 
 export const Disabled: Story = {
   args: { disabled: true },
@@ -94,7 +94,7 @@ export const Disabled: Story = {
     setup: () => ({ args }),
     template: '<CButton v-bind="args">Désactivé</CButton>',
   }),
-}
+};
 
 export const AllVariants: Story = {
   parameters: { controls: { disable: true } },
@@ -109,7 +109,7 @@ export const AllVariants: Story = {
       </div>
     `,
   }),
-}
+};
 
 export const AllSizes: Story = {
   parameters: { controls: { disable: true } },
@@ -123,4 +123,4 @@ export const AllSizes: Story = {
       </div>
     `,
   }),
-}
+};
