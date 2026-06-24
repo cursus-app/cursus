@@ -154,7 +154,10 @@ const onDisable = disableForm.handleSubmit(async (values) => {
   if (!activeFactor.value) { return }
   isSubmitting.value = true
   try {
-    // Vérifier le code TOTP avant de désactiver (double-check sécurité)
+    // Élever la session à AAL2 en vérifiant le code TOTP AVANT de désinscrire.
+    // Sans cette étape, un attaquant avec accès à la session AAL1 pourrait
+    // désactiver la 2FA sans connaître le code TOTP (authentication bypass).
+    await challengeAndVerify(values.factorId, values.totpCode)
     await unenroll(values.factorId)
 
     activeFactor.value = null

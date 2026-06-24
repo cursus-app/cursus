@@ -25,25 +25,18 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (raw) => backupCodeSchema.parse(raw))
   const codeHash = createHash('sha256').update(body.code).digest('hex')
 
-  const backupCode = await prisma.twoFaBackupCode.findFirst({
-    where: {
-      userId,
-      codeHash,
-      usedAt: null, // code pas encore consommé
-    },
+  // Consommation atomique : une seule opération DB (pas de TOCTOU).
+  // updateMany retourne { count: 1 } si et seulement si un code non consommé correspond.
+  const result = await prisma.twoFaBackupCode.updateMany({
+    where: { userId, codeHash, usedAt: null },
+    data: { usedAt: new Date() },
   })
 
-  if (!backupCode) {
+  if (result.count !== 1) {
     // Message générique intentionnel : ne pas distinguer "inconnu" de "déjà utilisé"
     logger.warn({ userId }, '2fa.backup_code.invalid')
     throw createError({ statusCode: 401, message: 'Code de backup invalide ou déjà utilisé' })
   }
-
-  // Consommation atomique du code (marquer usedAt)
-  await prisma.twoFaBackupCode.update({
-    where: { id: backupCode['id'] },
-    data: { usedAt: new Date() },
-  })
 
   logger.warn({ userId }, '2fa.backup_code.used')
 

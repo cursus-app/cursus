@@ -44,43 +44,43 @@ describe('totpCodeSchema', () => {
 })
 
 describe('backupCodeSchema', () => {
-  it('accepte un code de backup au format XXXX-XXXX (hex majuscule)', () => {
-    const result = backupCodeSchema.safeParse({ code: 'A1B2-C3D4' })
+  it('accepte un code de backup au format XXXXX-XXXXX-XXXXX-XXXXX (80 bits, hex majuscule)', () => {
+    const result = backupCodeSchema.safeParse({ code: 'A1B2C-D3E4F-12345-ABCDE' })
     expect(result.success).toBe(true)
   })
 
   it('accepte un code entièrement numérique', () => {
-    const result = backupCodeSchema.safeParse({ code: '1234-5678' })
+    const result = backupCodeSchema.safeParse({ code: '12345-67890-12345-67890' })
     expect(result.success).toBe(true)
   })
 
   it('accepte un code entièrement alphabétique (hex)', () => {
-    const result = backupCodeSchema.safeParse({ code: 'ABCD-EF01' })
+    const result = backupCodeSchema.safeParse({ code: 'ABCDE-F0123-45678-9ABCD' })
     expect(result.success).toBe(true)
   })
 
   it('rejette un code en minuscule', () => {
-    const result = backupCodeSchema.safeParse({ code: 'a1b2-c3d4' })
+    const result = backupCodeSchema.safeParse({ code: 'a1b2c-d3e4f-12345-abcde' })
     expect(result.success).toBe(false)
   })
 
   it('rejette un code sans tiret', () => {
-    const result = backupCodeSchema.safeParse({ code: 'A1B2C3D4' })
+    const result = backupCodeSchema.safeParse({ code: 'A1B2CD3E4F1234AABCDE' })
     expect(result.success).toBe(false)
   })
 
-  it('rejette un code trop court', () => {
+  it('rejette un code trop court (ancien format 8 chars)', () => {
     const result = backupCodeSchema.safeParse({ code: 'A1B2-C3' })
     expect(result.success).toBe(false)
   })
 
   it('rejette un code trop long', () => {
-    const result = backupCodeSchema.safeParse({ code: 'A1B2C-3D4E' })
+    const result = backupCodeSchema.safeParse({ code: 'A1B2C-D3E4F-12345-ABCDE-EXTRA' })
     expect(result.success).toBe(false)
   })
 
   it('rejette les caractères hors hex (G-Z)', () => {
-    const result = backupCodeSchema.safeParse({ code: 'GHIJ-KLMN' })
+    const result = backupCodeSchema.safeParse({ code: 'GHIJK-LMNOP-QRSTU-VWXYZ' })
     expect(result.success).toBe(false)
   })
 

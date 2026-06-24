@@ -14,11 +14,11 @@ export const totpCodeSchema = z.object({
   factorId: z.string().uuid('2fa.errors.factorIdInvalid'),
 })
 
-/** Code de backup — format XXXX-XXXX (hex majuscule) */
+/** Code de backup — format XXXXX-XXXXX-XXXXX-XXXXX (80 bits, hex majuscule) */
 export const backupCodeSchema = z.object({
   code: z
     .string()
-    .regex(/^[A-F0-9]{4}-[A-F0-9]{4}$/, '2fa.errors.backupCodeFormat'),
+    .regex(/^[A-F0-9]{5}-[A-F0-9]{5}-[A-F0-9]{5}-[A-F0-9]{5}$/, '2fa.errors.backupCodeFormat'),
 })
 
 /** Désactivation 2FA : mot de passe + code TOTP requis */

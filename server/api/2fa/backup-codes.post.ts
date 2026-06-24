@@ -14,12 +14,15 @@ import { createHash, randomBytes } from 'node:crypto'
 import { prisma } from '~~/server/utils/prisma'
 import { logger } from '~~/server/utils/logger'
 
-/** Format XXXX-XXXX (8 hex chars en 2 groupes de 4). */
+/**
+ * Format XXXXX-XXXXX-XXXXX-XXXXX (20 hex chars = 10 bytes = 80 bits d'entropie).
+ * 80 bits rendent la force brute en ligne infaisable même sans rate-limiting.
+ */
 function generateBackupCode(): string {
-  const hex = randomBytes(4).toString('hex').toUpperCase()
-  // regex /.{4}/g retourne toujours 2 groupes pour 8 chars — assertion de sécurité
-  const groups = hex.match(/.{4}/g)
-  if (!groups || groups.length !== 2) {
+  const hex = randomBytes(10).toString('hex').toUpperCase()
+  // 20 chars divisés en 4 groupes de 5
+  const groups = hex.match(/.{5}/g)
+  if (!groups || groups.length !== 4) {
     throw new Error('[2fa] backup code generation failed — unexpected hex length')
   }
   return groups.join('-')
