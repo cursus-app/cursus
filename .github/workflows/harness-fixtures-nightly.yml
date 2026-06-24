@@ -1,0 +1,51 @@
+name: Harness Fixtures (Nightly)
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # 2h UTC chaque nuit
+  workflow_dispatch:
+
+jobs:
+  harness-fixtures:
+    name: Test harness fixtures
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify fixture repos exist
+        run: pnpm tsx scripts/verify-fixtures.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.CURSUS_HARNESS_GITHUB_TOKEN }}
+
+      - name: Run harness fixture tests
+        run: pnpm vitest run tests/harness-fixtures/specs/
+        env:
+          CURSUS_GITHUB_APP_ID: ${{ secrets.CURSUS_GITHUB_APP_ID }}
+          CURSUS_API_BASE_URL: ${{ vars.CURSUS_NIGHTLY_API_URL }}
+          CURSUS_TEST_JWT: ${{ secrets.CURSUS_NIGHTLY_TEST_JWT }}
+
+      - name: Notify Slack on failure
+        if: failure()
+        # Toutes les valeurs github.* sont passées via env: pour éviter toute
+        # injection shell (bonne pratique OWASP GH Actions).
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_OPS_WEBHOOK_URL }}
+          RUN_SHA: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-type: application/json' \
+            --data "{\"text\":\"*Harness fixtures nightly* a echoue sur \`${RUN_SHA}\`\nVoir: ${RUN_URL}\"}"
