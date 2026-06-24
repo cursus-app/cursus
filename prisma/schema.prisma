@@ -33,22 +33,26 @@ datasource db {
 // ============================================================================
 
 model User {
-  id           String     @id @default(uuid()) @db.Uuid
-  email        String     @unique
-  globalRole   UserRole?  @map("global_role")
-  githubHandle String?    @unique @map("github_handle")
-  fullName     String?    @map("full_name")
-  avatarUrl    String?    @map("avatar_url")
-  bio          String?    @db.Text
-  locale       String     @default("fr")
-  timezone     String     @default("Europe/Paris")
-  xpTotal      Int        @default(0) @map("xp_total")
-  isPublic     Boolean    @default(false) @map("is_public")
-  publicSlug   String?    @unique @map("public_slug")
-  twoFaEnabled Boolean    @default(false) @map("two_fa_enabled")
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  deletedAt    DateTime?  @map("deleted_at")
+  id                String            @id @default(uuid()) @db.Uuid
+  email             String            @unique
+  globalRole        UserRole?         @map("global_role")
+  githubHandle      String?           @unique @map("github_handle")
+  fullName          String?           @map("full_name")
+  avatarUrl         String?           @map("avatar_url")
+  bio               String?           @db.Text
+  locale            String            @default("fr")
+  timezone          String            @default("Europe/Paris")
+  xpTotal           Int               @default(0) @map("xp_total")
+  isPublic          Boolean           @default(false) @map("is_public")
+  publicSlug        String?           @unique @map("public_slug")
+  twoFaEnabled      Boolean           @default(false) @map("two_fa_enabled")
+  accountStatus     AccountStatus     @default(ACTIVE) @map("account_status")
+  deletionScheduledAt DateTime?       @map("deletion_scheduled_at")
+  deletionCancelToken String?         @map("deletion_cancel_token")
+  gdprExportRequestedAt DateTime?     @map("gdpr_export_requested_at")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  deletedAt         DateTime?         @map("deleted_at")
 
   memberships       Membership[]
   submissions       Submission[]
@@ -60,11 +64,13 @@ model User {
   invitesSent       Invitation[]         @relation("InvitationInvitedBy")
   auditLogs         AuditLog[]
   overridesAuthored Submission[]         @relation("SubmissionOverriddenBy")
+  gdprExportJobs    GdprExportJob[]
 
   @@map("users")
   // NB : email / githubHandle / publicSlug sont @unique → Postgres crée déjà un
   // index pour la contrainte unique, inutile de le dupliquer via @@index.
   @@index([deletedAt])
+  @@index([accountStatus])
 }
 
 model Invitation {
@@ -372,6 +378,27 @@ model Notification {
 }
 
 // ============================================================================
+// RGPD
+// ============================================================================
+
+model GdprExportJob {
+  id          String          @id @default(uuid()) @db.Uuid
+  userId      String          @map("user_id") @db.Uuid
+  status      GdprExportStatus @default(PENDING)
+  filePath    String?         @map("file_path")
+  expiresAt   DateTime?       @map("expires_at")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  completedAt DateTime?       @map("completed_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("gdpr_export_jobs")
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ============================================================================
 // AUDIT & FEATURE FLAGS
 // ============================================================================
 
@@ -412,6 +439,19 @@ model FeatureFlag {
 // ============================================================================
 // ENUMS
 // ============================================================================
+
+enum AccountStatus {
+  ACTIVE
+  PENDING_DELETION
+  SUSPENDED
+}
+
+enum GdprExportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
 
 enum UserRole {
   STAGIAIRE

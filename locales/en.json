@@ -29,5 +29,35 @@
     "notFound": "Page not found.",
     "unauthorized": "You don't have access to this resource.",
     "supportRef": "Support reference"
+  },
+  "settings": {
+    "privacy": {
+      "title": "Privacy & Data",
+      "subtitle": "Manage your personal data in accordance with GDPR (Articles 17 and 20).",
+      "export": {
+        "title": "Export my data",
+        "description": "Download a copy of all your personal data stored by Cursus (profile, submissions, badges, notifications…). You will receive an email with a download link valid for 7 days.",
+        "button": "Download my data",
+        "cooldown": "You already requested an export. Try again in {hours}h."
+      },
+      "delete": {
+        "title": "Delete my account",
+        "description": "Deletion is permanent and irreversible. Your personal data will be erased within 7 days of your request.",
+        "button": "Delete my account",
+        "modal": {
+          "title": "Confirm deletion",
+          "warning": "This action is irreversible. Here is what will be deleted:",
+          "items": {
+            "submissions": "All your submissions and deliverables",
+            "profile": "Your public profile",
+            "certificates": "Your certificates will remain verifiable (anonymised)"
+          },
+          "confirmLabel": "Type \"{phrase}\" to confirm:",
+          "confirmPlaceholder": "SUPPRIMER MON COMPTE",
+          "confirmError": "The confirmation phrase is incorrect.",
+          "confirmButton": "Delete permanently"
+        }
+      }
+    }
   }
 }

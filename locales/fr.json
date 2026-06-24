@@ -29,5 +29,35 @@
     "notFound": "Page introuvable.",
     "unauthorized": "Tu n'as pas accès à cette ressource.",
     "supportRef": "Référence support"
+  },
+  "settings": {
+    "privacy": {
+      "title": "Confidentialité & données",
+      "subtitle": "Gérez vos données personnelles conformément au RGPD (articles 17 et 20).",
+      "export": {
+        "title": "Exporter mes données",
+        "description": "Téléchargez une copie de toutes vos données personnelles stockées par Cursus (profil, soumissions, badges, notifications…). Vous recevrez un email avec un lien de téléchargement valable 7 jours.",
+        "button": "Télécharger mes données",
+        "cooldown": "Vous avez déjà demandé un export. Réessayez dans {hours}h."
+      },
+      "delete": {
+        "title": "Supprimer mon compte",
+        "description": "La suppression est définitive et irréversible. Vos données personnelles seront effacées dans les 7 jours suivant votre demande.",
+        "button": "Supprimer mon compte",
+        "modal": {
+          "title": "Confirmer la suppression",
+          "warning": "Cette action est irréversible. Voici ce qui sera supprimé :",
+          "items": {
+            "submissions": "Toutes vos soumissions et livrables",
+            "profile": "Votre profil public",
+            "certificates": "Vos certificats resteront vérifiables (anonymisés)"
+          },
+          "confirmLabel": "Saisissez \"{phrase}\" pour confirmer :",
+          "confirmPlaceholder": "SUPPRIMER MON COMPTE",
+          "confirmError": "La phrase de confirmation est incorrecte.",
+          "confirmButton": "Supprimer définitivement"
+        }
+      }
+    }
   }
 }
