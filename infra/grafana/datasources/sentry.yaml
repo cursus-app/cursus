@@ -1,0 +1,14 @@
+apiVersion: 1
+
+datasources:
+  - name: Sentry
+    type: grafana-sentry-datasource
+    uid: cursus-sentry
+    jsonData:
+      authToken: ${SENTRY_API_TOKEN}
+      orgSlug: cursus-app
+    # Plugin requis : grafana-sentry-datasource
+    # Installer via : grafana-cli plugins install grafana-sentry-datasource
+    # Ou dans Grafana Cloud : Apps > Sentry
+    # Timeout configuré à 10s (datasource potentiellement rate-limited)
+    editable: false

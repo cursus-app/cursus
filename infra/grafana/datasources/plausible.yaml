@@ -1,0 +1,18 @@
+apiVersion: 1
+
+datasources:
+  - name: Plausible
+    type: grafana-simple-json-datasource
+    uid: cursus-plausible
+    url: https://plausible.io/api/v1
+    jsonData:
+      # L'API Plausible est compatible Simple JSON datasource
+      # Configurer les headers d'auth via secureJsonData
+      tlsSkipVerify: false
+      oauthPassThru: false
+    secureJsonData:
+      httpHeaderName1: Authorization
+      httpHeaderValue1: Bearer ${PLAUSIBLE_API_TOKEN}
+    # Plugin requis : grafana-simple-json-datasource
+    # Alternative : utiliser le plugin Infinity pour requêtes HTTP génériques
+    editable: false

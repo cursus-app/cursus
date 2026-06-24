@@ -1,0 +1,442 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_CURSUS_POSTGRES",
+      "label": "Cursus Postgres",
+      "description": "Supabase Postgres read-only replica",
+      "type": "datasource",
+      "pluginId": "postgres",
+      "pluginName": "PostgreSQL"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "barchart",
+      "name": "Bar chart",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      },
+      {
+        "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+        "enable": true,
+        "iconColor": "red",
+        "name": "Anomalies harnais (>5 min)",
+        "rawQuery": true,
+        "rawSql": "SELECT\n  EXTRACT(EPOCH FROM started_at) * 1000 AS time,\n  'Harnais lent' AS text,\n  submission_id::text AS tags\nFROM harness_runs\nWHERE $__timeFilter(started_at)\n  AND duration_ms > 300000",
+        "target": {}
+      }
+    ]
+  },
+  "description": "Suivi des runs harnais CI : latences, taux de succès, distribution par cursus, runs en échec.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": ["cursus"],
+      "targetBlank": false,
+      "title": "Tous les dashboards Cursus",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    }
+  ],
+  "panels": [
+    {
+      "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "ms",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": { "type": "linear" },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": { "group": "A", "mode": "none" },
+            "thresholdsStyle": {
+              "mode": "line",
+              "steps": [
+                { "color": "transparent", "value": null },
+                { "color": "red", "value": 300000 }
+              ]
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 120000 },
+              { "color": "red", "value": 300000 }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "p50" },
+            "properties": [{ "id": "displayName", "value": "p50 (médiane)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "p95" },
+            "properties": [
+              { "id": "displayName", "value": "p95 (95e percentile)" },
+              { "id": "custom.lineStyle", "value": { "dash": [10, 10], "fill": "dash" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi", "sort": "none" }
+      },
+      "pluginVersion": "11.0.0",
+      "title": "Latence harnais (p50 / p95) — anomalies >5 min annotées",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  date_trunc('minute', started_at) AS time,\n  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY duration_ms) AS p50,\n  PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY duration_ms) AS p95\nFROM harness_runs\nWHERE $__timeFilter(started_at)\n  AND status = 'success'\nGROUP BY 1\nORDER BY 1",
+          "refId": "A",
+          "sql": {}
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "green", "value": 90 }
+            ]
+          },
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.0.0",
+      "title": "Taux succès harnais",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  100.0 * COUNT(CASE WHEN status = 'success' THEN 1 END) / NULLIF(COUNT(*), 0) AS value\nFROM harness_runs\nWHERE $__timeFilter(started_at)",
+          "refId": "A",
+          "sql": {}
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 4 },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "11.0.0",
+      "title": "Runs en échec (fenêtre)",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(*) AS value FROM harness_runs WHERE $__timeFilter(started_at) AND status = 'failure'",
+          "refId": "A",
+          "sql": {}
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": { "legend": false, "tooltip": false, "viz": false },
+            "lineWidth": 1,
+            "scaleDistribution": { "type": "linear" }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "id": 4,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.7,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": { "mode": "single", "sort": "none" },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 200
+      },
+      "pluginVersion": "11.0.0",
+      "title": "Distribution runs par cursus",
+      "type": "barchart",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  c.title AS cursus,\n  COUNT(hr.id) FILTER (WHERE hr.status = 'success') AS success,\n  COUNT(hr.id) FILTER (WHERE hr.status = 'failure') AS failure,\n  COUNT(hr.id) FILTER (WHERE hr.status = 'timeout') AS timeout\nFROM harness_runs hr\nJOIN submissions s ON hr.submission_id = s.id\nJOIN cursus_weeks cw ON s.cursus_week_id = cw.id\nJOIN cursus c ON cw.cursus_id = c.id\nWHERE $__timeFilter(hr.started_at)\nGROUP BY c.title\nORDER BY (success + failure + timeout) DESC\nLIMIT 20",
+          "refId": "A",
+          "sql": {}
+        }
+      ]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "duration_ms" },
+            "properties": [
+              { "id": "displayName", "value": "Durée" },
+              { "id": "unit", "value": "ms" },
+              { "id": "custom.cellOptions", "value": { "type": "color-background" } },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 120000 },
+                    { "color": "red", "value": 300000 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "started_at" },
+            "properties": [
+              { "id": "displayName", "value": "Démarré le" },
+              { "id": "unit", "value": "dateTimeAsLocal" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "status" },
+            "properties": [
+              { "id": "displayName", "value": "Statut" },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "failure": { "color": "red", "index": 0, "text": "Echec" },
+                      "timeout": { "color": "orange", "index": 1, "text": "Timeout" }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } }
+            ]
+          }
+        ]
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "id": 5,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true,
+        "sortBy": [{ "desc": true, "displayName": "Démarré le" }]
+      },
+      "pluginVersion": "11.0.0",
+      "title": "Runs en echec — detail",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  c.title AS cursus,\n  u.full_name AS stagiaire,\n  hr.status,\n  hr.duration_ms,\n  hr.started_at,\n  COALESCE(hr.error_message, 'N/A') AS erreur\nFROM harness_runs hr\nJOIN submissions s ON hr.submission_id = s.id\nJOIN cursus_weeks cw ON s.cursus_week_id = cw.id\nJOIN cursus c ON cw.cursus_id = c.id\nJOIN users u ON s.user_id = u.id\nWHERE $__timeFilter(hr.started_at)\n  AND hr.status IN ('failure', 'timeout')\nORDER BY hr.started_at DESC\nLIMIT 50",
+          "refId": "A",
+          "sql": {}
+        }
+      ]
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 39,
+  "tags": ["cursus", "harnais"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 2,
+        "name": "DS_CURSUS_POSTGRES",
+        "query": "postgres",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "postgres", "uid": "${DS_CURSUS_POSTGRES}" },
+        "definition": "SELECT title FROM cursus ORDER BY title",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "cursus",
+        "query": "SELECT title FROM cursus ORDER BY title",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query",
+        "label": "Cursus"
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {
+    "refresh_intervals": ["30s", "1m", "5m", "15m"],
+    "time_options": ["1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+  },
+  "timezone": "Europe/Paris",
+  "title": "Cursus — Harnais CI",
+  "uid": "cursus-harnais",
+  "version": 1,
+  "weekStart": "monday"
+}
