@@ -20,7 +20,11 @@ export default defineVitestConfig({
         domEnvironment: 'happy-dom',
       },
     },
-    include: ['tests/unit/**/*.{test,spec}.ts', 'tests/integration/**/*.{test,spec}.ts'],
+    include: [
+      'tests/unit/**/*.{test,spec}.ts',
+      'tests/integration/**/*.{test,spec}.ts',
+      'tests/rls/**/*.{test,spec}.ts',
+    ],
     exclude: ['tests/e2e/**', 'node_modules/**', 'dist/**', '.nuxt/**', '.output/**'],
     setupFiles: ['./tests/setup.ts'],
     testTimeout: 10_000,
