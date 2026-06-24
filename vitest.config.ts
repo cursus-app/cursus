@@ -1,6 +1,17 @@
 import { defineVitestConfig } from '@nuxt/test-utils/config';
+import { fileURLToPath } from 'node:url';
 
 export default defineVitestConfig({
+  resolve: {
+    alias: {
+      // Module virtuel Nuxt généré par @nuxtjs/supabase — remplacé par un stub
+      // pour que les tests server (// @vitest-environment node) puissent s'exécuter
+      // sans le runtime Nuxt complet.
+      '#supabase/server': fileURLToPath(
+        new URL('./tests/__stubs__/supabase-server.ts', import.meta.url),
+      ),
+    },
+  },
   test: {
     globals: true,
     environment: 'happy-dom',
