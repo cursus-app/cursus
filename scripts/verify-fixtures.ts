@@ -45,7 +45,11 @@ async function verifyFixtures(): Promise<void> {
     }
   }
 
-  console.table(results)
+  // console.table n'est pas autorisé par eslint no-console — on formate à la main
+  for (const r of results) {
+    const status = r.exists ? 'OK' : 'MISSING'
+    process.stdout.write(`  [${status}] ${r.name} — ${r.url}\n`)
+  }
 
   const missing = results.filter((r) => !r.exists)
   if (missing.length > 0) {
@@ -55,7 +59,7 @@ async function verifyFixtures(): Promise<void> {
     }
     process.exit(1)
   } else {
-    console.log(`\nToutes les ${results.length} fixtures sont accessibles.`)
+    console.warn(`\nToutes les ${results.length} fixtures sont accessibles.`)
   }
 }
 

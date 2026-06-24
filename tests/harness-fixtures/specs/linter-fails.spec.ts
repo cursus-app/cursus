@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { HARNESS_FIXTURES } from '../fixtures.config'
 import { isHarnessConfigured, runHarnessAgainst } from './helpers'
 
-const fixture = HARNESS_FIXTURES.find((f) => f.name === 'linter-fails')!
+const fixture = HARNESS_FIXTURES.find((f) => f.name === 'linter-fails')
+if (!fixture) { throw new Error('Fixture "linter-fails" introuvable dans fixtures.config.ts') }
 
 describe.skipIf(!isHarnessConfigured())(`Harness fixture: ${fixture.name}`, () => {
   it(

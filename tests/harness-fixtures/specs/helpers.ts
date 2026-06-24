@@ -52,7 +52,7 @@ export async function runHarnessAgainst(
     await sleep(POLL_INTERVAL_MS)
 
     const run = await fetchRunStatus(runId)
-    if (run === null) continue
+    if (run === null) { continue }
 
     const terminalStatuses = new Set(['completed', 'failed', 'validated'])
     if (terminalStatuses.has(run.status)) {
@@ -92,7 +92,7 @@ async function fetchRunStatus(runId: string): Promise<RunStatusResponse | null> 
     headers: { Authorization: `Bearer ${CURSUS_TEST_JWT}` },
   })
 
-  if (!response.ok) return null
+  if (!response.ok) { return null }
 
   return (await response.json()) as RunStatusResponse
 }
