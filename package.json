@@ -11,6 +11,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "nuxt build",
+    "vercel-build": "prisma generate && prisma migrate deploy && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
