@@ -1,0 +1,18 @@
+{
+  "buildCommand": "pnpm run vercel-build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "framework": "nuxtjs",
+  "regions": ["cdg1"],
+  "headers": [
+    {
+      "source": "/_nuxt/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/public/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    }
+  ]
+}
