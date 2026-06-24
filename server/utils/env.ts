@@ -40,6 +40,10 @@ const EnvSchema = z.object({
   GITHUB_APP_PRIVATE_KEY: z.string().optional(),
   GITHUB_APP_WEBHOOK_SECRET: z.string().optional(),
 
+  // --- Invitations (JWT signé HS256) -----------------------------------------
+  // Minimum 32 caractères. Générer : openssl rand -base64 32
+  INVITATION_JWT_SECRET: z.string().min(32).optional(),
+
   // --- Certificate signing (Ed25519, base64) ----------------------------------
   CERTIFICATE_SIGNING_KEY: z.string().optional(),
 
