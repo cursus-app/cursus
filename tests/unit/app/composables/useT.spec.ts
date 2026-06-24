@@ -31,7 +31,8 @@ const { useT } = await import('../../../../app/composables/useT');
 // ce qui rend `typeof value === 'string'` faux dans l'environnement de test Nuxt.
 // Les tests de structure portent sur le JSON brut (source de vérité).
 
-const rootDir = resolve('/Users/sadjad/Dev/perso/cursus/.claude/worktrees/agent-a62c0756b66938fea');
+// __dirname = tests/unit/app/composables/ → remonter 4 niveaux pour atteindre la racine du repo
+const rootDir = resolve(__dirname, '../../../../');
 
 type LocaleJson = Record<string, Record<string, string>>;
 
