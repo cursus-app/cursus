@@ -50,6 +50,10 @@ const EnvSchema = z.object({
   SENTRY_AUTH_TOKEN: z.string().optional(),
   NUXT_PUBLIC_PLAUSIBLE_DOMAIN: z.string().optional(),
 
+  // --- Alertes opérationnelles ------------------------------------------------
+  SLACK_WEBHOOK_URL: z.string().url().optional(),
+  ALERT_EMAIL: z.string().email().optional(), // alias ops@cursus.app
+
   // --- Logging ----------------------------------------------------------------
   LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).default('info'),
 });
