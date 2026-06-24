@@ -29,6 +29,16 @@ DO $ci_compat$ BEGIN
       $body$ SELECT '00000000-0000-0000-0000-000000000000'::uuid $body$
     $fn$;
   END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_proc p
+    JOIN pg_namespace n ON p.pronamespace = n.oid
+    WHERE n.nspname = 'auth' AND p.proname = 'email'
+  ) THEN
+    EXECUTE $fn$
+      CREATE FUNCTION auth.email() RETURNS text LANGUAGE sql STABLE AS
+      $body$ SELECT ''::text $body$
+    $fn$;
+  END IF;
 END $ci_compat$;
 
 -- ============================================================================
