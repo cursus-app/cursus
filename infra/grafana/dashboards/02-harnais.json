@@ -147,7 +147,11 @@
       "gridPos": { "h": 8, "w": 16, "x": 0, "y": 0 },
       "id": 1,
       "options": {
-        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom"
+        },
         "tooltip": { "mode": "multi", "sort": "none" }
       },
       "pluginVersion": "11.0.0",

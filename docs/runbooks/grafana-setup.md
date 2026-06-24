@@ -42,21 +42,21 @@ Dans le repo GitHub Cursus :
 1. **Settings > Secrets and variables > Actions**
 2. Ajouter les deux secrets suivants :
 
-| Secret | Valeur | Exemple |
-|--------|--------|---------|
+| Secret              | Valeur                             | Exemple                          |
+| ------------------- | ---------------------------------- | -------------------------------- |
 | `GRAFANA_CLOUD_URL` | URL de l'instance sans slash final | `https://cursus-app.grafana.net` |
-| `GRAFANA_API_KEY` | Token du service account | `glsa_xxxxxxxxxxxx` |
+| `GRAFANA_API_KEY`   | Token du service account           | `glsa_xxxxxxxxxxxx`              |
 
 3. Pour les datasources Postgres, ajouter egalement :
 
-| Secret | Description |
-|--------|-------------|
-| `SUPABASE_DB_HOST` | Host du replica read-only Supabase |
-| `SUPABASE_DB_USER` | Utilisateur Postgres (read-only) |
-| `SUPABASE_DB_PASSWORD` | Mot de passe Postgres |
-| `SUPABASE_DB_NAME` | Nom de la base (ex: `postgres`) |
-| `SENTRY_API_TOKEN` | Token API Sentry (scope: `project:read`) |
-| `PLAUSIBLE_API_TOKEN` | Token API Plausible |
+| Secret                 | Description                              |
+| ---------------------- | ---------------------------------------- |
+| `SUPABASE_DB_HOST`     | Host du replica read-only Supabase       |
+| `SUPABASE_DB_USER`     | Utilisateur Postgres (read-only)         |
+| `SUPABASE_DB_PASSWORD` | Mot de passe Postgres                    |
+| `SUPABASE_DB_NAME`     | Nom de la base (ex: `postgres`)          |
+| `SENTRY_API_TOKEN`     | Token API Sentry (scope: `project:read`) |
+| `PLAUSIBLE_API_TOKEN`  | Token API Plausible                      |
 
 ---
 
@@ -183,6 +183,7 @@ Pour eviter un mot de passe partage Grafana :
 ### Le provisioning echoue avec 401
 
 Verifier que :
+
 - Le secret `GRAFANA_API_KEY` est bien un token de Service Account (prefixe `glsa_`)
 - Le Service Account a le role `Editor` (pas `Viewer`)
 - L'URL dans `GRAFANA_CLOUD_URL` n'a pas de slash final
@@ -190,6 +191,7 @@ Verifier que :
 ### Les panels affichent "No data"
 
 Verifier que :
+
 - La datasource Postgres est bien configuree et le test reussit
 - Les tables `api_logs`, `harness_runs`, etc. existent (cf. migrations Prisma)
 - La fenetre temporelle du dashboard correspond a des donnees existantes
@@ -197,6 +199,7 @@ Verifier que :
 ### Timeout Sentry (>10s)
 
 Grafana Cloud limite les requetes datasource a 30s. Si Sentry est rate-limited :
+
 - Augmenter le cache Grafana (Dashboard settings > Auto refresh : minimum 5m)
 - Reduire la fenetre temporelle par defaut du dashboard
 
