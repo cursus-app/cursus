@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // Layout par défaut — minimaliste, sera étoffé en EP-14/15 (atomic design).
 // Layouts spécialisés (stagiaire, formateur, public, auth) viendront après.
+// ST-15.5 : CookieNoticeBanner injecté ici pour couvrir toutes les pages.
 </script>
 
 <template>
@@ -15,5 +16,8 @@
     <main id="main" class="flex-1">
       <slot />
     </main>
+
+    <!-- Bandeau d'information cookies (ePrivacy + RGPD) — ST-15.5 -->
+    <MoleculesCookieNoticeBanner />
   </div>
 </template>
