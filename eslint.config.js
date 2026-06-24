@@ -51,4 +51,9 @@ export default withNuxt({
       '@typescript-eslint/no-explicit-any': 'off',
       'no-console': 'off',
     },
+  })
+  // Exclure les worktrees laissés par les sub-agents : ils ont leur propre
+  // eslint.config.js qui importe .nuxt/eslint.config.mjs (non généré → crash).
+  .append({
+    ignores: ['.claude/worktrees/**'],
   });
