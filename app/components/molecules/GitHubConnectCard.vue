@@ -8,22 +8,22 @@
  */
 
 interface Props {
-  currentHandle?: string | null
+  currentHandle?: string | null;
 }
 
-const { currentHandle = null } = defineProps<Props>()
+const { currentHandle = null } = defineProps<Props>();
 
-const { connectGitHub, disconnectGitHub } = useGitHubOAuth()
-const toast = useToast()
-const { t } = useI18n()
+const { connectGitHub, disconnectGitHub } = useGitHubOAuth();
+const toast = useToast();
+const { t } = useI18n();
 
-const isConnecting = ref(false)
-const isDisconnecting = ref(false)
+const isConnecting = ref(false);
+const isDisconnecting = ref(false);
 
 async function onConnect(): Promise<void> {
-  isConnecting.value = true
+  isConnecting.value = true;
   try {
-    await connectGitHub()
+    await connectGitHub();
     // La page est redirigée vers GitHub → pas de toast ici,
     // c'est la page /auth/callback qui gère le toast de succès.
   } catch {
@@ -32,33 +32,33 @@ async function onConnect(): Promise<void> {
       description: t('auth.github.oauthFailed'),
       color: 'error',
       icon: 'i-tabler-alert-triangle',
-    })
-    isConnecting.value = false
+    });
+    isConnecting.value = false;
   }
 }
 
 async function onDisconnect(): Promise<void> {
-  isDisconnecting.value = true
+  isDisconnecting.value = true;
   try {
-    await disconnectGitHub()
+    await disconnectGitHub();
     toast.add({
       title: t('auth.github.disconnected'),
       color: 'success',
       icon: 'i-tabler-circle-check',
-    })
+    });
     // Recharger la page profil pour mettre à jour l'état
     // /profil est créé dans ST-03.x — route connue mais page pas encore générée.
     // eslint-disable-next-line link-checker/valid-route
-    await navigateTo('/profil', { replace: true })
+    await navigateTo('/profil', { replace: true });
   } catch {
     toast.add({
       title: t('errors.generic'),
       description: t('auth.github.oauthFailed'),
       color: 'error',
       icon: 'i-tabler-alert-triangle',
-    })
+    });
   } finally {
-    isDisconnecting.value = false
+    isDisconnecting.value = false;
   }
 }
 </script>
@@ -69,10 +69,7 @@ async function onDisconnect(): Promise<void> {
       <span class="i-tabler-brand-github size-6 text-text-default" aria-hidden="true" />
       <div class="flex-1">
         <p class="font-medium text-text-strong">GitHub</p>
-        <p
-          v-if="currentHandle"
-          class="text-sm text-text-muted"
-        >
+        <p v-if="currentHandle" class="text-sm text-text-muted">
           {{ $t('auth.github.connectedAs') }}
           <span class="font-mono text-text-default">@{{ currentHandle }}</span>
         </p>

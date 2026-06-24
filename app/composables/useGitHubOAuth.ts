@@ -4,7 +4,7 @@
  * La déconnexion efface le github_handle en DB via notre endpoint.
  */
 export function useGitHubOAuth() {
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient();
 
   /**
    * Lance le flux OAuth GitHub.
@@ -18,9 +18,9 @@ export function useGitHubOAuth() {
         scopes: 'read:user read:public_repo',
         redirectTo: redirectTo ?? `${window.location.origin}/auth/callback`,
       },
-    })
+    });
     if (error) {
-      throw error
+      throw error;
     }
   }
 
@@ -29,8 +29,8 @@ export function useGitHubOAuth() {
    * Supabase ne supporte pas le "unlink" natif, on efface le handle en DB.
    */
   async function disconnectGitHub(): Promise<void> {
-    await $fetch('/api/profile/github-disconnect', { method: 'POST' })
+    await $fetch('/api/profile/github-disconnect', { method: 'POST' });
   }
 
-  return { connectGitHub, disconnectGitHub }
+  return { connectGitHub, disconnectGitHub };
 }
