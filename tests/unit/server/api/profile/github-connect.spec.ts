@@ -30,11 +30,10 @@ vi.mock('~~/server/utils/prisma', () => ({
   },
 }));
 
-// Mock du fichier physique réel derrière l'alias #supabase/server.
-vi.mock(
-  '/Users/sadjad/Dev/perso/cursus/node_modules/@nuxtjs/supabase/dist/runtime/server/services/index.js',
-  () => ({ serverSupabaseUser: mockServerSupabaseUser }),
-);
+vi.mock('#supabase/server', () => ({
+  serverSupabaseUser: mockServerSupabaseUser,
+  serverSupabaseClient: vi.fn(),
+}));
 
 // ─── requireGithubHandle ─────────────────────────────────────────────────────
 
