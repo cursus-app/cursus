@@ -47,8 +47,5 @@ export async function sendInvitationEmail(
 
   // TODO ST-12.x — brancher Resend ici.
   // L'invitation est créée en DB même si l'email n'est pas envoyé.
-  logger.warn(
-    { emailHash },
-    'email.invitation.not_sent — Resend non configuré (ST-12.x pending)',
-  );
+  logger.warn({ emailHash }, 'email.invitation.not_sent — Resend non configuré (ST-12.x pending)');
 }

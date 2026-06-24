@@ -68,7 +68,7 @@ function getErrorMessage(key: string): string {
     'auth.errors.passwordNeedsDigit': 'Le mot de passe doit contenir un chiffre.',
     'auth.errors.passwordNeedsSymbol': 'Le mot de passe doit contenir un symbole.',
   };
-  return messages[key] ?? "Une erreur est survenue. Réessaie ou contacte ton formateur.";
+  return messages[key] ?? 'Une erreur est survenue. Réessaie ou contacte ton formateur.';
 }
 
 /** Libellé lisible du rôle */
@@ -102,7 +102,11 @@ const roleLabel = computed(() => {
     <main id="main" class="w-full max-w-md">
       <!-- Chargement -->
       <div v-if="pending" class="flex justify-center py-12" aria-label="Vérification du lien…">
-        <UIcon name="i-tabler-loader-2" class="size-8 animate-spin text-accent" aria-hidden="true" />
+        <UIcon
+          name="i-tabler-loader-2"
+          class="size-8 animate-spin text-accent"
+          aria-hidden="true"
+        />
       </div>
 
       <!-- Invitation invalide / expirée -->
@@ -120,12 +124,7 @@ const roleLabel = computed(() => {
         <p class="mt-2 text-sm text-text-muted">
           Ce lien d'invitation n'est plus valide. Demande une nouvelle invitation à ton formateur.
         </p>
-        <UButton
-          to="/login"
-          variant="outline"
-          class="mt-6"
-          leading-icon="i-tabler-arrow-left"
-        >
+        <UButton to="/login" variant="outline" class="mt-6" leading-icon="i-tabler-arrow-left">
           Retour à la connexion
         </UButton>
       </div>
@@ -137,7 +136,8 @@ const roleLabel = computed(() => {
           <p class="mt-2 text-text-muted">
             Rejoins la cohorte
             <strong class="text-text-strong">{{ invitation.cohorteName }}</strong>
-            en tant que <strong class="text-text-strong">{{ roleLabel }}</strong>.
+            en tant que <strong class="text-text-strong">{{ roleLabel }}</strong
+            >.
           </p>
           <!-- Email pré-rempli non modifiable -->
           <p class="mt-1 text-sm text-text-subtle">
@@ -207,7 +207,7 @@ const roleLabel = computed(() => {
           Déjà un compte&nbsp;?
           <NuxtLink
             to="/login"
-            class="text-accent-text hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            class="text-accent-text hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Se connecter
           </NuxtLink>

@@ -33,9 +33,8 @@ describe('server/utils/invitationToken', () => {
   });
 
   it('vérifie un token valide et retourne le payload', async () => {
-    const { signInvitationToken, verifyInvitationToken } = await import(
-      '~~/server/utils/invitationToken'
-    );
+    const { signInvitationToken, verifyInvitationToken } =
+      await import('~~/server/utils/invitationToken');
     const token = await signInvitationToken(PAYLOAD, 7);
     const verified = await verifyInvitationToken(token);
 
@@ -46,9 +45,8 @@ describe('server/utils/invitationToken', () => {
   });
 
   it('rejette un token dont la signature est altérée', async () => {
-    const { signInvitationToken, verifyInvitationToken } = await import(
-      '~~/server/utils/invitationToken'
-    );
+    const { signInvitationToken, verifyInvitationToken } =
+      await import('~~/server/utils/invitationToken');
     const token = await signInvitationToken(PAYLOAD, 7);
     // Altérer les 5 derniers caractères de la signature (3e segment)
     const parts = token.split('.');
@@ -96,9 +94,7 @@ describe('server/utils/invitationToken', () => {
     // le comportement au runtime en passant un secret vide)
     const { signInvitationToken } = await import('~~/server/utils/invitationToken');
 
-    await expect(signInvitationToken(PAYLOAD, 7)).rejects.toThrow(
-      'INVITATION_JWT_SECRET manquant',
-    );
+    await expect(signInvitationToken(PAYLOAD, 7)).rejects.toThrow('INVITATION_JWT_SECRET manquant');
 
     // Restaurer
     process.env['INVITATION_JWT_SECRET'] = savedSecret;
