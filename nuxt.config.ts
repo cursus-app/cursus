@@ -190,12 +190,17 @@ export default defineNuxtConfig({
         '@@': fileURLToPath(new URL('./', import.meta.url)),
       },
     },
+    // Pré-bundle des deps découvertes au runtime (évite des reloads en dev).
+    optimizeDeps: {
+      include: ['@unhead/schema-org/vue'],
+    },
   },
 
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
       titleTemplate: '%s — Cursus',
+      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/branding/favicon.svg' }],
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },

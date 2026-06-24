@@ -39,12 +39,12 @@ function handleRetry(): void {
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col items-center justify-center bg-bg-base px-4 py-16">
+  <div class="flex min-h-screen flex-col items-center justify-center bg-app px-4 py-16">
     <div class="w-full max-w-md text-center">
       <p class="text-sm font-medium tracking-wider text-text-subtle uppercase">
         Erreur {{ error.statusCode }}
       </p>
-      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-text-base">
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-text-strong">
         {{ title }}
       </h1>
       <p class="mt-4 text-base text-text-muted">

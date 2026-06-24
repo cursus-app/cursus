@@ -1,176 +1,340 @@
-/* ===========================================================================
- * Cursus — Tailwind CSS v4 (CSS-first config).
- * Design tokens : cf. 10-design-system.md.
- *
- * Tokens exposés en variables CSS via @theme — consommables par Tailwind
- * (text-text-base, bg-bg-subtle, ...) ET par @nuxt/ui (color-primary).
- * =========================================================================== */
+/* ============================================================================
+   CURSUS — Design Tokens
+   Tailwind CSS v4 (CSS-first via @theme) · couleurs en OKLCH natif
+   Source de vérité : Claude Design « Design system Cursus » (import initial).
+   Détail / référence textuelle : docs/design/claude-design-export/.
+
+   ⚠️ RÈGLE NON NÉGOCIABLE : ce fichier est la SEULE source des tokens. Les
+   composants consomment des alias de rôle (--accent, --text-muted, bg-surface…),
+   JAMAIS un primitif (--color-indigo-600) ni une valeur en dur (#4f46e5).
+
+   Structure :
+   1. @import tailwindcss + @nuxt/ui (preset requis par @nuxt/ui v4)
+   2. @theme         → tokens primitifs (palettes, type, space, radius…)
+   3. :root          → tokens sémantiques LIGHT (alias vers primitifs)
+   4. .dark           → tokens sémantiques DARK (override)
+   5. @theme inline   → expose les tokens sémantiques à Tailwind (bg-surface…)
+   6. @layer base     → reset + a11y (focus visible, reduced-motion)
+   7. @layer utilities → utilitaires partagés (skeleton)
+   ========================================================================== */
 
 @import 'tailwindcss';
-
-/* @nuxt/ui v4 — preset (importé après tailwindcss pour overrider correctement) */
+/* @nuxt/ui v4 — preset (importé après tailwindcss pour overrider correctement).
+   La couleur `primary` est mappée sur `indigo` et `neutral` sur `neutral` via
+   app/app.config.ts. */
 @import '@nuxt/ui';
 
-/* ---------------------------------------------------------------------------
- * Design tokens — Light mode (default).
- * Couleurs : OKLCH pour gamut wide + interpolation perceptive correcte.
- * --------------------------------------------------------------------------- */
+/* Dark mode piloté par une classe .dark sur <html> (toggle @nuxtjs/color-mode) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ----------------------------------------------------------------------------
+   1 · PRIMITIFS — palettes brutes, neutres au thème
+   --------------------------------------------------------------------------*/
 @theme {
-  /* --- Surfaces ------------------------------------------------------------- */
-  --color-bg-base: oklch(1 0 0); /* white */
-  --color-bg-subtle: oklch(0.985 0 0); /* zinc-50 */
-  --color-bg-muted: oklch(0.967 0.001 286.4); /* zinc-100 */
-  --color-bg-emphasis: oklch(0.21 0.006 285.9); /* zinc-900 */
+  /* — Accent : INDIGO. Incarne « le harnais qui valide », le label qualité.
+       Teinte 264 constante ; chroma qui monte vers 600 (couleur signature). */
+  --color-indigo-50: oklch(0.97 0.018 264);
+  --color-indigo-100: oklch(0.936 0.04 264);
+  --color-indigo-200: oklch(0.888 0.07 264);
+  --color-indigo-300: oklch(0.812 0.112 264);
+  --color-indigo-400: oklch(0.685 0.17 264);
+  --color-indigo-500: oklch(0.605 0.205 264);
+  --color-indigo-600: oklch(0.55 0.22 264); /* ← PRIMARY */
+  --color-indigo-700: oklch(0.488 0.198 264);
+  --color-indigo-800: oklch(0.42 0.158 264);
+  --color-indigo-900: oklch(0.368 0.12 264);
+  --color-indigo-950: oklch(0.268 0.082 264);
 
-  /* --- Texte ---------------------------------------------------------------- */
-  --color-text-base: oklch(0.21 0.006 285.9); /* zinc-900 */
-  --color-text-muted: oklch(0.442 0.017 285.8); /* zinc-600 */
-  --color-text-subtle: oklch(0.705 0.015 286.1); /* zinc-400 */
-  --color-text-inverse: oklch(0.985 0 0); /* zinc-50 */
+  /* — Neutrals : gris warm-cool très légèrement teinté indigo (hue 268,
+       chroma quasi nul). Jamais un gris pur — donne la chaleur « outil pro ». */
+  --color-neutral-0: oklch(1 0 268);
+  --color-neutral-50: oklch(0.985 0.003 268);
+  --color-neutral-100: oklch(0.97 0.004 268);
+  --color-neutral-200: oklch(0.93 0.005 268);
+  --color-neutral-300: oklch(0.88 0.006 268);
+  --color-neutral-400: oklch(0.71 0.008 268);
+  --color-neutral-500: oklch(0.58 0.009 268);
+  --color-neutral-600: oklch(0.48 0.009 268);
+  --color-neutral-700: oklch(0.39 0.008 268);
+  --color-neutral-800: oklch(0.27 0.008 268);
+  --color-neutral-900: oklch(0.19 0.008 268);
+  --color-neutral-950: oklch(0.13 0.008 268); /* ← dark bg base */
 
-  /* --- Bordures ------------------------------------------------------------- */
-  --color-border-subtle: oklch(0.92 0.004 286.3); /* zinc-200 */
-  --color-border-base: oklch(0.871 0.006 286.3); /* zinc-300 */
-  --color-border-strong: oklch(0.552 0.016 285.9); /* zinc-500 */
+  /* — Sémantiques sobres (désaturées ~10-15 %). Une teinte = un sens. */
+  --color-success-50: oklch(0.96 0.025 155);
+  --color-success-100: oklch(0.92 0.05 155);
+  --color-success-500: oklch(0.64 0.12 155);
+  --color-success-600: oklch(0.56 0.115 155); /* vert sauge */
+  --color-success-700: oklch(0.48 0.1 155);
 
-  /* --- Accent (indigo) ------------------------------------------------------ */
-  --color-accent-50: oklch(0.962 0.018 272.3);
-  --color-accent-100: oklch(0.93 0.034 272.8);
-  --color-accent-200: oklch(0.87 0.065 274);
-  --color-accent-300: oklch(0.785 0.115 274.7);
-  --color-accent-400: oklch(0.673 0.182 276.9);
-  --color-accent-500: oklch(0.585 0.233 277.1);
-  --color-accent-600: oklch(0.511 0.262 276.9); /* primary */
-  --color-accent-700: oklch(0.457 0.24 277);
-  --color-accent-800: oklch(0.398 0.195 277.4);
-  --color-accent-900: oklch(0.359 0.144 278.7);
-  --color-accent-950: oklch(0.257 0.09 281.3);
+  --color-warning-50: oklch(0.965 0.03 75);
+  --color-warning-100: oklch(0.93 0.055 75);
+  --color-warning-500: oklch(0.76 0.13 75);
+  --color-warning-600: oklch(0.7 0.135 75); /* ambre */
+  --color-warning-700: oklch(0.6 0.12 75);
 
-  /* --- Sémantiques ---------------------------------------------------------- */
-  --color-success-base: oklch(0.65 0.17 152.5); /* emerald-600 */
-  --color-success-subtle: oklch(0.95 0.05 152.5);
-  --color-warning-base: oklch(0.7 0.17 60); /* amber-600 */
-  --color-warning-subtle: oklch(0.96 0.07 90);
-  --color-danger-base: oklch(0.58 0.22 27); /* red-600 */
-  --color-danger-subtle: oklch(0.94 0.06 22);
-  --color-info-base: oklch(0.68 0.14 230); /* sky-500 */
-  --color-info-subtle: oklch(0.96 0.04 230);
+  --color-danger-50: oklch(0.96 0.02 25);
+  --color-danger-100: oklch(0.92 0.045 25);
+  --color-danger-500: oklch(0.62 0.18 25);
+  --color-danger-600: oklch(0.56 0.18 25); /* rouge brique */
+  --color-danger-700: oklch(0.49 0.165 25);
 
-  /* --- Focus ring (toujours visible — a11y) -------------------------------- */
-  --color-focus-ring: oklch(0.585 0.233 277.1); /* accent-500 */
+  --color-info-50: oklch(0.96 0.02 240);
+  --color-info-100: oklch(0.92 0.045 240);
+  --color-info-500: oklch(0.66 0.12 240);
+  --color-info-600: oklch(0.6 0.125 240); /* bleu calme */
+  --color-info-700: oklch(0.52 0.115 240);
 
-  /* --- Typographie ---------------------------------------------------------- */
-  --font-sans:
-    'Inter Variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    sans-serif;
-  --font-mono:
-    'JetBrains Mono Variable', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  /* --------------------------------------------------------------------------
+     TYPOGRAPHIE — Inter (UI) + JetBrains Mono (IDs/URLs/logs)
+     Polices fournies par @nuxt/fonts (auto via @nuxt/ui v4).
+     Échelle modulaire Major Third (1.25), bornée 12 → 36 px.
+     ------------------------------------------------------------------------*/
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-  --text-xs: 0.75rem;
+  --text-xs: 0.75rem; /* 12 */
+  --text-sm: 0.875rem; /* 14 */
+  --text-base: 1rem; /* 16 */
+  --text-lg: 1.125rem; /* 18 */
+  --text-xl: 1.25rem; /* 20 */
+  --text-2xl: 1.563rem; /* 25 */
+  --text-3xl: 1.953rem; /* 31 */
+  --text-4xl: 2.25rem; /* 36 (cap) */
+
   --text-xs--line-height: 1rem;
-  --text-sm: 0.875rem;
   --text-sm--line-height: 1.25rem;
-  --text-base: 1rem;
   --text-base--line-height: 1.5rem;
-  --text-lg: 1.125rem;
   --text-lg--line-height: 1.75rem;
-  --text-xl: 1.25rem;
-  --text-xl--line-height: 1.75rem;
-  --text-2xl: 1.5rem;
+  --text-xl--line-height: 1.875rem;
   --text-2xl--line-height: 2rem;
-  --text-3xl: 1.875rem;
-  --text-3xl--line-height: 2.25rem;
-  --text-4xl: 2.25rem;
-  --text-4xl--line-height: 2.5rem;
+  --text-3xl--line-height: 2.375rem;
+  --text-4xl--line-height: 2.625rem;
 
-  /* --- Spacing (4-point grid) ----------------------------------------------- */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --tracking-tight: -0.014em; /* titres */
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em; /* labels/kbd uppercase */
+
+  /* --------------------------------------------------------------------------
+     ESPACEMENT — base 4 px (Tailwind v4 multiplie ce pas : p-4 = 1rem)
+     ------------------------------------------------------------------------*/
   --spacing: 0.25rem;
 
-  /* --- Radius --------------------------------------------------------------- */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
+  /* --------------------------------------------------------------------------
+     RAYONS — discrets, « outil » plutôt que « app friendly »
+     ------------------------------------------------------------------------*/
+  --radius-sm: 0.25rem; /* 4  — inputs, badges */
+  --radius-md: 0.375rem; /* 6  — boutons, champs */
+  --radius-lg: 0.5rem; /* 8  — cards */
+  --radius-xl: 0.75rem; /* 12 — modals, panneaux */
+  --radius-2xl: 1rem; /* 16 — feature cards */
   --radius-full: 9999px;
 
-  /* --- Ombres (discrètes) --------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  /* --------------------------------------------------------------------------
+     MOTION — durées + easings
+     ------------------------------------------------------------------------*/
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* entrée */
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0); /* sortie */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 
-  /* --- Z-index échelle explicite -------------------------------------------- */
-  --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-fixed: 30;
-  --z-overlay: 40;
-  --z-modal: 50;
-  --z-popover: 60;
-  --z-toast: 70;
-  --z-tooltip: 80;
-
-  /* --- Durées d'animation --------------------------------------------------- */
   --duration-instant: 100ms;
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 500ms;
 }
 
-/* ---------------------------------------------------------------------------
- * Dark mode — override des tokens via @variant.
- * On utilise la classe .dark sur <html> (cf. nuxt-color-mode).
- * --------------------------------------------------------------------------- */
-@variant dark (&:where(.dark, .dark *));
+/* ----------------------------------------------------------------------------
+   2 · SÉMANTIQUES — LIGHT (défaut)
+   On ne consomme JAMAIS un primitif directement dans un composant : on passe
+   par ces alias de rôle, ce qui rend le theming et le dark mode triviaux.
+   --------------------------------------------------------------------------*/
+:root {
+  /* Surfaces */
+  --bg-app: oklch(0.99 0.003 268); /* blanc cassé teinté indigo */
+  --bg-surface: var(--color-neutral-0); /* cards, panneaux */
+  --bg-subtle: var(--color-neutral-50); /* zones secondaires */
+  --bg-muted: var(--color-neutral-100);
+  --bg-inset: var(--color-neutral-100); /* code/log blocks */
+  --bg-hover: oklch(0.965 0.004 268);
+  --bg-active: oklch(0.945 0.005 268);
 
-.dark {
-  --color-bg-base: oklch(0.141 0.005 285.8);
-  --color-bg-subtle: oklch(0.21 0.006 285.9);
-  --color-bg-muted: oklch(0.27 0.006 286);
-  --color-bg-emphasis: oklch(0.985 0 0);
+  /* Bordures */
+  --border-subtle: var(--color-neutral-200);
+  --border-default: var(--color-neutral-300);
+  --border-strong: var(--color-neutral-400);
 
-  --color-text-base: oklch(0.985 0 0);
-  --color-text-muted: oklch(0.705 0.015 286.1);
-  --color-text-subtle: oklch(0.552 0.016 285.9);
-  --color-text-inverse: oklch(0.21 0.006 285.9);
+  /* Texte */
+  --text-strong: var(--color-neutral-900); /* titres */
+  --text-default: var(--color-neutral-800); /* corps */
+  --text-muted: var(--color-neutral-500); /* secondaire */
+  --text-subtle: var(--color-neutral-400); /* placeholders, hints */
+  --text-on-accent: var(--color-neutral-0);
 
-  --color-border-subtle: oklch(0.27 0.006 286);
-  --color-border-base: oklch(0.37 0.013 286);
-  --color-border-strong: oklch(0.705 0.015 286.1);
+  /* Accent / primary */
+  --accent: var(--color-indigo-600);
+  --accent-hover: var(--color-indigo-700);
+  --accent-active: var(--color-indigo-800);
+  --accent-subtle: var(--color-indigo-50); /* fond léger */
+  --accent-border: var(--color-indigo-200);
+  --accent-text: var(--color-indigo-700); /* texte/lien sur fond clair */
 
-  --color-success-subtle: oklch(0.27 0.07 152);
-  --color-warning-subtle: oklch(0.3 0.1 70);
-  --color-danger-subtle: oklch(0.3 0.1 27);
-  --color-info-subtle: oklch(0.27 0.08 230);
+  /* Sémantiques de statut (fond léger / texte / aplat) */
+  --success-bg: var(--color-success-50);
+  --success-fg: var(--color-success-700);
+  --success-solid: var(--color-success-600);
+  --warning-bg: var(--color-warning-50);
+  --warning-fg: var(--color-warning-700);
+  --warning-solid: var(--color-warning-600);
+  --danger-bg: var(--color-danger-50);
+  --danger-fg: var(--color-danger-700);
+  --danger-solid: var(--color-danger-600);
+  --info-bg: var(--color-info-50);
+  --info-fg: var(--color-info-700);
+  --info-solid: var(--color-info-600);
+
+  /* Focus ring */
+  --ring: var(--color-indigo-500);
+  --ring-offset: var(--bg-app);
+
+  /* Ombres — discrètes, teintées cool. Jamais lourdes. */
+  --shadow-xs: 0 1px 2px 0 oklch(0.13 0.02 268 / 0.05);
+  --shadow-sm: 0 1px 3px 0 oklch(0.13 0.02 268 / 0.08), 0 1px 2px -1px oklch(0.13 0.02 268 / 0.06);
+  --shadow-md:
+    0 4px 12px -2px oklch(0.13 0.02 268 / 0.1), 0 2px 6px -2px oklch(0.13 0.02 268 / 0.06);
+  --shadow-lg:
+    0 12px 28px -6px oklch(0.13 0.02 268 / 0.14), 0 6px 12px -6px oklch(0.13 0.02 268 / 0.08);
+  --shadow-focus: 0 0 0 3px oklch(0.605 0.205 264 / 0.35);
 }
 
-/* ---------------------------------------------------------------------------
- * Base layer — defaults globaux.
- * --------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------
+   3 · SÉMANTIQUES — DARK (noir bleu profond, production-ready)
+   On remonte les chromas d'accent et on inverse l'échelle de neutres.
+   --------------------------------------------------------------------------*/
+.dark {
+  --bg-app: var(--color-neutral-950); /* noir bleu */
+  --bg-surface: oklch(0.165 0.009 268);
+  --bg-subtle: oklch(0.19 0.009 268);
+  --bg-muted: oklch(0.23 0.01 268);
+  --bg-inset: oklch(0.15 0.01 268);
+  --bg-hover: oklch(0.215 0.01 268);
+  --bg-active: oklch(0.25 0.011 268);
+
+  --border-subtle: oklch(0.25 0.01 268);
+  --border-default: oklch(0.31 0.011 268);
+  --border-strong: oklch(0.4 0.012 268);
+
+  --text-strong: oklch(0.975 0.004 268);
+  --text-default: oklch(0.9 0.005 268);
+  --text-muted: oklch(0.66 0.009 268);
+  --text-subtle: oklch(0.5 0.009 268);
+  --text-on-accent: var(--color-neutral-0);
+
+  /* En dark, l'accent éclaircit pour garder le contraste AA sur fond sombre */
+  --accent: var(--color-indigo-500);
+  --accent-hover: var(--color-indigo-400);
+  --accent-active: var(--color-indigo-300);
+  --accent-subtle: oklch(0.3 0.09 264 / 0.35);
+  --accent-border: oklch(0.42 0.12 264);
+  --accent-text: var(--color-indigo-300);
+
+  --success-bg: oklch(0.3 0.06 155 / 0.3);
+  --success-fg: oklch(0.8 0.11 155);
+  --success-solid: var(--color-success-500);
+  --warning-bg: oklch(0.33 0.07 75 / 0.3);
+  --warning-fg: oklch(0.84 0.12 75);
+  --warning-solid: var(--color-warning-500);
+  --danger-bg: oklch(0.32 0.09 25 / 0.3);
+  --danger-fg: oklch(0.8 0.14 25);
+  --danger-solid: var(--color-danger-500);
+  --info-bg: oklch(0.32 0.06 240 / 0.3);
+  --info-fg: oklch(0.82 0.11 240);
+  --info-solid: var(--color-info-500);
+
+  --ring: var(--color-indigo-400);
+  --ring-offset: var(--bg-app);
+
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.3);
+  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.4), 0 1px 2px -1px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px -2px oklch(0 0 0 / 0.5), 0 2px 6px -2px oklch(0 0 0 / 0.35);
+  --shadow-lg: 0 12px 28px -6px oklch(0 0 0 / 0.6), 0 6px 12px -6px oklch(0 0 0 / 0.4);
+  --shadow-focus: 0 0 0 3px oklch(0.685 0.17 264 / 0.45);
+}
+
+/* ----------------------------------------------------------------------------
+   4 · EXPOSITION TAILWIND — rend les tokens sémantiques dispo en utilitaires
+   ex. bg-surface, text-text-muted, border-border-subtle, ring-ring,
+   bg-success-bg / text-success-fg / bg-success-solid …
+   --------------------------------------------------------------------------*/
+@theme inline {
+  --color-app: var(--bg-app);
+  --color-surface: var(--bg-surface);
+  --color-subtle: var(--bg-subtle);
+  --color-muted: var(--bg-muted);
+  --color-inset: var(--bg-inset);
+  --color-hover: var(--bg-hover);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-strong: var(--text-strong);
+  --color-text-default: var(--text-default);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-text-on-accent: var(--text-on-accent);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+  --color-accent-text: var(--accent-text);
+
+  --color-success-bg: var(--success-bg);
+  --color-success-fg: var(--success-fg);
+  --color-success-solid: var(--success-solid);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-fg: var(--warning-fg);
+  --color-warning-solid: var(--warning-solid);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-solid: var(--danger-solid);
+  --color-info-bg: var(--info-bg);
+  --color-info-fg: var(--info-fg);
+  --color-info-solid: var(--info-solid);
+
+  --color-ring: var(--ring);
+}
+
+/* ----------------------------------------------------------------------------
+   5 · RESET DE BASE + A11Y
+   --------------------------------------------------------------------------*/
 @layer base {
-  :root {
-    color-scheme: light dark;
-  }
-
   html {
-    @apply antialiased;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'cv11', 'ss01';
+    -webkit-text-size-adjust: 100%;
   }
-
   body {
-    @apply bg-bg-base font-sans text-text-base;
+    background: var(--bg-app);
+    color: var(--text-default);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-
-  /* Focus visible toujours présent (a11y) — cf. 10-design-system §0 */
+  /* Focus visible obligatoire — jamais outline:none nu */
   :focus-visible {
-    @apply ring-2 ring-offset-2 outline-none;
-    outline-color: var(--color-focus-ring);
-    --tw-ring-color: var(--color-focus-ring);
-    --tw-ring-offset-color: var(--color-bg-base);
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  ::selection {
+    background: var(--accent-subtle);
   }
 
-  /* Respect prefers-reduced-motion — cf. 10-design-system §4.4 */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -183,26 +347,26 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
- * Skeleton shimmer — utilitaire commun.
- * --------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------
+   6 · UTILITAIRES PARTAGÉS — skeleton shimmer (loading)
+   --------------------------------------------------------------------------*/
 @layer utilities {
   .skeleton {
-    @apply relative overflow-hidden bg-bg-muted;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-muted);
+    border-radius: var(--radius-sm);
   }
-
   .skeleton::after {
     content: '';
-    @apply absolute inset-0;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--bg-hover) 50%, transparent);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s linear infinite;
   }
-
   @keyframes skeleton-shimmer {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
+    100% {
       transform: translateX(100%);
     }
   }

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css">
+<style>
+  :root{
+    --color-indigo-50:oklch(0.970 0.018 264);--color-indigo-100:oklch(0.936 0.040 264);--color-indigo-200:oklch(0.888 0.070 264);--color-indigo-300:oklch(0.812 0.112 264);--color-indigo-400:oklch(0.685 0.170 264);--color-indigo-500:oklch(0.605 0.205 264);--color-indigo-600:oklch(0.550 0.220 264);--color-indigo-700:oklch(0.488 0.198 264);--color-indigo-800:oklch(0.420 0.158 264);--color-indigo-900:oklch(0.368 0.120 264);--color-indigo-950:oklch(0.268 0.082 264);
+    --color-neutral-0:oklch(1 0 268);--color-neutral-50:oklch(0.985 0.003 268);--color-neutral-100:oklch(0.970 0.004 268);--color-neutral-200:oklch(0.930 0.005 268);--color-neutral-300:oklch(0.880 0.006 268);--color-neutral-400:oklch(0.710 0.008 268);--color-neutral-500:oklch(0.580 0.009 268);--color-neutral-600:oklch(0.480 0.009 268);--color-neutral-700:oklch(0.390 0.008 268);--color-neutral-800:oklch(0.270 0.008 268);--color-neutral-900:oklch(0.190 0.008 268);--color-neutral-950:oklch(0.130 0.008 268);
+    --color-success-600:oklch(0.560 0.115 155);--color-warning-600:oklch(0.700 0.135 75);--color-danger-600:oklch(0.560 0.180 25);--color-info-600:oklch(0.600 0.125 240);
+    --bg-app:oklch(0.990 0.003 268);--bg-surface:var(--color-neutral-0);--bg-subtle:var(--color-neutral-50);--bg-muted:var(--color-neutral-100);--bg-inset:var(--color-neutral-100);--bg-hover:oklch(0.965 0.004 268);
+    --border-subtle:var(--color-neutral-200);--border-default:var(--color-neutral-300);--border-strong:var(--color-neutral-400);
+    --text-strong:var(--color-neutral-900);--text-default:var(--color-neutral-800);--text-muted:var(--color-neutral-500);--text-subtle:var(--color-neutral-400);
+    --accent:var(--color-indigo-600);--accent-hover:var(--color-indigo-700);--accent-subtle:var(--color-indigo-50);--accent-border:var(--color-indigo-200);--accent-text:var(--color-indigo-700);
+    --success-bg:oklch(0.960 0.025 155);--success-fg:oklch(0.480 0.100 155);--success-solid:var(--color-success-600);
+    --warning-bg:oklch(0.965 0.030 75);--warning-fg:oklch(0.600 0.120 75);--warning-solid:var(--color-warning-600);
+    --danger-bg:oklch(0.960 0.020 25);--danger-fg:oklch(0.490 0.165 25);--danger-solid:var(--color-danger-600);
+    --info-bg:oklch(0.960 0.020 240);--info-fg:oklch(0.520 0.115 240);--info-solid:var(--color-info-600);
+    --ring:var(--color-indigo-500);
+    --shadow-xs:0 1px 2px 0 oklch(0.13 0.02 268 / 0.05);
+    --shadow-sm:0 1px 3px 0 oklch(0.13 0.02 268 / 0.08),0 1px 2px -1px oklch(0.13 0.02 268 / 0.06);
+    --shadow-md:0 4px 12px -2px oklch(0.13 0.02 268 / 0.10),0 2px 6px -2px oklch(0.13 0.02 268 / 0.06);
+    --shadow-lg:0 12px 28px -6px oklch(0.13 0.02 268 / 0.14),0 6px 12px -6px oklch(0.13 0.02 268 / 0.08);
+  }
+  .dark{
+    --bg-app:var(--color-neutral-950);--bg-surface:oklch(0.165 0.009 268);--bg-subtle:oklch(0.190 0.009 268);--bg-muted:oklch(0.230 0.010 268);--bg-inset:oklch(0.150 0.010 268);--bg-hover:oklch(0.215 0.010 268);
+    --border-subtle:oklch(0.250 0.010 268);--border-default:oklch(0.310 0.011 268);--border-strong:oklch(0.400 0.012 268);
+    --text-strong:oklch(0.975 0.004 268);--text-default:oklch(0.900 0.005 268);--text-muted:oklch(0.660 0.009 268);--text-subtle:oklch(0.500 0.009 268);
+    --accent:var(--color-indigo-500);--accent-hover:var(--color-indigo-400);--accent-subtle:oklch(0.300 0.090 264 / 0.35);--accent-border:oklch(0.420 0.120 264);--accent-text:var(--color-indigo-300);
+    --success-bg:oklch(0.300 0.060 155 / 0.30);--success-fg:oklch(0.800 0.110 155);
+    --warning-bg:oklch(0.330 0.070 75 / 0.30);--warning-fg:oklch(0.840 0.120 75);
+    --danger-bg:oklch(0.320 0.090 25 / 0.30);--danger-fg:oklch(0.800 0.140 25);
+    --info-bg:oklch(0.320 0.060 240 / 0.30);--info-fg:oklch(0.820 0.110 240);
+    --ring:var(--color-indigo-400);
+    --shadow-xs:0 1px 2px 0 oklch(0 0 0 / 0.30);
+    --shadow-sm:0 1px 3px 0 oklch(0 0 0 / 0.40),0 1px 2px -1px oklch(0 0 0 / 0.30);
+    --shadow-md:0 4px 12px -2px oklch(0 0 0 / 0.50),0 2px 6px -2px oklch(0 0 0 / 0.35);
+    --shadow-lg:0 12px 28px -6px oklch(0 0 0 / 0.60),0 6px 12px -6px oklch(0 0 0 / 0.40);
+  }
+  *{box-sizing:border-box;}
+  ::selection{background:var(--accent-subtle);}
+  .cz-scroll::-webkit-scrollbar{width:10px;height:10px;}
+  .cz-scroll::-webkit-scrollbar-thumb{background:var(--border-default);border-radius:9999px;border:2px solid transparent;background-clip:padding-box;}
+  @keyframes cz-pop{0%{transform:scale(0.6);opacity:0;}55%{transform:scale(1.18);}100%{transform:scale(1);opacity:1;}}
+  @keyframes cz-spark{0%{transform:scale(0) rotate(0deg);opacity:0;}40%{opacity:1;}100%{transform:scale(1.4) rotate(35deg);opacity:0;}}
+  @keyframes cz-shimmer{100%{transform:translateX(100%);}}
+  @keyframes cz-fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</helmet>
+
+<div class="{{ rootClass }}" style="min-height:100vh;background:var(--bg-app);color:var(--text-default);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;">
+
+  <!-- ============ TOP BAR ============ -->
+  <header style="position:sticky;top:0;z-index:40;display:flex;align-items:center;justify-content:space-between;height:60px;padding:0 28px;background:color-mix(in oklch, var(--bg-app) 82%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-subtle);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent);box-shadow:var(--shadow-sm);">
+        <i class="ti ti-route" style="font-size:18px;color:#fff;"></i>
+      </div>
+      <div style="display:flex;flex-direction:column;line-height:1.1;">
+        <span style="font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);font-size:15px;">Cursus</span>
+        <span style="font-size:11px;color:var(--text-muted);">Design System · v0.1 MVP</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border-default);border-radius:8px;background:var(--bg-surface);color:var(--text-muted);font-size:13px;">
+        <i class="ti ti-search" style="font-size:15px;"></i><span>Rechercher</span>
+        <span style="display:inline-flex;gap:2px;margin-left:6px;">
+          <kbd style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 5px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:4px;background:var(--bg-subtle);color:var(--text-default);">⌘</kbd>
+          <kbd style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 5px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:4px;background:var(--bg-subtle);color:var(--text-default);">K</kbd>
+        </span>
+      </div>
+      <button onClick="{{ toggleTheme }}" aria-label="Basculer le thème" style="display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 12px;border:1px solid var(--border-default);border-radius:8px;background:var(--bg-surface);color:var(--text-default);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;">
+        <i class="{{ themeIcon }}" style="font-size:16px;"></i><span>{{ themeLabel }}</span>
+      </button>
+    </div>
+  </header>
+
+  <div style="display:flex;align-items:flex-start;max-width:1280px;margin:0 auto;">
+    <!-- ============ SIDEBAR NAV ============ -->
+    <nav class="cz-scroll" style="position:sticky;top:60px;flex:none;width:212px;height:calc(100vh - 60px);overflow-y:auto;padding:24px 16px 64px;border-right:1px solid var(--border-subtle);">
+      <sc-for list="{{ nav }}" as="grp" hint-placeholder-count="3">
+        <div style="margin-bottom:18px;">
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);padding:0 8px 6px;">{{ grp.title }}</div>
+          <sc-for list="{{ grp.items }}" as="it" hint-placeholder-count="4">
+            <a href="{{ it.href }}" style="display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:6px;color:var(--text-muted);text-decoration:none;font-size:13.5px;font-weight:500;" style-hover="background:var(--bg-hover);color:var(--text-default);">
+              <i class="{{ it.icon }}" style="font-size:16px;width:16px;"></i>{{ it.label }}
+            </a>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <!-- ============ MAIN ============ -->
+    <main style="flex:1;min-width:0;padding:40px 48px 120px;">
+
+      <!-- INTRO -->
+      <div style="margin-bottom:52px;animation:cz-fadein var(--duration-base,300ms) var(--ease-out,ease);">
+        <div style="display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:9999px;background:var(--accent-subtle);color:var(--accent-text);font-size:12px;font-weight:600;margin-bottom:18px;">
+          <i class="ti ti-sparkles" style="font-size:14px;"></i>Fondations &amp; Atomes
+        </div>
+        <h1 style="font-size:36px;line-height:1.15;font-weight:700;letter-spacing:-0.02em;color:var(--text-strong);margin:0 0 14px;max-width:680px;">Le harnais, traduit en système.</h1>
+        <p style="font-size:17px;line-height:1.6;color:var(--text-muted);max-width:620px;margin:0;">Ce que Linear ferait si Linear était un outil de pédagogie — pensé par des ingénieurs, pour des ingénieurs. Sobre, dense, monochrome, un seul accent&nbsp;: l'indigo de la validation.</p>
+      </div>
+
+      <!-- ============ PALETTE ============ -->
+      <section id="palette" style="margin-bottom:64px;">
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;">
+          <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0;">Palette OKLCH</h2>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-subtle);">light + dark</span>
+        </div>
+        <p style="color:var(--text-muted);max-width:660px;margin:0 0 28px;font-size:14.5px;">Tout en OKLCH (natif Tailwind v4). Les composants ne consomment jamais un primitif&nbsp;: ils passent par des <strong style="color:var(--text-default);font-weight:600;">alias de rôle</strong> (<code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-text);">--accent</code>, <code style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-text);">--text-muted</code>…), ce qui rend le dark mode trivial.</p>
+
+        <!-- Accent indigo -->
+        <div style="margin-bottom:26px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0;">Accent · Indigo</h3>
+            <span style="font-size:12.5px;color:var(--text-muted);">— la couleur de « ça valide ». Teinte 264 constante, chroma qui culmine sur le 600.</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(11,1fr);gap:6px;">
+            <sc-for list="{{ indigo }}" as="s" hint-placeholder-count="11">
+              <div title="{{ s.oklch }}" style="display:flex;flex-direction:column;gap:5px;">
+                <div style="height:56px;border-radius:7px;border:1px solid var(--border-subtle);background:{{ s.css }};"></div>
+                <span style="font-size:11px;font-weight:600;color:var(--text-default);">{{ s.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Neutrals -->
+        <div style="margin-bottom:26px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0;">Neutrals · warm-cool</h3>
+            <span style="font-size:12.5px;color:var(--text-muted);">— jamais un gris pur. Teinté indigo (hue 268, chroma ≈ 0). Donne la chaleur « outil pro ».</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(13,1fr);gap:6px;">
+            <sc-for list="{{ neutral }}" as="s" hint-placeholder-count="13">
+              <div title="{{ s.oklch }}" style="display:flex;flex-direction:column;gap:5px;">
+                <div style="height:56px;border-radius:7px;border:1px solid var(--border-subtle);background:{{ s.css }};"></div>
+                <span style="font-size:10.5px;font-weight:600;color:var(--text-default);">{{ s.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Semantic -->
+        <div>
+          <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0 0 10px;">Sémantiques sobres <span style="font-weight:400;color:var(--text-muted);">— désaturées ~10-15 %, une teinte = un sens</span></h3>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+            <sc-for list="{{ semantic }}" as="s" hint-placeholder-count="4">
+              <div style="border:1px solid var(--border-subtle);border-radius:10px;overflow:hidden;background:var(--bg-surface);">
+                <div style="height:52px;background:{{ s.solid }};"></div>
+                <div style="padding:11px 13px;">
+                  <div style="display:flex;align-items:center;gap:7px;">
+                    <i class="{{ s.icon }}" style="font-size:15px;color:{{ s.solid }};"></i>
+                    <span style="font-weight:600;font-size:13.5px;color:var(--text-strong);">{{ s.name }}</span>
+                  </div>
+                  <p style="margin:5px 0 0;font-size:12px;color:var(--text-muted);">{{ s.use }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TYPOGRAPHIE ============ -->
+      <section id="type" style="margin-bottom:64px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 6px;">Typographie</h2>
+        <p style="color:var(--text-muted);max-width:660px;margin:0 0 24px;font-size:14.5px;"><strong style="color:var(--text-default);font-weight:600;">Inter</strong> pour l'UI, <strong style="color:var(--text-default);font-weight:600;">JetBrains Mono</strong> pour IDs/URLs/logs. Échelle Major Third (1.25), bornée 12 → 36. Poids 400/500/600/700 seulement.</p>
+        <div style="border:1px solid var(--border-subtle);border-radius:12px;overflow:hidden;background:var(--bg-surface);">
+          <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="8">
+            <div style="display:flex;align-items:baseline;gap:20px;padding:14px 20px;border-bottom:1px solid var(--border-subtle);">
+              <span style="flex:none;width:120px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted);">{{ t.token }} · {{ t.px }}</span>
+              <span style="font-size:{{ t.size }};font-weight:{{ t.weight }};letter-spacing:-0.014em;color:var(--text-strong);line-height:1.1;">{{ t.sample }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;gap:16px;align-items:center;padding:16px 20px;background:var(--bg-inset);">
+            <span style="flex:none;width:120px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted);">font-mono</span>
+            <code style="font-family:'JetBrains Mono',monospace;font-size:13.5px;color:var(--text-default);">git push origin feat/semaine-04-harness</code>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
+          <sc-for list="{{ weights }}" as="w" hint-placeholder-count="4">
+            <div style="flex:1;min-width:120px;border:1px solid var(--border-subtle);border-radius:9px;padding:13px 15px;background:var(--bg-surface);">
+              <div style="font-size:19px;font-weight:{{ w.val }};color:var(--text-strong);">{{ w.val }}</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">{{ w.name }} — {{ w.use }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- ============ ESPACEMENT / RADIUS / SHADOW / MOTION ============ -->
+      <section id="space" style="margin-bottom:64px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 24px;">Espacement, rayons, ombres, motion</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+          <!-- Spacing -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;padding:20px;background:var(--bg-surface);">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0 0 4px;">Espacement <span style="font-weight:400;color:var(--text-muted);">— base 4px</span></h3>
+            <div style="display:flex;flex-direction:column;gap:9px;margin-top:14px;">
+              <sc-for list="{{ spacing }}" as="sp" hint-placeholder-count="9">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <span style="flex:none;width:64px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted);">{{ sp.token }}</span>
+                  <div style="height:14px;border-radius:3px;background:var(--accent);width:{{ sp.w }};"></div>
+                  <span style="font-size:11.5px;color:var(--text-subtle);">{{ sp.px }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- Radius -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;padding:20px;background:var(--bg-surface);">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0 0 14px;">Rayons <span style="font-weight:400;color:var(--text-muted);">— discrets</span></h3>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+              <sc-for list="{{ radii }}" as="r" hint-placeholder-count="6">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:7px;">
+                  <div style="width:100%;height:48px;background:var(--accent-subtle);border:1.5px solid var(--accent-border);border-radius:{{ r.val }};"></div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-muted);">{{ r.token }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- Shadows -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;padding:20px;background:var(--bg-surface);">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0 0 18px;">Ombres <span style="font-weight:400;color:var(--text-muted);">— jamais lourdes, teintées cool</span></h3>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;">
+              <sc-for list="{{ shadows }}" as="sh" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                  <div style="width:100%;height:50px;border-radius:9px;background:var(--bg-surface);border:1px solid var(--border-subtle);box-shadow:{{ sh.val }};"></div>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-muted);">{{ sh.token }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- Motion -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;padding:20px;background:var(--bg-surface);">
+            <h3 style="font-size:14px;font-weight:600;color:var(--text-strong);margin:0 0 6px;">Motion</h3>
+            <p style="font-size:12px;color:var(--text-muted);margin:0 0 14px;">ease-out à l'entrée · ease-in à la sortie · <code style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent-text);">prefers-reduced-motion</code> strict.</p>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <sc-for list="{{ motion }}" as="m" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px;">
+                  <span style="font-family:'JetBrains Mono',monospace;color:var(--text-default);">{{ m.token }}</span>
+                  <span style="color:var(--text-muted);">{{ m.val }} — {{ m.use }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ICÔNES ============ -->
+      <section id="icons" style="margin-bottom:64px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 6px;">Système d'icônes</h2>
+        <p style="color:var(--text-muted);max-width:660px;margin:0 0 22px;font-size:14.5px;"><strong style="color:var(--text-default);font-weight:600;">Tabler Icons</strong>, outline uniquement (jamais filled). 1px de trait, taille 16/18/20. Une action = une icône, partout.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">
+          <sc-for list="{{ icons }}" as="ic" hint-placeholder-count="18">
+            <div style="display:flex;align-items:center;gap:11px;padding:11px 13px;border:1px solid var(--border-subtle);border-radius:9px;background:var(--bg-surface);">
+              <i class="{{ ic.cls }}" style="font-size:19px;color:var(--accent-text);flex:none;"></i>
+              <div style="min-width:0;">
+                <div style="font-size:12.5px;font-weight:500;color:var(--text-strong);">{{ ic.label }}</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-subtle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ ic.name }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- ============ ATOMES : BUTTONS ============ -->
+      <section id="buttons" style="margin-bottom:56px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 6px;">Button</h2>
+        <p style="color:var(--text-muted);margin:0 0 22px;font-size:14.5px;">Verbes d'action. Primary indigo, secondary outline, ghost, danger. Tailles sm / md / lg. État loading sans spinner global.</p>
+
+        <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:26px;display:flex;flex-direction:column;gap:24px;">
+          <!-- variants -->
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+            <button style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-xs);transition:background var(--duration-instant,100ms) var(--ease-out);" style-hover="background:var(--accent-hover);"><i class="ti ti-send" style="font-size:16px;"></i>Soumettre</button>
+            <button style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border:1px solid var(--border-default);border-radius:8px;background:var(--bg-surface);color:var(--text-default);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:background var(--duration-instant,100ms);" style-hover="background:var(--bg-hover);"><i class="ti ti-user-plus" style="font-size:16px;"></i>Inviter</button>
+            <button style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border:none;border-radius:8px;background:transparent;color:var(--text-default);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;" style-hover="background:var(--bg-hover);">Annuler</button>
+            <button style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border:none;border-radius:8px;background:var(--danger-solid);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;"><i class="ti ti-trash" style="font-size:16px;"></i>Supprimer</button>
+            <button disabled style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;opacity:0.5;cursor:not-allowed;"><i class="ti ti-loader-2" style="font-size:16px;animation:spin 0.8s linear infinite;"></i>Validation…</button>
+          </div>
+          <div style="height:1px;background:var(--border-subtle);"></div>
+          <!-- sizes -->
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;">
+            <button style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:none;border-radius:7px;background:var(--accent);color:#fff;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;">sm</button>
+            <button style="display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 16px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">md</button>
+            <button style="display:inline-flex;align-items:center;gap:7px;height:46px;padding:0 22px;border:none;border-radius:9px;background:var(--accent);color:#fff;font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;">lg</button>
+            <span style="font-size:12.5px;color:var(--text-subtle);margin-left:4px;">touch target ≥ 44px sur lg</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ATOMES : INPUTS ============ -->
+      <section id="inputs" style="margin-bottom:56px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 22px;">Input · Textarea · Select</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:24px;display:flex;flex-direction:column;gap:18px;">
+            <!-- FormField default -->
+            <div>
+              <label style="display:block;font-size:12.5px;font-weight:600;color:var(--text-default);margin-bottom:6px;">URL du repo</label>
+              <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1px solid var(--border-default);border-radius:8px;background:var(--bg-app);">
+                <i class="ti ti-brand-github" style="font-size:17px;color:var(--text-muted);"></i>
+                <input value="github.com/lea/semaine-04" style="flex:1;border:none;outline:none;background:transparent;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-default);"/>
+              </div>
+              <p style="margin:6px 0 0;font-size:12px;color:var(--text-subtle);">Le harnais clone ce repo à chaque soumission.</p>
+            </div>
+            <!-- focused -->
+            <div>
+              <label style="display:block;font-size:12.5px;font-weight:600;color:var(--text-default);margin-bottom:6px;">Email</label>
+              <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1.5px solid var(--accent);border-radius:8px;background:var(--bg-app);box-shadow:var(--shadow-focus,0 0 0 3px oklch(0.605 0.205 264 / 0.25));">
+                <i class="ti ti-mail" style="font-size:17px;color:var(--accent);"></i>
+                <input value="lea@cursus.dev" style="flex:1;border:none;outline:none;background:transparent;font-size:14px;color:var(--text-default);"/>
+              </div>
+              <p style="margin:6px 0 0;font-size:12px;color:var(--accent-text);">État focus — ring indigo, AAA sur login.</p>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:24px;display:flex;flex-direction:column;gap:18px;">
+            <!-- error -->
+            <div>
+              <label style="display:block;font-size:12.5px;font-weight:600;color:var(--text-default);margin-bottom:6px;">URL du repo</label>
+              <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border:1.5px solid var(--danger-solid);border-radius:8px;background:var(--bg-app);">
+                <i class="ti ti-link" style="font-size:17px;color:var(--danger-solid);"></i>
+                <input value="https://mon-site.fr" style="flex:1;border:none;outline:none;background:transparent;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-default);"/>
+              </div>
+              <p style="margin:6px 0 0;font-size:12px;color:var(--danger-fg);display:flex;align-items:center;gap:5px;"><i class="ti ti-alert-circle" style="font-size:14px;"></i>Cette URL ne semble pas être un repo GitHub.</p>
+            </div>
+            <!-- textarea -->
+            <div>
+              <label style="display:block;font-size:12.5px;font-weight:600;color:var(--text-default);margin-bottom:6px;">Note de soumission <span style="font-weight:400;color:var(--text-subtle);">(optionnel)</span></label>
+              <textarea rows="3" placeholder="Ce que tu veux signaler au formateur…" style="width:100%;padding:10px 12px;border:1px solid var(--border-default);border-radius:8px;background:var(--bg-app);font-family:inherit;font-size:13.5px;color:var(--text-default);resize:vertical;outline:none;"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ATOMES : CONTROLS ============ -->
+      <section id="controls" style="margin-bottom:56px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 22px;">Checkbox · Radio · Switch</h2>
+        <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:26px;display:flex;gap:48px;flex-wrap:wrap;align-items:center;">
+          <!-- checkbox -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--text-default);">
+              <span style="display:grid;place-items:center;width:18px;height:18px;border-radius:5px;background:var(--accent);"><i class="ti ti-check" style="font-size:13px;color:#fff;stroke-width:3;"></i></span>Notifier par email
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--text-default);">
+              <span style="display:block;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border-strong);"></span>Rappel J-1
+            </label>
+          </div>
+          <!-- radio -->
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--text-default);">
+              <span style="display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--accent);"><span style="width:8px;height:8px;border-radius:50%;background:var(--accent);"></span></span>Dev web
+            </label>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;color:var(--text-default);">
+              <span style="display:block;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-strong);"></span>Cybersécurité
+            </label>
+          </div>
+          <!-- switch (interactive) -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <label onClick="{{ toggleSwitch }}" style="display:flex;align-items:center;gap:11px;cursor:pointer;font-size:14px;color:var(--text-default);">
+              <span style="position:relative;width:38px;height:22px;border-radius:9999px;background:{{ switchBg }};transition:background var(--duration-fast,200ms) var(--ease-out);">
+                <span style="position:absolute;top:2px;left:{{ switchX }};width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);transition:left var(--duration-fast,200ms) var(--ease-out);"></span>
+              </span>{{ switchLabel }}
+            </label>
+            <span style="font-size:12px;color:var(--text-subtle);">Switch — clique pour basculer</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ATOMES : BADGES / TAGS / AVATARS / KBD ============ -->
+      <section id="badges" style="margin-bottom:56px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 22px;">Badge · Tag · Avatar · Kbd · Tooltip</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <!-- Badges -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:14px;">Badges de statut</div>
+            <div style="display:flex;flex-wrap:wrap;gap:9px;">
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:9999px;background:var(--success-bg);color:var(--success-fg);font-size:12px;font-weight:600;"><i class="ti ti-circle-check" style="font-size:14px;"></i>Validé</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:9999px;background:var(--info-bg);color:var(--info-fg);font-size:12px;font-weight:600;"><i class="ti ti-progress" style="font-size:14px;"></i>En cours</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:9999px;background:var(--warning-bg);color:var(--warning-fg);font-size:12px;font-weight:600;"><i class="ti ti-alert-triangle" style="font-size:14px;"></i>Alerte</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:9999px;background:var(--danger-bg);color:var(--danger-fg);font-size:12px;font-weight:600;"><i class="ti ti-clock-exclamation" style="font-size:14px;"></i>Retard</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:9999px;background:var(--bg-muted);color:var(--text-muted);font-size:12px;font-weight:600;">Brouillon</span>
+            </div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin:20px 0 14px;">Tags fermables</div>
+            <div style="display:flex;flex-wrap:wrap;gap:9px;">
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 11px;border-radius:7px;border:1px solid var(--border-default);background:var(--bg-app);font-size:12.5px;color:var(--text-default);">Semaine 04<i class="ti ti-x" style="font-size:14px;color:var(--text-subtle);cursor:pointer;"></i></span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 6px 4px 11px;border-radius:7px;border:1px solid var(--accent-border);background:var(--accent-subtle);font-size:12.5px;color:var(--accent-text);">IA<i class="ti ti-x" style="font-size:14px;cursor:pointer;"></i></span>
+            </div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin:20px 0 14px;">Raccourcis (Kbd)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+              <span style="display:inline-flex;gap:3px;"><kbd style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:5px;background:var(--bg-subtle);color:var(--text-default);">⌘</kbd><kbd style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:5px;background:var(--bg-subtle);color:var(--text-default);">K</kbd></span>
+              <span style="font-size:12.5px;color:var(--text-muted);">ouvrir la palette</span>
+              <kbd style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:5px;background:var(--bg-subtle);color:var(--text-default);">G</kbd><span style="font-size:12.5px;color:var(--text-muted);">puis</span>
+              <kbd style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:2px 7px;border:1px solid var(--border-default);border-bottom-width:2px;border-radius:5px;background:var(--bg-subtle);color:var(--text-default);">D</kbd><span style="font-size:12.5px;color:var(--text-muted);">dashboard</span>
+            </div>
+          </div>
+          <!-- Avatars + tooltip + skeleton -->
+          <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:22px;">
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin-bottom:14px;">Avatars · fallback initiales en gradient</div>
+            <div style="display:flex;align-items:flex-end;gap:14px;">
+              <div style="display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--color-indigo-400),var(--color-indigo-700));color:#fff;font-size:10px;font-weight:600;">LM</div>
+              <div style="display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,oklch(0.7 0.13 200),oklch(0.5 0.16 264));color:#fff;font-size:12px;font-weight:600;">TD</div>
+              <div style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,oklch(0.72 0.13 75),oklch(0.55 0.18 25));color:#fff;font-size:14px;font-weight:600;">YK</div>
+              <div style="display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,oklch(0.7 0.13 155),oklch(0.5 0.14 200));color:#fff;font-size:17px;font-weight:600;">SA</div>
+              <div style="display:flex;align-items:center;">
+                <div style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--color-indigo-400),var(--color-indigo-700));color:#fff;font-size:12px;font-weight:600;border:2px solid var(--bg-surface);">+5</div>
+              </div>
+            </div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin:22px 0 14px;">Tooltip</div>
+            <div style="position:relative;display:inline-block;">
+              <button style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--border-default);border-radius:7px;background:var(--bg-surface);color:var(--text-default);font-family:inherit;font-size:13px;font-weight:500;cursor:default;"><i class="ti ti-info-circle" style="font-size:15px;"></i>Le harnais</button>
+              <div style="position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);white-space:nowrap;padding:6px 10px;border-radius:7px;background:var(--color-neutral-900);color:var(--color-neutral-50);font-size:12px;font-weight:500;box-shadow:var(--shadow-md);">Validation auto via GitHub Actions<span style="position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--color-neutral-900);"></span></div>
+            </div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-subtle);margin:46px 0 14px;">Skeleton (loading)</div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <div style="height:12px;width:70%;border-radius:5px;background:linear-gradient(90deg,var(--bg-muted) 0%,var(--bg-hover) 50%,var(--bg-muted) 100%);background-size:200% 100%;animation:cz-shimmer 1.4s linear infinite;"></div>
+              <div style="height:12px;width:90%;border-radius:5px;background:linear-gradient(90deg,var(--bg-muted) 0%,var(--bg-hover) 50%,var(--bg-muted) 100%);background-size:200% 100%;animation:cz-shimmer 1.4s linear infinite;"></div>
+              <div style="height:12px;width:50%;border-radius:5px;background:linear-gradient(90deg,var(--bg-muted) 0%,var(--bg-hover) 50%,var(--bg-muted) 100%);background-size:200% 100%;animation:cz-shimmer 1.4s linear infinite;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MICRO-INTERACTION SIGNATURE ============ -->
+      <section id="signature" style="margin-bottom:40px;">
+        <h2 style="font-size:25px;font-weight:700;letter-spacing:-0.014em;color:var(--text-strong);margin:0 0 6px;">Micro-interaction signature</h2>
+        <p style="color:var(--text-muted);margin:0 0 22px;font-size:14.5px;">Validation d'un livrable → sparkle + bounce léger du badge XP. Jamais de feedback négatif sur « Je suis bloqué ».</p>
+        <div style="border:1px solid var(--border-subtle);border-radius:12px;background:var(--bg-surface);padding:30px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+          <button onClick="{{ triggerXp }}" style="display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 18px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;" style-hover="background:var(--accent-hover);"><i class="ti ti-circle-check" style="font-size:17px;"></i>Valider le livrable</button>
+          <div style="position:relative;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:9999px;background:var(--accent-subtle);color:var(--accent-text);font-weight:700;font-size:14px;" key="{{ xpKey }}">
+            <i class="ti ti-bolt" style="font-size:16px;"></i><span style="animation:{{ xpAnim }};display:inline-block;">+{{ xpValue }} XP</span>
+            <i class="ti ti-sparkles" style="position:absolute;top:-8px;right:-6px;font-size:16px;color:var(--warning-solid);animation:{{ sparkAnim }};"></i>
+          </div>
+          <span style="font-size:12.5px;color:var(--text-subtle);">clique « Valider » →</span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { dark:false, switchOn:true, xpCount:0, xpValue:120 };
+
+  renderVals(){
+    const d = this.state.dark;
+    const mk = (name, css, oklch) => ({ name, css, oklch });
+    return {
+      rootClass: d ? 'dark' : '',
+      themeIcon: d ? 'ti ti-sun' : 'ti ti-moon',
+      themeLabel: d ? 'Clair' : 'Sombre',
+      toggleTheme: () => this.setState(s=>({dark:!s.dark})),
+
+      // switch
+      switchBg: this.state.switchOn ? 'var(--accent)' : 'var(--border-strong)',
+      switchX: this.state.switchOn ? '18px' : '2px',
+      switchLabel: this.state.switchOn ? 'Mode sombre auto' : 'Mode sombre off',
+      toggleSwitch: () => this.setState(s=>({switchOn:!s.switchOn})),
+
+      // signature xp
+      xpKey: 'xp'+this.state.xpCount,
+      xpValue: this.state.xpValue,
+      xpAnim: this.state.xpCount ? 'cz-pop 450ms cubic-bezier(0.16,1,0.3,1)' : 'none',
+      sparkAnim: this.state.xpCount ? 'cz-spark 700ms ease-out' : 'none',
+      triggerXp: () => this.setState(s=>({xpCount:s.xpCount+1, xpValue:[80,120,150,200][s.xpCount%4]})),
+
+      nav: [
+        { title:'Fondations', items:[
+          {label:'Palette', href:'#palette', icon:'ti ti-palette'},
+          {label:'Typographie', href:'#type', icon:'ti ti-typography'},
+          {label:'Espace & motion', href:'#space', icon:'ti ti-ruler-2'},
+          {label:'Icônes', href:'#icons', icon:'ti ti-icons'},
+        ]},
+        { title:'Atomes', items:[
+          {label:'Button', href:'#buttons', icon:'ti ti-square-rounded'},
+          {label:'Input', href:'#inputs', icon:'ti ti-forms'},
+          {label:'Controls', href:'#controls', icon:'ti ti-toggle-left'},
+          {label:'Badge & co', href:'#badges', icon:'ti ti-badge'},
+          {label:'Signature', href:'#signature', icon:'ti ti-sparkles'},
+        ]},
+      ],
+
+      indigo: [
+        mk('50','var(--color-indigo-50)','oklch(0.97 0.018 264)'),
+        mk('100','var(--color-indigo-100)','oklch(0.936 0.04 264)'),
+        mk('200','var(--color-indigo-200)','oklch(0.888 0.07 264)'),
+        mk('300','var(--color-indigo-300)','oklch(0.812 0.112 264)'),
+        mk('400','var(--color-indigo-400)','oklch(0.685 0.17 264)'),
+        mk('500','var(--color-indigo-500)','oklch(0.605 0.205 264)'),
+        mk('600','var(--color-indigo-600)','oklch(0.55 0.22 264)'),
+        mk('700','var(--color-indigo-700)','oklch(0.488 0.198 264)'),
+        mk('800','var(--color-indigo-800)','oklch(0.42 0.158 264)'),
+        mk('900','var(--color-indigo-900)','oklch(0.368 0.12 264)'),
+        mk('950','var(--color-indigo-950)','oklch(0.268 0.082 264)'),
+      ],
+      neutral: ['0','50','100','200','300','400','500','600','700','800','900','950'].map(n=>mk(n,'var(--color-neutral-'+n+')','')).concat([]),
+
+      semantic: [
+        {name:'Success', solid:'var(--color-success-600)', icon:'ti ti-circle-check', use:'Livrable validé, harnass au vert.'},
+        {name:'Warning', solid:'var(--color-warning-600)', icon:'ti ti-alert-triangle', use:'Alerte, check partiel, à surveiller.'},
+        {name:'Danger', solid:'var(--color-danger-600)', icon:'ti ti-clock-exclamation', use:'Retard, échec bloquant.'},
+        {name:'Info', solid:'var(--color-info-600)', icon:'ti ti-progress', use:'En cours, neutre informatif.'},
+      ],
+
+      typeScale: [
+        {token:'text-4xl', px:'36', size:'2.25rem', weight:700, sample:'Tableau de bord cohorte'},
+        {token:'text-3xl', px:'31', size:'1.953rem', weight:700, sample:'Semaine 04 — Le harnais'},
+        {token:'text-2xl', px:'25', size:'1.563rem', weight:600, sample:'Soumettre un livrable'},
+        {token:'text-xl', px:'20', size:'1.25rem', weight:600, sample:'12 stagiaires actifs'},
+        {token:'text-lg', px:'18', size:'1.125rem', weight:500, sample:'Validation automatique'},
+        {token:'text-base', px:'16', size:'1rem', weight:400, sample:'Corps de texte par défaut de l\u2019interface.'},
+        {token:'text-sm', px:'14', size:'0.875rem', weight:400, sample:'Texte secondaire et descriptions.'},
+        {token:'text-xs', px:'12', size:'0.75rem', weight:500, sample:'LABELS · MÉTADONNÉES · HINTS'},
+      ],
+      weights: [
+        {val:400, name:'Regular', use:'corps'},
+        {val:500, name:'Medium', use:'labels'},
+        {val:600, name:'Semibold', use:'titres, boutons'},
+        {val:700, name:'Bold', use:'H1/H2, chiffres clés'},
+      ],
+
+      spacing: [
+        {token:'space-1', px:'4px', w:'4px'},
+        {token:'space-2', px:'8px', w:'8px'},
+        {token:'space-3', px:'12px', w:'12px'},
+        {token:'space-4', px:'16px', w:'16px'},
+        {token:'space-5', px:'20px', w:'20px'},
+        {token:'space-6', px:'24px', w:'24px'},
+        {token:'space-8', px:'32px', w:'32px'},
+        {token:'space-10', px:'40px', w:'40px'},
+        {token:'space-12', px:'48px', w:'48px'},
+      ],
+      radii: [
+        {token:'sm · 4', val:'4px'},
+        {token:'md · 6', val:'6px'},
+        {token:'lg · 8', val:'8px'},
+        {token:'xl · 12', val:'12px'},
+        {token:'2xl · 16', val:'16px'},
+        {token:'full', val:'9999px'},
+      ],
+      shadows: [
+        {token:'xs', val:'var(--shadow-xs)'},
+        {token:'sm', val:'var(--shadow-sm)'},
+        {token:'md', val:'var(--shadow-md)'},
+        {token:'lg', val:'var(--shadow-lg)'},
+      ],
+      motion: [
+        {token:'instant', val:'100ms', use:'hover'},
+        {token:'fast', val:'200ms', use:'toggle'},
+        {token:'base', val:'300ms', use:'composant'},
+        {token:'slow', val:'500ms', use:'page'},
+      ],
+
+      icons: [
+        {label:'Rechercher', name:'ti-search', cls:'ti ti-search'},
+        {label:'Palette Cmd+K', name:'ti-command', cls:'ti ti-command'},
+        {label:'Enregistrer', name:'ti-device-floppy', cls:'ti ti-device-floppy'},
+        {label:'Supprimer', name:'ti-trash', cls:'ti ti-trash'},
+        {label:'Éditer', name:'ti-pencil', cls:'ti ti-pencil'},
+        {label:'GitHub', name:'ti-brand-github', cls:'ti ti-brand-github'},
+        {label:'Harnais', name:'ti-shield-check', cls:'ti ti-shield-check'},
+        {label:'Alerte', name:'ti-alert-triangle', cls:'ti ti-alert-triangle'},
+        {label:'Validé', name:'ti-circle-check', cls:'ti ti-circle-check'},
+        {label:'En cours', name:'ti-progress', cls:'ti ti-progress'},
+        {label:'Soumettre', name:'ti-send', cls:'ti ti-send'},
+        {label:'Inviter', name:'ti-user-plus', cls:'ti ti-user-plus'},
+        {label:'Cohorte', name:'ti-users-group', cls:'ti ti-users-group'},
+        {label:'Module', name:'ti-stack-2', cls:'ti ti-stack-2'},
+        {label:'Certificat', name:'ti-certificate', cls:'ti ti-certificate'},
+        {label:'Portfolio', name:'ti-layout-grid', cls:'ti ti-layout-grid'},
+        {label:'Notifications', name:'ti-bell', cls:'ti ti-bell'},
+        {label:'Bloqué (aide)', name:'ti-help-circle', cls:'ti ti-help-circle'},
+        {label:'XP / points', name:'ti-bolt', cls:'ti ti-bolt'},
+        {label:'Logs bruts', name:'ti-terminal-2', cls:'ti ti-terminal-2'},
+        {label:'QR vérif', name:'ti-qrcode', cls:'ti ti-qrcode'},
+        {label:'Paramètres', name:'ti-settings', cls:'ti ti-settings'},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -16,17 +16,17 @@ jobs:
     name: Visual regression (Chromatic)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Non-bloquant tant que CHROMATIC_PROJECT_TOKEN n'est pas configuré dans les secrets GitHub
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
           # Chromatic a besoin de l'historique pour TurboSnap
           fetch-depth: 0
       - uses: pnpm/action-setup@v4
-        with:
-          version: '9'
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Build Storybook + publish to Chromatic

@@ -193,6 +193,34 @@ Crée un fichier `tasks/_blockers.md` (append-only) avec format :
 - **prefers-reduced-motion** respecté sur toute animation > 200ms
 - **A11y AAA** sur écrans critiques (auth, capstone, vérification certificat), AA partout ailleurs
 
+### Design system — RÈGLE NON NÉGOCIABLE
+
+Le design system est **importé depuis Claude Design** (« Design system Cursus »). La
+source de vérité est **`assets/css/main.css`** (bloc `@theme` + rôles `:root`/`.dark`
+
+- exposition `@theme inline`). Référence : `docs/design/claude-design-export/`
+  (`tokens.md`, `components/*.html`, `mockups/`).
+
+1. **Tokens = source unique.** Tu consommes **uniquement des rôles** exposés en
+   utilitaires Tailwind : `bg-app`, `bg-surface`, `bg-muted`, `text-text-strong`,
+   `text-text-default`, `text-text-muted`, `text-text-subtle`, `border-border-subtle`,
+   `bg-accent`, `text-accent-text`, `bg-success-bg`/`text-success-fg`/`bg-success-solid`
+   (idem warning/danger/info), `ring-ring`.
+2. **INTERDIT** : une couleur en dur (`#4f46e5`, `rgb(...)`, `oklch(...)` inline), un
+   primitif brut (`bg-indigo-600`, `text-zinc-500`), ou un token hors design system.
+   Si un rôle manque, on l'**ajoute dans `main.css`** — on n'improvise pas dans le composant.
+3. **@nuxt/ui** : `primary` ↦ `indigo`, `neutral` ↦ `neutral` (cf. `app/app.config.ts`).
+   Préférer les composants natifs (`UButton`, `UInput`, …) qui héritent déjà des tokens.
+4. **Icônes** : Tabler outline uniquement (`i-tabler-*`).
+5. **Dark mode** : jamais de couleur conditionnelle en dur — les rôles basculent seuls
+   via `.dark`. Tester light **et** dark.
+6. **Drift** : si le rendu diverge de `docs/design/claude-design-export/`, l'export
+   gagne → corriger les tokens, ouvrir une note de drift. Ré-import via `/design-login`
+   - MCP `claude_design`.
+
+> En review, tout diff introduisant une valeur de couleur en dur ou un primitif dans
+> un composant est **bloquant**.
+
 ### Sécurité
 
 - **OWASP Top 10** checklist par PR (cf. `09-engineering-playbook.md` §6.1)

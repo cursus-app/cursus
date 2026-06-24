@@ -37,12 +37,12 @@ const statusLabel = computed(() => {
 
 const statusColor = computed(() => {
   if (status.value === 'pending') {
-    return 'bg-bg-muted text-text-muted';
+    return 'bg-muted text-text-muted';
   }
   if (error.value || !health.value?.ok) {
-    return 'bg-danger-subtle text-danger-base';
+    return 'bg-danger-bg text-danger-fg';
   }
-  return 'bg-success-subtle text-success-base';
+  return 'bg-success-bg text-success-fg';
 });
 </script>
 
@@ -50,7 +50,7 @@ const statusColor = computed(() => {
   <section class="mx-auto flex min-h-screen max-w-2xl flex-col justify-center px-6 py-16">
     <p class="text-xs font-medium tracking-widest text-text-subtle uppercase">Cursus</p>
 
-    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-text-base sm:text-5xl">
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-text-strong sm:text-5xl">
       Le parcours de stage tech, structuré et validé.
     </h1>
 
@@ -68,14 +68,14 @@ const statusColor = computed(() => {
       <div class="flex items-center justify-between gap-4">
         <div>
           <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">Statut système</p>
-          <p class="mt-1 text-sm text-text-base">
+          <p class="mt-1 text-sm text-text-default">
             <span
               class="inline-flex items-center gap-2 rounded-full px-2.5 py-0.5 text-xs font-medium"
               :class="statusColor"
             >
               <span
                 class="h-1.5 w-1.5 rounded-full"
-                :class="health?.ok ? 'bg-success-base' : 'bg-danger-base'"
+                :class="health?.ok ? 'bg-success-solid' : 'bg-danger-solid'"
               />
               {{ statusLabel }}
             </span>
