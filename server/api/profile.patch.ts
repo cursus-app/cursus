@@ -46,13 +46,25 @@ export default defineEventHandler(async (event) => {
     publicSlug?: string | null;
   } = {};
 
-  if (body.fullName !== undefined) { data.fullName = body.fullName; }
-  if (body.bio !== undefined) { data.bio = body.bio; }
-  if (body.locale !== undefined) { data.locale = body.locale; }
-  if (body.timezone !== undefined) { data.timezone = body.timezone; }
-  if (body.isPublic !== undefined) { data.isPublic = body.isPublic; }
+  if (body.fullName !== undefined) {
+    data.fullName = body.fullName;
+  }
+  if (body.bio !== undefined) {
+    data.bio = body.bio;
+  }
+  if (body.locale !== undefined) {
+    data.locale = body.locale;
+  }
+  if (body.timezone !== undefined) {
+    data.timezone = body.timezone;
+  }
+  if (body.isPublic !== undefined) {
+    data.isPublic = body.isPublic;
+  }
   // publicSlug peut être null (suppression du slug) ou une string (nouveau slug)
-  if ('publicSlug' in body) { data.publicSlug = body.publicSlug ?? null; }
+  if ('publicSlug' in body) {
+    data.publicSlug = body.publicSlug ?? null;
+  }
 
   const updated = await prisma.user.update({
     where: { id: supabaseUser['id'] },

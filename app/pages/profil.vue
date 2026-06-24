@@ -12,49 +12,49 @@
  *  - Lien vers /settings/2fa
  *  - Danger zone : suppression de compte avec double confirmation
  */
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import { updateProfileSchema, deleteAccountSchema } from '~~/shared/schemas/profile'
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { updateProfileSchema, deleteAccountSchema } from '~~/shared/schemas/profile';
 
 // useDebounceFn est auto-importé par @vueuse/nuxt — pas d'import explicite nécessaire.
 
 definePageMeta({
   middleware: 'auth',
   layout: 'default',
-})
+});
 
-useSeoMeta({ title: 'Mon profil — Cursus', robots: 'noindex' })
+useSeoMeta({ title: 'Mon profil — Cursus', robots: 'noindex' });
 
-const { t } = useI18n()
-const toast = useToast()
-const supabase = useSupabaseClient()
-const supabaseUser = useSupabaseUser()
+const { t } = useI18n();
+const toast = useToast();
+const supabase = useSupabaseClient();
+const supabaseUser = useSupabaseUser();
 
 // ─── Données profil ───────────────────────────────────────────────────────────
 
 interface ProfileData {
-  id: string
-  email: string
-  fullName: string | null
-  avatarUrl: string | null
-  bio: string | null
-  locale: string
-  timezone: string
-  isPublic: boolean
-  publicSlug: string | null
-  twoFaEnabled: boolean
-  globalRole: string | null
+  id: string;
+  email: string;
+  fullName: string | null;
+  avatarUrl: string | null;
+  bio: string | null;
+  locale: string;
+  timezone: string;
+  isPublic: boolean;
+  publicSlug: string | null;
+  twoFaEnabled: boolean;
+  globalRole: string | null;
 }
 
-const profile = ref<ProfileData | null>(null)
-const isLoading = ref(true)
-const isSaving = ref(false)
+const profile = ref<ProfileData | null>(null);
+const isLoading = ref(true);
+const isSaving = ref(false);
 
 async function loadProfile() {
-  isLoading.value = true
+  isLoading.value = true;
   try {
-    const data = await $fetch<ProfileData>('/api/me/profile')
-    profile.value = data
+    const data = await $fetch<ProfileData>('/api/me/profile');
+    profile.value = data;
     // Pré-remplir le formulaire
     profileForm.setValues({
       fullName: data.fullName ?? undefined,
@@ -63,198 +63,210 @@ async function loadProfile() {
       timezone: data.timezone,
       isPublic: data.isPublic,
       publicSlug: data.publicSlug ?? undefined,
-    })
+    });
   } catch {
     toast.add({
       title: t('errors.generic'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
-onMounted(() => { void loadProfile() })
+onMounted(() => {
+  void loadProfile();
+});
 
 // ─── Formulaire profil (édition inline avec autosave) ─────────────────────────
 
 const profileForm = useForm({
   validationSchema: toTypedSchema(updateProfileSchema),
-})
+});
 
 // useDebounceFn auto-importé depuis @vueuse/nuxt
 const saveProfile = useDebounceFn(async (values: Record<string, unknown>) => {
-  if (isSaving.value) { return }
-  isSaving.value = true
+  if (isSaving.value) {
+    return;
+  }
+  isSaving.value = true;
   try {
     const updated = await $fetch<ProfileData>('/api/profile', {
       method: 'PATCH',
       body: values,
-    })
+    });
     if (profile.value) {
-      profile.value = { ...profile.value, ...updated }
+      profile.value = { ...profile.value, ...updated };
     }
     toast.add({
       title: t('profile.savedToast'),
       color: 'success',
       icon: 'i-tabler-check',
-    })
+    });
   } catch (err: unknown) {
-    const fetchErr = err as { data?: { message?: string } }
-    const msgKey = fetchErr.data?.message ?? 'profile.errors.saveFailed'
+    const fetchErr = err as { data?: { message?: string } };
+    const msgKey = fetchErr.data?.message ?? 'profile.errors.saveFailed';
     toast.add({
       title: t(msgKey),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
   } finally {
-    isSaving.value = false
+    isSaving.value = false;
   }
-}, 500)
+}, 500);
 
 // Watcher sur les champs pour déclencher l'autosave
-const { values: formValues } = profileForm
-watch(formValues, async (newValues) => {
-  const { errors } = await profileForm.validate()
-  const hasErrors = Object.keys(errors).length > 0
-  if (!hasErrors && profile.value) {
-    void saveProfile(newValues)
-  }
-}, { deep: true })
+const { values: formValues } = profileForm;
+watch(
+  formValues,
+  async (newValues) => {
+    const { errors } = await profileForm.validate();
+    const hasErrors = Object.keys(errors).length > 0;
+    if (!hasErrors && profile.value) {
+      void saveProfile(newValues);
+    }
+  },
+  { deep: true },
+);
 
 // ─── Upload avatar ─────────────────────────────────────────────────────────────
 
-const avatarInput = ref<HTMLInputElement | null>(null)
-const avatarPreview = ref<string | null>(null)
-const isUploadingAvatar = ref(false)
+const avatarInput = ref<HTMLInputElement | null>(null);
+const avatarPreview = ref<string | null>(null);
+const isUploadingAvatar = ref(false);
 
 function triggerAvatarInput() {
-  avatarInput.value?.click()
+  avatarInput.value?.click();
 }
 
 async function onAvatarChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-  if (!file) { return }
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) {
+    return;
+  }
 
   // Validation côté client avant envoi
-  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp']
+  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
   if (!ALLOWED.includes(file.type)) {
     toast.add({
       title: t('profile.avatar.errors.invalidType'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
-    return
+    });
+    return;
   }
   if (file.size > 2 * 1024 * 1024) {
     toast.add({
       title: t('profile.avatar.errors.tooLarge'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
-    return
+    });
+    return;
   }
 
   // Preview locale immédiate
-  avatarPreview.value = URL.createObjectURL(file)
+  avatarPreview.value = URL.createObjectURL(file);
 
-  isUploadingAvatar.value = true
+  isUploadingAvatar.value = true;
   try {
-    const formData = new FormData()
-    formData.append('avatar', file)
+    const formData = new FormData();
+    formData.append('avatar', file);
 
     const result = await $fetch<{ avatarUrl: string }>('/api/profile/avatar', {
       method: 'POST',
       body: formData,
-    })
+    });
 
     if (profile.value) {
-      profile.value.avatarUrl = result.avatarUrl
+      profile.value.avatarUrl = result.avatarUrl;
     }
     // Libérer l'object URL après récupération de l'URL permanente
     if (avatarPreview.value) {
-      URL.revokeObjectURL(avatarPreview.value)
-      avatarPreview.value = null
+      URL.revokeObjectURL(avatarPreview.value);
+      avatarPreview.value = null;
     }
 
     toast.add({
       title: t('profile.savedToast'),
       color: 'success',
       icon: 'i-tabler-check',
-    })
+    });
   } catch {
     toast.add({
       title: t('profile.avatar.errors.uploadFailed'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
     // Annuler la preview si l'upload échoue
     if (avatarPreview.value) {
-      URL.revokeObjectURL(avatarPreview.value)
-      avatarPreview.value = null
+      URL.revokeObjectURL(avatarPreview.value);
+      avatarPreview.value = null;
     }
   } finally {
-    isUploadingAvatar.value = false
+    isUploadingAvatar.value = false;
     // Réinitialiser l'input pour permettre de re-sélectionner le même fichier
-    if (target) { target.value = '' }
+    if (target) {
+      target.value = '';
+    }
   }
 }
 
 // URL d'avatar effective : preview locale en priorité, sinon URL serveur
-const currentAvatarUrl = computed(() => avatarPreview.value ?? profile.value?.avatarUrl ?? null)
+const currentAvatarUrl = computed(() => avatarPreview.value ?? profile.value?.avatarUrl ?? null);
 
 // ─── Danger zone — suppression de compte ─────────────────────────────────────
 
-const showDeleteModal = ref(false)
-const isDeletingAccount = ref(false)
+const showDeleteModal = ref(false);
+const isDeletingAccount = ref(false);
 
 const deleteForm = useForm({
   validationSchema: toTypedSchema(deleteAccountSchema),
-})
+});
 
 const onDeleteAccount = deleteForm.handleSubmit(async (values) => {
-  isDeletingAccount.value = true
+  isDeletingAccount.value = true;
   try {
     await $fetch<{ scheduledFor: string }>('/api/profile/delete', {
       method: 'POST',
       body: values,
-    })
+    });
 
-    showDeleteModal.value = false
+    showDeleteModal.value = false;
 
     // L'endpoint signe out côté serveur — on nettoie aussi la session cliente
-    await supabase.auth.signOut()
-    await navigateTo('/login')
+    await supabase.auth.signOut();
+    await navigateTo('/login');
   } catch (err: unknown) {
-    const fetchErr = err as { data?: { message?: string } }
-    const msgKey = fetchErr.data?.message ?? 'profile.delete.errors.generic'
+    const fetchErr = err as { data?: { message?: string } };
+    const msgKey = fetchErr.data?.message ?? 'profile.delete.errors.generic';
     toast.add({
       title: t(msgKey),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
   } finally {
-    isDeletingAccount.value = false
+    isDeletingAccount.value = false;
   }
-})
+});
 
 function openDeleteModal() {
-  deleteForm.resetForm()
-  showDeleteModal.value = true
+  deleteForm.resetForm();
+  showDeleteModal.value = true;
 }
 
 // ─── Helpers affichage ────────────────────────────────────────────────────────
 
 const userInitials = computed(() => {
-  const name = profile.value?.fullName ?? supabaseUser.value?.email ?? ''
+  const name = profile.value?.fullName ?? supabaseUser.value?.email ?? '';
   return name
     .split(/\s+/)
     .slice(0, 2)
     .map((s) => s[0]?.toUpperCase() ?? '')
-    .join('')
-})
+    .join('');
+});
 
 const roleLabel = computed(() => {
   const roleMap: Record<string, string> = {
@@ -262,11 +274,11 @@ const roleLabel = computed(() => {
     FORMATEUR_PRINCIPAL: 'Formateur',
     CO_FORMATEUR: 'Co-formateur',
     STAGIAIRE: 'Stagiaire',
-  }
+  };
   return profile.value?.globalRole
     ? (roleMap[profile.value.globalRole] ?? profile.value.globalRole)
-    : null
-})
+    : null;
+});
 
 const timezoneOptions = [
   'Europe/Paris',
@@ -279,12 +291,12 @@ const timezoneOptions = [
   'Asia/Shanghai',
   'Australia/Sydney',
   'UTC',
-].map((tz) => ({ label: tz, value: tz }))
+].map((tz) => ({ label: tz, value: tz }));
 
 const localeOptions = [
   { label: t('profile.locales.fr'), value: 'fr' as const },
   { label: t('profile.locales.en'), value: 'en' as const },
-]
+];
 </script>
 
 <template>
@@ -308,7 +320,6 @@ const localeOptions = [
 
     <template v-else-if="profile">
       <div class="space-y-6">
-
         <!-- ═══════════════════════════════════════════════════════════════
              SECTION — Avatar + identité
         ═══════════════════════════════════════════════════════════════ -->
@@ -329,11 +340,13 @@ const localeOptions = [
               >
                 <img
                   :src="currentAvatarUrl"
-                  :alt="profile.fullName
-                    ? t('profile.avatar.altText', { name: profile.fullName })
-                    : t('profile.avatar.altTextDefault')"
+                  :alt="
+                    profile.fullName
+                      ? t('profile.avatar.altText', { name: profile.fullName })
+                      : t('profile.avatar.altTextDefault')
+                  "
                   class="size-full object-cover"
-                >
+                />
                 <!-- Overlay upload en cours -->
                 <div
                   v-if="isUploadingAvatar"
@@ -373,12 +386,7 @@ const localeOptions = [
                 <p class="truncate font-medium text-text-strong">
                   {{ profile.fullName ?? supabaseUser?.email ?? '' }}
                 </p>
-                <UBadge
-                  v-if="roleLabel"
-                  color="neutral"
-                  variant="subtle"
-                  size="sm"
-                >
+                <UBadge v-if="roleLabel" color="neutral" variant="subtle" size="sm">
                   {{ roleLabel }}
                 </UBadge>
               </div>
@@ -393,7 +401,7 @@ const localeOptions = [
                   class="sr-only"
                   :aria-label="t('profile.avatar.label')"
                   @change="onAvatarChange"
-                >
+                />
                 <UButton
                   size="sm"
                   color="neutral"
@@ -403,7 +411,9 @@ const localeOptions = [
                   :disabled="isUploadingAvatar"
                   @click="triggerAvatarInput"
                 >
-                  {{ isUploadingAvatar ? t('profile.avatar.uploading') : t('profile.avatar.change') }}
+                  {{
+                    isUploadingAvatar ? t('profile.avatar.uploading') : t('profile.avatar.change')
+                  }}
                 </UButton>
               </div>
               <p class="mt-1.5 text-xs text-text-subtle">{{ t('profile.avatar.uploadHint') }}</p>
@@ -411,15 +421,8 @@ const localeOptions = [
           </div>
 
           <!-- Champs identité -->
-          <form
-            class="mt-6 space-y-4"
-            novalidate
-            @submit.prevent
-          >
-            <UFormField
-              :label="t('profile.fields.fullName')"
-              name="fullName"
-            >
+          <form class="mt-6 space-y-4" novalidate @submit.prevent>
+            <UFormField :label="t('profile.fields.fullName')" name="fullName">
               <UInput
                 id="fullName"
                 name="fullName"
@@ -433,10 +436,7 @@ const localeOptions = [
               />
             </UFormField>
 
-            <UFormField
-              :label="t('profile.fields.bio')"
-              name="bio"
-            >
+            <UFormField :label="t('profile.fields.bio')" name="bio">
               <UTextarea
                 id="bio"
                 name="bio"
@@ -508,7 +508,9 @@ const localeOptions = [
             </UFormField>
 
             <!-- Toggle profil public -->
-            <div class="flex items-center justify-between gap-4 rounded-lg border border-border-subtle px-4 py-3">
+            <div
+              class="flex items-center justify-between gap-4 rounded-lg border border-border-subtle px-4 py-3"
+            >
               <div>
                 <p class="text-sm font-medium text-text-strong">
                   {{ t('profile.fields.isPublic') }}
@@ -540,7 +542,9 @@ const localeOptions = [
                 :placeholder="t('profile.fields.publicSlugPlaceholder')"
                 class="w-full"
                 :model-value="profileForm.values.publicSlug ?? ''"
-                @update:model-value="profileForm.setFieldValue('publicSlug', ($event as string) || null)"
+                @update:model-value="
+                  profileForm.setFieldValue('publicSlug', ($event as string) || null)
+                "
                 @blur="profileForm.validateField('publicSlug')"
               />
               <template #help>
@@ -575,7 +579,11 @@ const localeOptions = [
                     :name="profile.twoFaEnabled ? 'i-tabler-shield-check' : 'i-tabler-shield-off'"
                     class="mr-1 size-3"
                   />
-                  {{ profile.twoFaEnabled ? t('profile.security.twoFaEnabled') : t('profile.security.twoFaDisabled') }}
+                  {{
+                    profile.twoFaEnabled
+                      ? t('profile.security.twoFaEnabled')
+                      : t('profile.security.twoFaDisabled')
+                  }}
                 </UBadge>
               </div>
             </div>
@@ -621,7 +629,6 @@ const localeOptions = [
             </UButton>
           </div>
         </UCard>
-
       </div>
     </template>
 
@@ -632,7 +639,9 @@ const localeOptions = [
       <template #content>
         <div class="p-6">
           <div class="mb-4 flex items-start gap-3">
-            <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-danger-bg">
+            <div
+              class="flex size-10 shrink-0 items-center justify-center rounded-full bg-danger-bg"
+            >
               <UIcon name="i-tabler-alert-triangle" class="size-5 text-danger-fg" />
             </div>
             <div>
@@ -655,11 +664,7 @@ const localeOptions = [
           </div>
 
           <form novalidate class="space-y-4" @submit="onDeleteAccount">
-            <UFormField
-              :label="t('profile.delete.emailLabel')"
-              name="email"
-              required
-            >
+            <UFormField :label="t('profile.delete.emailLabel')" name="email" required>
               <UInput
                 id="delete-email"
                 name="email"
@@ -670,11 +675,7 @@ const localeOptions = [
               />
             </UFormField>
 
-            <UFormField
-              :label="t('profile.delete.passwordLabel')"
-              name="password"
-              required
-            >
+            <UFormField :label="t('profile.delete.passwordLabel')" name="password" required>
               <UInput
                 id="delete-password"
                 name="password"

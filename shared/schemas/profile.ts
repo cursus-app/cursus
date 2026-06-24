@@ -9,7 +9,11 @@ import { z } from 'zod';
  */
 
 export const updateProfileSchema = z.object({
-  fullName: z.string().min(1, 'profile.errors.fullNameRequired').max(100, 'profile.errors.fullNameTooLong').optional(),
+  fullName: z
+    .string()
+    .min(1, 'profile.errors.fullNameRequired')
+    .max(100, 'profile.errors.fullNameTooLong')
+    .optional(),
   bio: z.string().max(500, 'profile.errors.bioTooLong').optional(),
   locale: z.enum(['fr', 'en']).optional(),
   timezone: z.string().max(50, 'profile.errors.timezoneTooLong').optional(),
