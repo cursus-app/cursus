@@ -73,6 +73,10 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
     },
+    compilation: {
+      strictMessage: false,
+      escapeHtml: false,
+    },
   },
 
   // Supabase — l'auth/storage/realtime continuent de passer par le client JS,
