@@ -255,16 +255,16 @@ CREATE POLICY "harness_runs_select_formateur" ON harness_runs
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM submissions s
-      JOIN memberships m_formateur ON true
+      JOIN memberships m_formateur
+        ON m_formateur.user_id = auth.uid()
+        AND m_formateur.role IN ('FORMATEUR_PRINCIPAL'::"MembershipRole", 'CO_FORMATEUR'::"MembershipRole")
+        AND m_formateur.left_at IS NULL
       JOIN cohortes c ON c.id = m_formateur.cohorte_id
       JOIN memberships m_stagiaire
         ON m_stagiaire.cohorte_id = c.id
         AND m_stagiaire.user_id = s.user_id
         AND m_stagiaire.left_at IS NULL
       WHERE s.id = harness_runs.submission_id
-        AND m_formateur.user_id = auth.uid()
-        AND m_formateur.role IN ('FORMATEUR_PRINCIPAL'::"MembershipRole", 'CO_FORMATEUR'::"MembershipRole")
-        AND m_formateur.left_at IS NULL
     )
   );
 

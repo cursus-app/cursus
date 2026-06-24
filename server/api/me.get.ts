@@ -7,6 +7,7 @@
 import { serverSupabaseUser } from '#supabase/server';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
+import { hashId } from '~~/server/utils/hash';
 
 export default defineEventHandler(async (event) => {
   const supabaseUser = await serverSupabaseUser(event);
@@ -37,7 +38,7 @@ export default defineEventHandler(async (event) => {
   if (!dbUser) {
     // L'utilisateur existe dans Supabase Auth mais pas encore dans notre DB.
     // (ex. : provisioning asynchrone pas encore complété)
-    logger.warn({ userId: supabaseUser['id'] }, 'auth.profile.not_found');
+    logger.warn({ userIdHash: hashId(supabaseUser['id']) }, 'auth.profile.not_found');
     throw createError({ statusCode: 404, message: 'User profile not found' });
   }
 
