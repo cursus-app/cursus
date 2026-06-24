@@ -14,6 +14,24 @@
 -- mais la comparaison directe uuid = uuid suffit ; on la documente explicitement.
 
 -- ============================================================================
+-- CI COMPAT : stub auth schema si absent (plain Postgres sans Supabase auth)
+-- En production Supabase, auth.uid() existe déjà — les IF NOT EXISTS sont no-ops.
+-- ============================================================================
+DO $ci_compat$ BEGIN
+  CREATE SCHEMA IF NOT EXISTS auth;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_proc p
+    JOIN pg_namespace n ON p.pronamespace = n.oid
+    WHERE n.nspname = 'auth' AND p.proname = 'uid'
+  ) THEN
+    EXECUTE $fn$
+      CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS
+      $body$ SELECT '00000000-0000-0000-0000-000000000000'::uuid $body$
+    $fn$;
+  END IF;
+END $ci_compat$;
+
+-- ============================================================================
 -- ACTIVATION RLS SUR TOUTES LES TABLES SENSIBLES
 -- ============================================================================
 

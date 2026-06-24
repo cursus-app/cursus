@@ -23,7 +23,7 @@ export default defineNuxtRouteMiddleware((to) => {
   // Déjà connecté sur page d'auth → redirige vers dashboard.
   // /dashboard est créé dans ST-03.x — route connue mais page pas encore générée.
   if (user.value && isPublicRoute) {
-    // eslint-disable-next-line link-checker/valid-route
+    // eslint-disable-next-line link-checker/valid-sitemap-link
     return navigateTo('/dashboard');
   }
 });

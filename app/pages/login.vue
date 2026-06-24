@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     await login(values.email, values.password);
     // /dashboard est créé dans ST-03.x — route connue mais page pas encore générée.
-    // eslint-disable-next-line link-checker/valid-route
+    // eslint-disable-next-line link-checker/valid-sitemap-link
     await router.push('/dashboard');
   } catch (error) {
     if (error instanceof AuthError) {
