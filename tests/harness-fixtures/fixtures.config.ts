@@ -1,9 +1,9 @@
 export interface FixtureConfig {
-  name: string
-  repoUrl: string
-  expectedStatus: 'validated' | 'failed'
-  expectedFailedChecks?: string[]
-  maxDurationMs?: number
+  name: string;
+  repoUrl: string;
+  expectedStatus: 'validated' | 'failed';
+  expectedFailedChecks?: string[];
+  maxDurationMs?: number;
 }
 
 export const HARNESS_FIXTURES: FixtureConfig[] = [
@@ -55,4 +55,4 @@ export const HARNESS_FIXTURES: FixtureConfig[] = [
     expectedStatus: 'failed',
     expectedFailedChecks: ['lighthouse_score'],
   },
-]
+];

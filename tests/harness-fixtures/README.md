@@ -16,16 +16,16 @@ l'API GitHub et peuvent durer plusieurs minutes par fixture.
 
 ## Fixtures disponibles
 
-| Nom                    | Repo GitHub                                    | Scénario attendu                         |
-| ---------------------- | ---------------------------------------------- | ---------------------------------------- |
-| `pass-all-checks`      | `cursus-fixtures/pass-all-checks`              | Tous les checks verts → `validated`      |
-| `missing-branch`       | `cursus-fixtures/missing-branch`               | `branch_exists` rouge → `failed`         |
-| `missing-signed-commit`| `cursus-fixtures/missing-signed-commit`        | `signed_commits` rouge → `failed`        |
-| `deploy-down`          | `cursus-fixtures/deploy-down`                  | `deploy_url_responds` rouge → `failed`   |
-| `linter-fails`         | `cursus-fixtures/linter-fails`                 | `linter` rouge → `failed`                |
-| `tests-fail`           | `cursus-fixtures/tests-fail`                   | `tests` rouge → `failed`                 |
-| `no-readme`            | `cursus-fixtures/no-readme`                    | `readme_exists` rouge → `failed`         |
-| `lighthouse-low`       | `cursus-fixtures/lighthouse-low`               | `lighthouse_score` rouge → `failed`      |
+| Nom                     | Repo GitHub                             | Scénario attendu                       |
+| ----------------------- | --------------------------------------- | -------------------------------------- |
+| `pass-all-checks`       | `cursus-fixtures/pass-all-checks`       | Tous les checks verts → `validated`    |
+| `missing-branch`        | `cursus-fixtures/missing-branch`        | `branch_exists` rouge → `failed`       |
+| `missing-signed-commit` | `cursus-fixtures/missing-signed-commit` | `signed_commits` rouge → `failed`      |
+| `deploy-down`           | `cursus-fixtures/deploy-down`           | `deploy_url_responds` rouge → `failed` |
+| `linter-fails`          | `cursus-fixtures/linter-fails`          | `linter` rouge → `failed`              |
+| `tests-fail`            | `cursus-fixtures/tests-fail`            | `tests` rouge → `failed`               |
+| `no-readme`             | `cursus-fixtures/no-readme`             | `readme_exists` rouge → `failed`       |
+| `lighthouse-low`        | `cursus-fixtures/lighthouse-low`        | `lighthouse_score` rouge → `failed`    |
 
 ## Créer les repos fixtures dans l'org
 
@@ -37,6 +37,7 @@ gh repo create cursus-fixtures/missing-branch --public --description "Fixture: b
 ```
 
 Chaque repo doit contenir :
+
 - Un `README.md` interne décrivant le cas illustré (pour les futurs mainteneurs)
 - Le code minimal faisant échouer le check ciblé, sans PII ni secret
 

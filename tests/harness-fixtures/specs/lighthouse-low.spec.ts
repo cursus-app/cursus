@@ -1,19 +1,21 @@
-import { describe, expect, it } from 'vitest'
-import { HARNESS_FIXTURES } from '../fixtures.config'
-import { isHarnessConfigured, runHarnessAgainst } from './helpers'
+import { describe, expect, it } from 'vitest';
+import { HARNESS_FIXTURES } from '../fixtures.config';
+import { isHarnessConfigured, runHarnessAgainst } from './helpers';
 
-const fixture = HARNESS_FIXTURES.find((f) => f.name === 'lighthouse-low')
-if (!fixture) { throw new Error('Fixture "lighthouse-low" introuvable dans fixtures.config.ts') }
+const fixture = HARNESS_FIXTURES.find((f) => f.name === 'lighthouse-low');
+if (!fixture) {
+  throw new Error('Fixture "lighthouse-low" introuvable dans fixtures.config.ts');
+}
 
 describe.skipIf(!isHarnessConfigured())(`Harness fixture: ${fixture.name}`, () => {
   it(
     'check lighthouse_score rouge quand score insuffisant → statut failed',
     async () => {
-      const result = await runHarnessAgainst(fixture.repoUrl)
+      const result = await runHarnessAgainst(fixture.repoUrl);
 
-      expect(result.status).toBe<typeof result.status>('failed')
-      expect(result.failedChecks).toContain('lighthouse_score')
+      expect(result.status).toBe<typeof result.status>('failed');
+      expect(result.failedChecks).toContain('lighthouse_score');
     },
     10 * 60 * 1000,
-  )
-})
+  );
+});
