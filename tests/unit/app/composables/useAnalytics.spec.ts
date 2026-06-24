@@ -13,7 +13,7 @@ function withPlausible(fn: () => void) {
     configurable: true,
   });
   fn();
-   
+
   delete (window as Window & { plausible?: PlausibleFn }).plausible;
 }
 

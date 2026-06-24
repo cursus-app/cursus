@@ -2,7 +2,9 @@ export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig();
   const domain = config.public.plausibleDomain as string | undefined;
 
-  if (!domain) {return;}
+  if (!domain) {
+    return;
+  }
 
   useHead({
     script: [
