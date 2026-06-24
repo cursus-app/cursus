@@ -73,6 +73,84 @@
       "criterionNotMet": "Criterion not met"
     }
   },
+  "profile": {
+    "title": "My profile",
+    "subtitle": "Manage your personal information and preferences.",
+    "savedToast": "Changes saved",
+    "sections": {
+      "identity": "Identity",
+      "preferences": "Preferences",
+      "security": "Security",
+      "danger": "Danger zone"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "fullNamePlaceholder": "First Last",
+      "bio": "Short bio",
+      "bioPlaceholder": "In a few words, who are you?",
+      "locale": "Language",
+      "timezone": "Timezone",
+      "isPublic": "Public profile",
+      "isPublicDescription": "Make your profile visible in the public directory",
+      "publicSlug": "Public identifier (URL)",
+      "publicSlugPlaceholder": "my-identifier",
+      "publicSlugHint": "Lowercase letters, digits and hyphens only.",
+      "email": "Email (cannot be changed)"
+    },
+    "avatar": {
+      "label": "Profile picture",
+      "altText": "Profile picture of {name}",
+      "altTextDefault": "Profile picture",
+      "change": "Change",
+      "remove": "Remove",
+      "uploadHint": "PNG, JPG or WebP — 2 MB max",
+      "uploading": "Uploading…",
+      "errors": {
+        "tooLarge": "File too large (2 MB max)",
+        "invalidType": "Unsupported format (PNG, JPG or WebP only)",
+        "uploadFailed": "Upload error. Please try again."
+      }
+    },
+    "security": {
+      "twoFaTitle": "Two-factor authentication",
+      "twoFaEnabled": "Enabled",
+      "twoFaDisabled": "Disabled",
+      "manage2fa": "Manage 2FA"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "description": "This action will schedule the permanent deletion of your account in 30 days. You can cancel via the link sent by email.",
+      "button": "Delete my account",
+      "confirmTitle": "Confirm deletion",
+      "confirmDescription": "To confirm, enter your email address and password.",
+      "emailLabel": "Confirmation email",
+      "passwordLabel": "Password",
+      "confirmButton": "Confirm deletion",
+      "scheduledMessage": "Your account will be deleted on {date}. Check your emails to cancel.",
+      "errors": {
+        "emailMismatch": "The email address does not match your account.",
+        "passwordInvalid": "Incorrect password.",
+        "generic": "Error during deletion. Please try again."
+      }
+    },
+    "errors": {
+      "fullNameRequired": "Name cannot be empty",
+      "fullNameTooLong": "100 characters maximum",
+      "bioTooLong": "500 characters maximum",
+      "timezoneTooLong": "Invalid timezone",
+      "slugTooShort": "3 characters minimum",
+      "slugTooLong": "50 characters maximum",
+      "slugInvalidChars": "Lowercase letters, digits and hyphens only",
+      "slugTaken": "This identifier is already taken",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "saveFailed": "Unable to save changes."
+    },
+    "locales": {
+      "fr": "Français",
+      "en": "English"
+    }
+  },
   "errors": {
     "generic": "Something went wrong.",
     "notFound": "Page not found.",
