@@ -1,0 +1,82 @@
+{
+  "app": {
+    "name": "Cursus",
+    "tagline": "The tech internship journey, structured and validated."
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "signup": "Create my account",
+    "email": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Your password",
+    "newPasswordPlaceholder": "At least 12 characters",
+    "passwordConfirm": "Confirm password",
+    "passwordConfirmPlaceholder": "Repeat your password",
+    "forgotPassword": "Forgot your password?",
+    "forgotPasswordTitle": "Forgot your password",
+    "forgotPasswordSubtitle": "Enter your email and receive a reset link.",
+    "sendResetLink": "Send reset link",
+    "backToLogin": "Back to sign in",
+    "magicLink": "Receive a magic link",
+    "githubLogin": "Continue with GitHub",
+    "invitationOnly": "Registration is by invitation only.",
+    "loginSubtitle": "Welcome back to Cursus.",
+    "signupSubtitle": "Create your intern workspace.",
+    "cguLabel": "I accept the terms and conditions",
+    "checkEmail": "If an account exists for this email, you will receive a link within the next few minutes.",
+    "checkEmailTitle": "Check your email",
+    "checkEmailDescription": "A confirmation email has been sent. Click the link to activate your account.",
+    "checkEmailSpam": "If you don't see it, check your spam or junk mail folder.",
+    "passwordReset": "Reset password",
+    "resetTokenExpired": "This reset link has expired or is invalid.",
+    "requestNewResetLink": "Request a new link",
+    "passwordResetSuccess": "Your password has been updated. You will be redirected to the sign-in page.",
+    "saveNewPassword": "Save new password",
+    "errors": {
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Minimum 12 characters",
+      "passwordNeedsUppercase": "At least one uppercase letter",
+      "passwordNeedsLowercase": "At least one lowercase letter",
+      "passwordNeedsDigit": "At least one digit",
+      "passwordNeedsSymbol": "At least one special character",
+      "passwordMismatch": "Passwords do not match",
+      "cguRequired": "You must accept the terms and conditions to create an account",
+      "invalidCredentials": "Invalid email or password",
+      "emailAlreadyUsed": "This email is already associated with an account.",
+      "emailAlreadyUsedDetail": "This email is already associated with an account. Sign in or reset your password.",
+      "generic": "An error occurred, please try again later."
+    },
+    "passwordStrength": {
+      "length": "At least 12 characters",
+      "uppercase": "One uppercase letter",
+      "lowercase": "One lowercase letter",
+      "digit": "One digit",
+      "symbol": "One special character",
+      "allValid": "Strong password — all criteria met.",
+      "criterionMet": "Criterion met",
+      "criterionNotMet": "Criterion not met"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong.",
+    "notFound": "Page not found.",
+    "unauthorized": "You don't have access to this resource.",
+    "supportRef": "Support reference"
+  }
+}
