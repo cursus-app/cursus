@@ -17,10 +17,7 @@ import { logger } from '~~/server/utils/logger';
 
 export default defineEventHandler((event) => {
   // Bloquer en production si la variable de déverrouillage est absente
-  if (
-    process.env['NODE_ENV'] === 'production' &&
-    !process.env['ENABLE_TEST_ERROR_ROUTE']
-  ) {
+  if (process.env['NODE_ENV'] === 'production' && !process.env['ENABLE_TEST_ERROR_ROUTE']) {
     throw createError({ statusCode: 404 });
   }
 
