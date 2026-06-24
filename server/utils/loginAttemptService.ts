@@ -15,8 +15,8 @@
 //  - 10 tentatives en 1h   → lockout 1h
 //  - 20 tentatives en 24h  → lockout 24h
 
-import { createHash } from 'node:crypto'
-import { logger } from '~~/server/utils/logger'
+import { createHash } from 'node:crypto';
+import { logger } from '~~/server/utils/logger';
 
 // ---------------------------------------------------------------------------
 // Types publics
@@ -24,11 +24,11 @@ import { logger } from '~~/server/utils/logger'
 
 export interface LoginCheckResult {
   /** L'accès est-il autorisé ? */
-  allowed: boolean
+  allowed: boolean;
   /** Date jusqu'à laquelle le compte est verrouillé (si !allowed). */
-  lockedUntil?: Date
+  lockedUntil?: Date;
   /** Tentatives restantes avant lockout (si allowed et proche du seuil). */
-  remainingAttempts?: number
+  remainingAttempts?: number;
 }
 
 export interface LoginAttemptService {
@@ -36,7 +36,7 @@ export interface LoginAttemptService {
    * Vérifie si le compte est verrouillé sans enregistrer de tentative.
    * À appeler AVANT d'interroger Supabase pour éviter les tentatives inutiles.
    */
-  isLocked(email: string): Promise<{ locked: boolean; lockedUntil?: Date }>
+  isLocked(email: string): Promise<{ locked: boolean; lockedUntil?: Date }>;
 
   /**
    * Enregistre une tentative et vérifie si un lockout doit être appliqué.
@@ -44,18 +44,18 @@ export interface LoginAttemptService {
    * @param ip      IP source (pour logs — non stockée dans Redis)
    * @param success true si le login a réussi (reset des compteurs)
    */
-  checkAndRecord(email: string, ip: string, success: boolean): Promise<LoginCheckResult>
+  checkAndRecord(email: string, ip: string, success: boolean): Promise<LoginCheckResult>;
 
   /**
    * Rate limit par IP : 5 tentatives par minute (fenêtre glissante).
    * Retourne allowed=false si l'IP dépasse la limite.
    */
-  checkIpRateLimit(ip: string): Promise<{ allowed: boolean }>
+  checkIpRateLimit(ip: string): Promise<{ allowed: boolean }>;
 
   /**
    * Lève manuellement le verrouillage (ex. : après reset par magic-link).
    */
-  clearLockout(email: string): Promise<void>
+  clearLockout(email: string): Promise<void>;
 }
 
 // ---------------------------------------------------------------------------
@@ -63,14 +63,14 @@ export interface LoginAttemptService {
 // ---------------------------------------------------------------------------
 
 interface RedisClient {
-  get<T>(key: string): Promise<T | null>
-  set(key: string, value: string, options?: { ex: number }): Promise<unknown>
+  get<T>(key: string): Promise<T | null>;
+  set(key: string, value: string, options?: { ex: number }): Promise<unknown>;
   pipeline(): {
-    del(...keys: string[]): unknown
-    incr(key: string): unknown
-    expire(key: string, seconds: number): unknown
-    exec(): Promise<Array<number | null>>
-  }
+    del(...keys: string[]): unknown;
+    incr(key: string): unknown;
+    expire(key: string, seconds: number): unknown;
+    exec(): Promise<Array<number | null>>;
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -78,10 +78,7 @@ interface RedisClient {
 // ---------------------------------------------------------------------------
 
 function hashForRedis(value: string): string {
-  return createHash('sha256')
-    .update(value.toLowerCase().trim())
-    .digest('hex')
-    .slice(0, 16)
+  return createHash('sha256').update(value.toLowerCase().trim()).digest('hex').slice(0, 16);
 }
 
 // ---------------------------------------------------------------------------
@@ -93,78 +90,78 @@ function hashForRedis(value: string): string {
  * Exportée pour être testable directement avec un mock Redis.
  */
 export class RedisLoginAttemptService implements LoginAttemptService {
-  private redis: RedisClient
+  private redis: RedisClient;
 
   constructor(redis: RedisClient) {
-    this.redis = redis
+    this.redis = redis;
   }
 
   async isLocked(email: string): Promise<{ locked: boolean; lockedUntil?: Date }> {
-    const emailHash = hashForRedis(email)
-    const lockKey = `auth:lock:${emailHash}`
+    const emailHash = hashForRedis(email);
+    const lockKey = `auth:lock:${emailHash}`;
 
-    const lockedUntil = await this.redis.get<string>(lockKey)
+    const lockedUntil = await this.redis.get<string>(lockKey);
     if (lockedUntil) {
-      return { locked: true, lockedUntil: new Date(lockedUntil) }
+      return { locked: true, lockedUntil: new Date(lockedUntil) };
     }
-    return { locked: false }
+    return { locked: false };
   }
 
   async checkAndRecord(email: string, ip: string, success: boolean): Promise<LoginCheckResult> {
-    const emailHash = hashForRedis(email)
-    const lockKey = `auth:lock:${emailHash}`
-    const key15m = `auth:attempts:${emailHash}:15m`
-    const key1h = `auth:attempts:${emailHash}:1h`
-    const key24h = `auth:attempts:${emailHash}:24h`
+    const emailHash = hashForRedis(email);
+    const lockKey = `auth:lock:${emailHash}`;
+    const key15m = `auth:attempts:${emailHash}:15m`;
+    const key1h = `auth:attempts:${emailHash}:1h`;
+    const key24h = `auth:attempts:${emailHash}:24h`;
 
     // Vérifier si déjà verrouillé
-    const existingLock = await this.redis.get<string>(lockKey)
+    const existingLock = await this.redis.get<string>(lockKey);
     if (existingLock) {
-      const lockedUntil = new Date(existingLock)
+      const lockedUntil = new Date(existingLock);
       logger.warn(
         { emailHash, event: 'auth.login.blocked_locked', ip_hash: hashForRedis(ip) },
         'auth.account.already_locked',
-      )
-      return { allowed: false, lockedUntil }
+      );
+      return { allowed: false, lockedUntil };
     }
 
     if (success) {
       // Succès → reset toutes les clés de compteur
-      const pipe = this.redis.pipeline()
-      pipe.del(key15m, key1h, key24h)
-      await pipe.exec()
-      return { allowed: true }
+      const pipe = this.redis.pipeline();
+      pipe.del(key15m, key1h, key24h);
+      await pipe.exec();
+      return { allowed: true };
     }
 
     // Échec → incrémenter les compteurs (fenêtres glissantes via TTL)
-    const pipe = this.redis.pipeline()
-    pipe.incr(key15m)
-    pipe.expire(key15m, 15 * 60)
-    pipe.incr(key1h)
-    pipe.expire(key1h, 60 * 60)
-    pipe.incr(key24h)
-    pipe.expire(key24h, 24 * 60 * 60)
-    const results = await pipe.exec()
+    const pipe = this.redis.pipeline();
+    pipe.incr(key15m);
+    pipe.expire(key15m, 15 * 60);
+    pipe.incr(key1h);
+    pipe.expire(key1h, 60 * 60);
+    pipe.incr(key24h);
+    pipe.expire(key24h, 24 * 60 * 60);
+    const results = await pipe.exec();
 
     // pipeline exec() retourne les résultats dans l'ordre des commandes
     // indices : 0=incr15m, 1=expire, 2=incr1h, 3=expire, 4=incr24h, 5=expire
-    const count15m = results[0] ?? 0
-    const count1h = results[2] ?? 0
-    const count24h = results[4] ?? 0
+    const count15m = results[0] ?? 0;
+    const count1h = results[2] ?? 0;
+    const count24h = results[4] ?? 0;
 
     // Appliquer le seuil de lockout le plus sévère applicable
-    let lockoutSeconds = 0
+    let lockoutSeconds = 0;
     if (count24h >= 20) {
-      lockoutSeconds = 24 * 60 * 60
+      lockoutSeconds = 24 * 60 * 60;
     } else if (count1h >= 10) {
-      lockoutSeconds = 60 * 60
+      lockoutSeconds = 60 * 60;
     } else if (count15m >= 5) {
-      lockoutSeconds = 15 * 60
+      lockoutSeconds = 15 * 60;
     }
 
     if (lockoutSeconds > 0) {
-      const until = new Date(Date.now() + lockoutSeconds * 1000)
-      await this.redis.set(lockKey, until.toISOString(), { ex: lockoutSeconds })
+      const until = new Date(Date.now() + lockoutSeconds * 1000);
+      await this.redis.set(lockKey, until.toISOString(), { ex: lockoutSeconds });
       logger.warn(
         {
           emailHash,
@@ -173,37 +170,37 @@ export class RedisLoginAttemptService implements LoginAttemptService {
           lockedUntil: until.toISOString(),
         },
         'auth.account.locked',
-      )
-      return { allowed: false, lockedUntil: until }
+      );
+      return { allowed: false, lockedUntil: until };
     }
 
     // Pas encore verrouillé — indiquer les tentatives restantes (basé sur fenêtre 15min)
-    const remainingAttempts = Math.max(0, 5 - count15m)
-    return { allowed: true, remainingAttempts }
+    const remainingAttempts = Math.max(0, 5 - count15m);
+    return { allowed: true, remainingAttempts };
   }
 
   async checkIpRateLimit(ip: string): Promise<{ allowed: boolean }> {
-    const ipHash = hashForRedis(ip)
-    const key = `auth:ip:${ipHash}:1m`
-    const pipe = this.redis.pipeline()
-    pipe.incr(key)
-    pipe.expire(key, 60)
-    const results = await pipe.exec()
-    const count = results[0] ?? 0
-    return { allowed: count <= 5 }
+    const ipHash = hashForRedis(ip);
+    const key = `auth:ip:${ipHash}:1m`;
+    const pipe = this.redis.pipeline();
+    pipe.incr(key);
+    pipe.expire(key, 60);
+    const results = await pipe.exec();
+    const count = results[0] ?? 0;
+    return { allowed: count <= 5 };
   }
 
   async clearLockout(email: string): Promise<void> {
-    const emailHash = hashForRedis(email)
-    const lockKey = `auth:lock:${emailHash}`
-    const key15m = `auth:attempts:${emailHash}:15m`
-    const key1h = `auth:attempts:${emailHash}:1h`
-    const key24h = `auth:attempts:${emailHash}:24h`
+    const emailHash = hashForRedis(email);
+    const lockKey = `auth:lock:${emailHash}`;
+    const key15m = `auth:attempts:${emailHash}:15m`;
+    const key1h = `auth:attempts:${emailHash}:1h`;
+    const key24h = `auth:attempts:${emailHash}:24h`;
 
-    const pipe = this.redis.pipeline()
-    pipe.del(lockKey, key15m, key1h, key24h)
-    await pipe.exec()
-    logger.info({ emailHash, event: 'auth.lockout.cleared' }, 'auth.lockout.cleared')
+    const pipe = this.redis.pipeline();
+    pipe.del(lockKey, key15m, key1h, key24h);
+    await pipe.exec();
+    logger.info({ emailHash, event: 'auth.lockout.cleared' }, 'auth.lockout.cleared');
   }
 }
 
@@ -218,19 +215,15 @@ export class RedisLoginAttemptService implements LoginAttemptService {
  */
 export class NoopLoginAttemptService implements LoginAttemptService {
   async isLocked(_email: string): Promise<{ locked: boolean; lockedUntil?: Date }> {
-    return { locked: false }
+    return { locked: false };
   }
 
-  async checkAndRecord(
-    _email: string,
-    _ip: string,
-    _success: boolean,
-  ): Promise<LoginCheckResult> {
-    return { allowed: true }
+  async checkAndRecord(_email: string, _ip: string, _success: boolean): Promise<LoginCheckResult> {
+    return { allowed: true };
   }
 
   async checkIpRateLimit(_ip: string): Promise<{ allowed: boolean }> {
-    return { allowed: true }
+    return { allowed: true };
   }
 
   async clearLockout(_email: string): Promise<void> {
@@ -242,7 +235,7 @@ export class NoopLoginAttemptService implements LoginAttemptService {
 // Singleton
 // ---------------------------------------------------------------------------
 
-let _service: LoginAttemptService | null = null
+let _service: LoginAttemptService | null = null;
 
 /**
  * Retourne le service de lockout approprié selon la configuration.
@@ -252,25 +245,27 @@ let _service: LoginAttemptService | null = null
  * (ne bloque pas le développement local).
  */
 export async function getLoginAttemptService(): Promise<LoginAttemptService> {
-  if (_service) { return _service }
+  if (_service) {
+    return _service;
+  }
 
-  const url = process.env['UPSTASH_REDIS_REST_URL']
-  const token = process.env['UPSTASH_REDIS_REST_TOKEN']
+  const url = process.env['UPSTASH_REDIS_REST_URL'];
+  const token = process.env['UPSTASH_REDIS_REST_TOKEN'];
 
   if (!url || !token) {
     logger.warn(
       { event: 'auth.lockout.noop' },
       'Upstash Redis non configuré — lockout désactivé (NoopLoginAttemptService)',
-    )
-    _service = new NoopLoginAttemptService()
-    return _service
+    );
+    _service = new NoopLoginAttemptService();
+    return _service;
   }
 
   // Import dynamique pour éviter l'évaluation du module sans Redis configuré
-  const { Redis } = await import('@upstash/redis')
-  const redis = new Redis({ url, token })
-  _service = new RedisLoginAttemptService(redis)
-  return _service
+  const { Redis } = await import('@upstash/redis');
+  const redis = new Redis({ url, token });
+  _service = new RedisLoginAttemptService(redis);
+  return _service;
 }
 
 /**
@@ -278,5 +273,5 @@ export async function getLoginAttemptService(): Promise<LoginAttemptService> {
  * @internal
  */
 export function _resetLoginAttemptServiceForTests(): void {
-  _service = null
+  _service = null;
 }
