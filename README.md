@@ -103,7 +103,7 @@ cursus/
 
 - **`CLAUDE.md`** : contexte projet auto-chargé par Claude Code (à lire en premier)
 - **`tasks/_README.md`** : méthodologie de spec-driven tasks (1 fichier par story JIRA)
-- **`docs/adr/`** : Architecture Decision Records
+- **`docs/adr/`** : Architecture Decision Records — [ADR-001 Stack technique](./docs/adr/001-stack-technique.md)
 - **`docs/runbooks/`** : runbooks ops (incident, rollback, etc.)
 - **`docs/db/`** : schémas DB et politiques RLS
 

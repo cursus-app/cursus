@@ -45,9 +45,10 @@ Tout choix qui :
 
 ## Index
 
-| #   | Titre    | Statut | Date | JIRA |
-| --- | -------- | ------ | ---- | ---- |
-| 000 | Template | —      | —    | —    |
+| #   | Titre                  | Statut  | Date       | JIRA                                                        |
+| --- | ---------------------- | ------- | ---------- | ----------------------------------------------------------- |
+| 000 | Template               | —       | —          | —                                                           |
+| 001 | Stack technique Cursus | Accepté | 2026-06-21 | [CUR-29](https://ousmanesadjad.atlassian.net/browse/CUR-29) |
 
 <!--
 Ajoute une ligne ci-dessus à chaque nouvel ADR.
