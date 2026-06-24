@@ -1,0 +1,112 @@
+name: Sync Grafana Dashboards
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/grafana/dashboards/**'
+  # Déclencher manuellement pour un re-provisioning complet
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Mode dry-run (ne pas envoyer vers Grafana)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  validate:
+    name: Valider les JSON dashboards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Valider la syntaxe JSON
+        run: |
+          failed=0
+          for f in infra/grafana/dashboards/*.json; do
+            if ! jq empty "$f" 2>/dev/null; then
+              echo "::error file=$f::JSON invalide dans $f"
+              failed=$((failed + 1))
+            else
+              echo "::notice file=$f::OK: $f"
+            fi
+          done
+          if [ "$failed" -gt 0 ]; then
+            echo "::error::$failed fichier(s) JSON invalide(s)"
+            exit 1
+          fi
+          echo "Tous les dashboards JSON sont valides."
+
+      - name: Vérifier les champs obligatoires (uid, title, schemaVersion)
+        run: |
+          failed=0
+          for f in infra/grafana/dashboards/*.json; do
+            uid=$(jq -r '.uid // empty' "$f")
+            title=$(jq -r '.title // empty' "$f")
+            schema=$(jq -r '.schemaVersion // empty' "$f")
+
+            if [ -z "$uid" ]; then
+              echo "::error file=$f::Champ 'uid' manquant dans $f"
+              failed=$((failed + 1))
+            fi
+            if [ -z "$title" ]; then
+              echo "::error file=$f::Champ 'title' manquant dans $f"
+              failed=$((failed + 1))
+            fi
+            if [ -z "$schema" ]; then
+              echo "::error file=$f::Champ 'schemaVersion' manquant dans $f"
+              failed=$((failed + 1))
+            fi
+          done
+          if [ "$failed" -gt 0 ]; then
+            exit 1
+          fi
+          echo "Tous les champs obligatoires sont présents."
+
+  sync:
+    name: Importer dashboards vers Grafana Cloud
+    runs-on: ubuntu-latest
+    needs: validate
+    # Ne pas syncer sur les forks ou en mode PR
+    if: github.repository == 'ousmanesadjad/cursus' && github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer jq
+        run: sudo apt-get install -y jq
+
+      - name: Sync dashboards vers Grafana Cloud
+        # La valeur dry_run vient d'un workflow_dispatch input (type: choice).
+        # On la récupère via env: pour éviter toute injection d'expression dans run:,
+        # puis on la valide en shell (whitelist stricte) avant de l'utiliser.
+        env:
+          GRAFANA_URL: ${{ secrets.GRAFANA_CLOUD_URL }}
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }}
+          # Passer l'input via env: plutôt qu'interpoler directement dans run:
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          # Valider la whitelist : seules les valeurs "true" et "false" sont acceptées
+          if [ "$INPUT_DRY_RUN" = "true" ]; then
+            export DRY_RUN="true"
+          else
+            export DRY_RUN="false"
+          fi
+          bash infra/grafana/provisioning.sh
+
+      - name: Résumé
+        if: always()
+        run: |
+          echo "### Grafana Sync" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Dashboard | UID |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-----------|-----|" >> "$GITHUB_STEP_SUMMARY"
+          for f in infra/grafana/dashboards/*.json; do
+            title=$(jq -r '.title' "$f")
+            uid=$(jq -r '.uid' "$f")
+            echo "| $title | \`$uid\` |" >> "$GITHUB_STEP_SUMMARY"
+          done
