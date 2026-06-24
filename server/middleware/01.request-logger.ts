@@ -9,7 +9,11 @@
 //  - "res" à la sortie : method + url + status + durationMs
 //
 // Cf. ST-16.1 / TT-16.1.2
+//
+// Note : on importe explicitement depuis h3 (plutôt que d'utiliser les
+// auto-imports Nitro) pour faciliter le test unitaire sans serveur Nitro.
 import { randomUUID } from 'node:crypto';
+import { defineEventHandler, getHeader, getRequestURL, setHeader } from 'h3';
 import { childLogger } from '~~/server/utils/logger';
 
 export default defineEventHandler((event) => {
