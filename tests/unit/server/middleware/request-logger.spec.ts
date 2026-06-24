@@ -18,8 +18,7 @@ let mockUrl = '/api/test';
 // defineEventHandler est un pass-through (identité) pour exposer la fonction handler.
 vi.mock('h3', () => ({
   defineEventHandler: (fn: (event: unknown) => unknown) => fn,
-  getHeader: (_event: unknown, name: string) =>
-    name === 'x-request-id' ? mockRequestId : null,
+  getHeader: (_event: unknown, name: string) => (name === 'x-request-id' ? mockRequestId : null),
   setHeader: (_event: unknown, name: string, value: string) => {
     mockResponseHeaders[name] = value;
   },
@@ -64,9 +63,7 @@ function buildEvent(overrides?: { requestId?: string; url?: string }) {
 
 // On importe le module UNE seule fois (les mocks sont déjà en place via vi.mock hoisting).
 // `vi.clearAllMocks()` dans beforeEach suffit à remettre les compteurs à zéro.
-const { default: requestLoggerHandler } = await import(
-  '~~/server/middleware/01.request-logger'
-);
+const { default: requestLoggerHandler } = await import('~~/server/middleware/01.request-logger');
 
 describe('server/middleware/01.request-logger', () => {
   beforeEach(() => {
