@@ -9,37 +9,37 @@
  *
  * Cf. ST-02.5 — TT-02.5.5.
  */
-import { serverSupabaseUser } from '#supabase/server'
-import { createHash, randomBytes } from 'node:crypto'
-import { prisma } from '~~/server/utils/prisma'
-import { logger } from '~~/server/utils/logger'
+import { serverSupabaseUser } from '#supabase/server';
+import { createHash, randomBytes } from 'node:crypto';
+import { prisma } from '~~/server/utils/prisma';
+import { logger } from '~~/server/utils/logger';
 
 /**
  * Format XXXXX-XXXXX-XXXXX-XXXXX (20 hex chars = 10 bytes = 80 bits d'entropie).
  * 80 bits rendent la force brute en ligne infaisable même sans rate-limiting.
  */
 function generateBackupCode(): string {
-  const hex = randomBytes(10).toString('hex').toUpperCase()
+  const hex = randomBytes(10).toString('hex').toUpperCase();
   // 20 chars divisés en 4 groupes de 5
-  const groups = hex.match(/.{5}/g)
+  const groups = hex.match(/.{5}/g);
   if (!groups || groups.length !== 4) {
-    throw new Error('[2fa] backup code generation failed — unexpected hex length')
+    throw new Error('[2fa] backup code generation failed — unexpected hex length');
   }
-  return groups.join('-')
+  return groups.join('-');
 }
 
 function hashCode(code: string): string {
-  return createHash('sha256').update(code).digest('hex')
+  return createHash('sha256').update(code).digest('hex');
 }
 
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
+  const user = await serverSupabaseUser(event);
   if (!user) {
-    throw createError({ statusCode: 401, message: 'Unauthorized' })
+    throw createError({ statusCode: 401, message: 'Unauthorized' });
   }
 
-  const userId = user['id']
-  const plainCodes = Array.from({ length: 8 }, generateBackupCode)
+  const userId = user['id'];
+  const plainCodes = Array.from({ length: 8 }, generateBackupCode);
 
   // Rotation : supprimer les anciens codes, insérer les nouveaux en transaction.
   await prisma.$transaction([
@@ -50,10 +50,10 @@ export default defineEventHandler(async (event) => {
         codeHash: hashCode(code),
       })),
     }),
-  ])
+  ]);
 
-  logger.info({ userId }, '2fa.backup_codes.generated')
+  logger.info({ userId }, '2fa.backup_codes.generated');
 
   // Les codes en clair sont retournés UNE SEULE FOIS — ne jamais les loguer.
-  return { codes: plainCodes }
-})
+  return { codes: plainCodes };
+});

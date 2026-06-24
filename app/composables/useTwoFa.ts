@@ -8,7 +8,7 @@
  * Cf. ST-02.5 — 2FA TOTP (Premium MVP).
  */
 export function useTwoFa() {
-  const supabase = useSupabaseClient()
+  const supabase = useSupabaseClient();
 
   /**
    * Enrôle une app TOTP : génère le secret + le QR code.
@@ -16,9 +16,11 @@ export function useTwoFa() {
    * Le QR code est rendu côté client uniquement (jamais logué, jamais conservé).
    */
   async function enroll() {
-    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' })
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp' });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -26,9 +28,11 @@ export function useTwoFa() {
    * Le challenge est valide 10 minutes (côté Supabase).
    */
   async function createChallenge(factorId: string) {
-    const { data, error } = await supabase.auth.mfa.challenge({ factorId })
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.challenge({ factorId });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -36,9 +40,11 @@ export function useTwoFa() {
    * Utilisé lors de l'enrôlement (validation du premier code).
    */
   async function verify(factorId: string, challengeId: string, code: string) {
-    const { data, error } = await supabase.auth.mfa.verify({ factorId, challengeId, code })
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.verify({ factorId, challengeId, code });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -46,9 +52,11 @@ export function useTwoFa() {
    * Équivalent à createChallenge() + verify() mais sans exposer le challengeId.
    */
   async function challengeAndVerify(factorId: string, code: string) {
-    const { data, error } = await supabase.auth.mfa.challengeAndVerify({ factorId, code })
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.challengeAndVerify({ factorId, code });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -56,9 +64,11 @@ export function useTwoFa() {
    * Nécessite que l'utilisateur ait préalablement fourni son mot de passe + code TOTP.
    */
   async function unenroll(factorId: string) {
-    const { data, error } = await supabase.auth.mfa.unenroll({ factorId })
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.unenroll({ factorId });
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -66,9 +76,11 @@ export function useTwoFa() {
    * Retourne `{ totp: [...] }`.
    */
   async function listFactors() {
-    const { data, error } = await supabase.auth.mfa.listFactors()
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.listFactors();
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   /**
@@ -77,9 +89,11 @@ export function useTwoFa() {
    * - `currentLevel === 'aal1'` + `nextLevel === 'aal2'` → 2FA requis.
    */
   async function getAssuranceLevel() {
-    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-    if (error) { throw error }
-    return data
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (error) {
+      throw error;
+    }
+    return data;
   }
 
   return {
@@ -90,5 +104,5 @@ export function useTwoFa() {
     unenroll,
     listFactors,
     getAssuranceLevel,
-  }
+  };
 }

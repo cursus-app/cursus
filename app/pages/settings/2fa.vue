@@ -9,203 +9,212 @@
  *  - 'active'     : 2FA activée, codes backup affichés / bouton "Désactiver"
  *  - 'disabling'  : modale de confirmation désactivation (mdp + code TOTP)
  */
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import { disableTwoFaSchema, totpCodeSchema } from '~~/shared/schemas/twoFa'
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { disableTwoFaSchema, totpCodeSchema } from '~~/shared/schemas/twoFa';
 
 definePageMeta({
   middleware: 'auth',
   layout: 'default',
-})
+});
 
-useSeoMeta({ title: 'Authentification à deux facteurs — Cursus', robots: 'noindex' })
+useSeoMeta({ title: 'Authentification à deux facteurs — Cursus', robots: 'noindex' });
 
-const { t } = useI18n()
-const { enroll, verify, createChallenge, challengeAndVerify, unenroll, listFactors } = useTwoFa()
-const toast = useToast()
+const { t } = useI18n();
+const { enroll, verify, createChallenge, challengeAndVerify, unenroll, listFactors } = useTwoFa();
+const toast = useToast();
 
 // ─── État global ──────────────────────────────────────────────────────────────
 
-type PageState = 'loading' | 'idle' | 'enrolling' | 'active' | 'disabling'
+type PageState = 'loading' | 'idle' | 'enrolling' | 'active' | 'disabling';
 
-const pageState = ref<PageState>('loading')
-const isSubmitting = ref(false)
+const pageState = ref<PageState>('loading');
+const isSubmitting = ref(false);
 
 // ─── Données enrôlement ───────────────────────────────────────────────────────
 
 interface EnrollData {
-  factorId: string
-  qrCode: string   // data:image/svg+xml;base64,... renvoyé par Supabase
-  secret: string   // secret manuel (pour saisie sans caméra)
-  uri: string
+  factorId: string;
+  qrCode: string; // data:image/svg+xml;base64,... renvoyé par Supabase
+  secret: string; // secret manuel (pour saisie sans caméra)
+  uri: string;
 }
-const enrollData = ref<EnrollData | null>(null)
+const enrollData = ref<EnrollData | null>(null);
 
 // ─── Facteur TOTP actif ───────────────────────────────────────────────────────
 
 interface ActiveFactor {
-  id: string
-  friendlyName: string | undefined
+  id: string;
+  friendlyName: string | undefined;
 }
-const activeFactor = ref<ActiveFactor | null>(null)
+const activeFactor = ref<ActiveFactor | null>(null);
 
 // ─── Codes de backup ──────────────────────────────────────────────────────────
 
-const backupCodes = ref<string[]>([])
-const showBackupCodes = ref(false)
+const backupCodes = ref<string[]>([]);
+const showBackupCodes = ref(false);
 
 // ─── Formulaire enrôlement ────────────────────────────────────────────────────
 
-const enrollForm = useForm({ validationSchema: toTypedSchema(totpCodeSchema) })
+const enrollForm = useForm({ validationSchema: toTypedSchema(totpCodeSchema) });
 
 // ─── Formulaire désactivation ─────────────────────────────────────────────────
 
-const disableForm = useForm({ validationSchema: toTypedSchema(disableTwoFaSchema) })
+const disableForm = useForm({ validationSchema: toTypedSchema(disableTwoFaSchema) });
 
 // ─── Initialisation ───────────────────────────────────────────────────────────
 
 async function initPage() {
-  pageState.value = 'loading'
+  pageState.value = 'loading';
   try {
-    const factors = await listFactors()
-    const totpFactor = factors.totp.find((f) => f.status === 'verified')
+    const factors = await listFactors();
+    const totpFactor = factors.totp.find((f) => f.status === 'verified');
     if (totpFactor) {
-      activeFactor.value = { id: totpFactor.id, friendlyName: totpFactor.friendly_name ?? undefined }
-      pageState.value = 'active'
+      activeFactor.value = {
+        id: totpFactor.id,
+        friendlyName: totpFactor.friendly_name ?? undefined,
+      };
+      pageState.value = 'active';
     } else {
-      pageState.value = 'idle'
+      pageState.value = 'idle';
     }
   } catch {
-    pageState.value = 'idle'
+    pageState.value = 'idle';
   }
 }
 
-onMounted(() => { void initPage() })
+onMounted(() => {
+  void initPage();
+});
 
 // ─── Enrôlement ───────────────────────────────────────────────────────────────
 
 async function startEnroll() {
-  isSubmitting.value = true
+  isSubmitting.value = true;
   try {
-    const data = await enroll()
+    const data = await enroll();
     enrollData.value = {
       factorId: data.id,
       qrCode: data.totp.qr_code,
       secret: data.totp.secret,
       uri: data.totp.uri,
-    }
-    pageState.value = 'enrolling'
+    };
+    pageState.value = 'enrolling';
   } catch {
     toast.add({
       title: t('2fa.errors.enrollFailed'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 
 const onVerifyEnrollment = enrollForm.handleSubmit(async (values) => {
-  if (!enrollData.value) { return }
-  isSubmitting.value = true
+  if (!enrollData.value) {
+    return;
+  }
+  isSubmitting.value = true;
   try {
-    const challenge = await createChallenge(enrollData.value.factorId)
-    await verify(enrollData.value.factorId, challenge.id, values.code)
+    const challenge = await createChallenge(enrollData.value.factorId);
+    await verify(enrollData.value.factorId, challenge.id, values.code);
 
     // Génération des codes de backup après activation réussie
-    const resp = await $fetch<{ codes: string[] }>('/api/2fa/backup-codes', { method: 'POST' })
-    backupCodes.value = resp.codes
-    showBackupCodes.value = true
+    const resp = await $fetch<{ codes: string[] }>('/api/2fa/backup-codes', { method: 'POST' });
+    backupCodes.value = resp.codes;
+    showBackupCodes.value = true;
 
-    activeFactor.value = { id: enrollData.value.factorId, friendlyName: undefined }
-    enrollData.value = null
-    pageState.value = 'active'
+    activeFactor.value = { id: enrollData.value.factorId, friendlyName: undefined };
+    enrollData.value = null;
+    pageState.value = 'active';
 
     toast.add({
       title: t('2fa.enrollSuccess'),
       color: 'success',
       icon: 'i-tabler-shield-check',
-    })
+    });
   } catch {
-    enrollForm.setFieldError('code', t('2fa.errors.invalidCode'))
+    enrollForm.setFieldError('code', t('2fa.errors.invalidCode'));
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-})
+});
 
 function cancelEnroll() {
-  enrollData.value = null
-  pageState.value = 'idle'
+  enrollData.value = null;
+  pageState.value = 'idle';
 }
 
 // ─── Désactivation ────────────────────────────────────────────────────────────
 
 function startDisable() {
-  pageState.value = 'disabling'
+  pageState.value = 'disabling';
 }
 
 function cancelDisable() {
-  disableForm.resetForm()
-  pageState.value = 'active'
+  disableForm.resetForm();
+  pageState.value = 'active';
 }
 
 const onDisable = disableForm.handleSubmit(async (values) => {
-  if (!activeFactor.value) { return }
-  isSubmitting.value = true
+  if (!activeFactor.value) {
+    return;
+  }
+  isSubmitting.value = true;
   try {
     // Élever la session à AAL2 en vérifiant le code TOTP AVANT de désinscrire.
     // Sans cette étape, un attaquant avec accès à la session AAL1 pourrait
     // désactiver la 2FA sans connaître le code TOTP (authentication bypass).
-    await challengeAndVerify(values.factorId, values.totpCode)
-    await unenroll(values.factorId)
+    await challengeAndVerify(values.factorId, values.totpCode);
+    await unenroll(values.factorId);
 
-    activeFactor.value = null
-    backupCodes.value = []
-    showBackupCodes.value = false
-    pageState.value = 'idle'
+    activeFactor.value = null;
+    backupCodes.value = [];
+    showBackupCodes.value = false;
+    pageState.value = 'idle';
 
     toast.add({
       title: t('2fa.disableSuccess'),
       color: 'warning',
       icon: 'i-tabler-shield-off',
-    })
+    });
   } catch {
-    disableForm.setFieldError('totpCode', t('2fa.errors.invalidCode'))
+    disableForm.setFieldError('totpCode', t('2fa.errors.invalidCode'));
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
-})
+});
 
 // ─── Régénération codes backup ────────────────────────────────────────────────
 
 async function regenBackupCodes() {
-  isSubmitting.value = true
+  isSubmitting.value = true;
   try {
-    const resp = await $fetch<{ codes: string[] }>('/api/2fa/backup-codes', { method: 'POST' })
-    backupCodes.value = resp.codes
-    showBackupCodes.value = true
+    const resp = await $fetch<{ codes: string[] }>('/api/2fa/backup-codes', { method: 'POST' });
+    backupCodes.value = resp.codes;
+    showBackupCodes.value = true;
     toast.add({
       title: t('2fa.backupCodesRegenerated'),
       color: 'info',
       icon: 'i-tabler-refresh',
-    })
+    });
   } catch {
     toast.add({
       title: t('2fa.errors.generic'),
       color: 'error',
       icon: 'i-tabler-circle-x',
-    })
+    });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
   }
 }
 
 // ─── QR code : decode base64 SVG pour affichage inline ───────────────────────
 
 function decodeSvgQrCode(dataUrl: string): string {
-  const base64 = dataUrl.replace('data:image/svg+xml;base64,', '')
-  return globalThis.atob(base64)
+  const base64 = dataUrl.replace('data:image/svg+xml;base64,', '');
+  return globalThis.atob(base64);
 }
 
 // ─── Téléchargement codes backup ──────────────────────────────────────────────
@@ -215,19 +224,19 @@ function downloadBackupCodes() {
     'Cursus — Codes de backup 2FA',
     `Générés le : ${new Date().toLocaleDateString('fr-FR')}`,
     '',
-    'Chaque code ne peut être utilisé qu\'une seule fois.',
+    "Chaque code ne peut être utilisé qu'une seule fois.",
     'Conservez ce fichier en lieu sûr.',
     '',
     ...backupCodes.value,
-  ].join('\n')
+  ].join('\n');
 
-  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'cursus-2fa-backup-codes.txt'
-  a.click()
-  URL.revokeObjectURL(url)
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'cursus-2fa-backup-codes.txt';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 
@@ -250,10 +259,18 @@ function downloadBackupCodes() {
         class="shrink-0"
       >
         <UIcon
-          :name="pageState === 'active' || pageState === 'disabling' ? 'i-tabler-shield-check' : 'i-tabler-shield-off'"
+          :name="
+            pageState === 'active' || pageState === 'disabling'
+              ? 'i-tabler-shield-check'
+              : 'i-tabler-shield-off'
+          "
           class="mr-1 size-3.5"
         />
-        {{ pageState === 'active' || pageState === 'disabling' ? t('2fa.statusEnabled') : t('2fa.statusDisabled') }}
+        {{
+          pageState === 'active' || pageState === 'disabling'
+            ? t('2fa.statusEnabled')
+            : t('2fa.statusDisabled')
+        }}
       </UBadge>
     </div>
 
@@ -322,7 +339,7 @@ function downloadBackupCodes() {
               </summary>
               <div class="mt-2 rounded-md bg-inset p-3">
                 <p class="mb-1 text-xs text-text-muted">{{ t('2fa.manualEntryLabel') }}</p>
-                <code class="select-all break-all font-mono text-sm text-text-strong">
+                <code class="font-mono text-sm break-all text-text-strong select-all">
                   {{ enrollData.secret }}
                 </code>
               </div>
@@ -341,7 +358,7 @@ function downloadBackupCodes() {
 
           <form novalidate @submit="onVerifyEnrollment">
             <!-- hidden field pour factorId -->
-            <input type="hidden" name="factorId" :value="enrollData.factorId">
+            <input type="hidden" name="factorId" :value="enrollData.factorId" />
 
             <div class="space-y-4">
               <p class="text-sm text-text-muted">{{ t('2fa.step2Description') }}</p>
@@ -444,14 +461,11 @@ function downloadBackupCodes() {
             </div>
 
             <!-- Grille 2×4 des codes -->
-            <ul
-              class="grid grid-cols-2 gap-2"
-              aria-label="Codes de backup"
-            >
+            <ul class="grid grid-cols-2 gap-2" aria-label="Codes de backup">
               <li
                 v-for="code in backupCodes"
                 :key="code"
-                class="select-all rounded-md bg-inset px-3 py-2 text-center font-mono text-sm tracking-wider text-text-strong"
+                class="rounded-md bg-inset px-3 py-2 text-center font-mono text-sm tracking-wider text-text-strong select-all"
               >
                 {{ code }}
               </li>
@@ -474,12 +488,7 @@ function downloadBackupCodes() {
 
           <div class="flex items-center justify-between gap-4">
             <p class="text-sm text-text-muted">{{ t('2fa.disableDescription') }}</p>
-            <UButton
-              color="error"
-              variant="soft"
-              icon="i-tabler-shield-off"
-              @click="startDisable"
-            >
+            <UButton color="error" variant="soft" icon="i-tabler-shield-off" @click="startDisable">
               {{ t('2fa.disableButton') }}
             </UButton>
           </div>
@@ -501,12 +510,7 @@ function downloadBackupCodes() {
 
         <form novalidate @submit="onDisable">
           <!-- hidden field factorId -->
-          <input
-            v-if="activeFactor"
-            type="hidden"
-            name="factorId"
-            :value="activeFactor.id"
-          >
+          <input v-if="activeFactor" type="hidden" name="factorId" :value="activeFactor.id" />
 
           <div class="space-y-4">
             <div

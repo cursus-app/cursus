@@ -11,110 +11,112 @@
  *
  * Cf. ST-02.5 — TT-02.5.4 (Step de saisie 2FA dans le flow login).
  */
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import { loginSchema } from '~~/shared/schemas/auth'
-import { AuthError } from '~/composables/useAuth'
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { loginSchema } from '~~/shared/schemas/auth';
+import { AuthError } from '~/composables/useAuth';
 
 definePageMeta({
   layout: 'auth',
   middleware: 'auth',
-})
+});
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 useSeoMeta({
   title: t('auth.login'),
   robots: 'noindex', // Pages d'auth non indexées
-})
+});
 
-const { login } = useAuth()
-const { getAssuranceLevel, listFactors, challengeAndVerify } = useTwoFa()
-const router = useRouter()
+const { login } = useAuth();
+const { getAssuranceLevel, listFactors, challengeAndVerify } = useTwoFa();
+const router = useRouter();
 
 // Message d'invitation uniquement redirigé
-const route = useRoute()
+const route = useRoute();
 const invitationOnlyMessage = computed(() =>
   route.query['invitation'] === 'required' ? t('auth.invitationOnly') : null,
-)
+);
 
 // ─── Step courant : 'credentials' | 'totp' ────────────────────────────────────
 
-type LoginStep = 'credentials' | 'totp'
-const currentStep = ref<LoginStep>('credentials')
+type LoginStep = 'credentials' | 'totp';
+const currentStep = ref<LoginStep>('credentials');
 
 // ─── Formulaire credentials ───────────────────────────────────────────────────
 
 const { handleSubmit, isSubmitting, setFieldError } = useForm({
   validationSchema: toTypedSchema(loginSchema),
-})
+});
 
 // Message d'erreur générique — jamais spécifique à l'email ou au mot de passe
 // (anti user enumeration — cf. considérations sécurité ST-02.1)
-const serverError = ref<string | null>(null)
+const serverError = ref<string | null>(null);
 
 const onSubmit = handleSubmit(async (values) => {
-  serverError.value = null
+  serverError.value = null;
   try {
-    await login(values.email, values.password)
+    await login(values.email, values.password);
 
     // Vérifier si une 2FA challenge est requise
-    const { currentLevel, nextLevel } = await getAssuranceLevel()
+    const { currentLevel, nextLevel } = await getAssuranceLevel();
     if (currentLevel === 'aal1' && nextLevel === 'aal2') {
       // 2FA requise — charger le facteur actif et afficher le step TOTP
-      const factors = await listFactors()
-      const totpFactor = factors.totp.find((f) => f.status === 'verified')
+      const factors = await listFactors();
+      const totpFactor = factors.totp.find((f) => f.status === 'verified');
       if (totpFactor) {
-        activeTotpFactorId.value = totpFactor['id']
-        currentStep.value = 'totp'
-        return
+        activeTotpFactorId.value = totpFactor['id'];
+        currentStep.value = 'totp';
+        return;
       }
     }
 
     // Pas de 2FA → redirection directe
     // /dashboard est créé dans ST-03.x — route connue mais page pas encore générée.
     // eslint-disable-next-line link-checker/valid-route
-    await router.push('/dashboard')
+    await router.push('/dashboard');
   } catch (error) {
     if (error instanceof AuthError) {
-      serverError.value = t(error.i18nKey)
+      serverError.value = t(error.i18nKey);
     } else {
-      serverError.value = t('auth.errors.generic')
+      serverError.value = t('auth.errors.generic');
     }
     // Effacement immédiat du mot de passe — sécurité
-    setFieldError('password', undefined)
+    setFieldError('password', undefined);
   }
-})
+});
 
 // ─── Step TOTP ────────────────────────────────────────────────────────────────
 
-const activeTotpFactorId = ref<string | null>(null)
-const totpCode = ref('')
-const totpError = ref<string | null>(null)
-const isVerifyingTotp = ref(false)
+const activeTotpFactorId = ref<string | null>(null);
+const totpCode = ref('');
+const totpError = ref<string | null>(null);
+const isVerifyingTotp = ref(false);
 
 async function submitTotpCode() {
-  if (!activeTotpFactorId.value || totpCode.value.length !== 6) { return }
+  if (!activeTotpFactorId.value || totpCode.value.length !== 6) {
+    return;
+  }
 
-  isVerifyingTotp.value = true
-  totpError.value = null
+  isVerifyingTotp.value = true;
+  totpError.value = null;
   try {
-    await challengeAndVerify(activeTotpFactorId.value, totpCode.value)
+    await challengeAndVerify(activeTotpFactorId.value, totpCode.value);
     // eslint-disable-next-line link-checker/valid-route
-    await router.push('/dashboard')
+    await router.push('/dashboard');
   } catch {
-    totpError.value = t('2fa.errors.invalidCode')
-    totpCode.value = ''
+    totpError.value = t('2fa.errors.invalidCode');
+    totpCode.value = '';
   } finally {
-    isVerifyingTotp.value = false
+    isVerifyingTotp.value = false;
   }
 }
 
 function backToCredentials() {
-  currentStep.value = 'credentials'
-  activeTotpFactorId.value = null
-  totpCode.value = ''
-  totpError.value = null
+  currentStep.value = 'credentials';
+  activeTotpFactorId.value = null;
+  totpCode.value = '';
+  totpError.value = null;
 }
 
 // TODO ST-15.4 : rate limiting Upstash Redis (5 tentatives / 5 min / IP+email)
@@ -209,7 +211,9 @@ function backToCredentials() {
     ══════════════════════════════════════════════════════════════════ -->
     <template v-else-if="currentStep === 'totp'">
       <div class="mb-8 text-center">
-        <div class="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-accent-subtle">
+        <div
+          class="mx-auto mb-4 flex size-14 items-center justify-center rounded-full bg-accent-subtle"
+        >
           <UIcon name="i-tabler-shield-lock" class="size-7 text-accent-text" />
         </div>
         <h1 class="text-2xl font-semibold tracking-tight text-text-strong">
@@ -234,10 +238,7 @@ function backToCredentials() {
       <form novalidate @submit.prevent="submitTotpCode">
         <div class="space-y-5">
           <div>
-            <label
-              for="totp-login-code"
-              class="mb-1.5 block text-sm font-medium text-text-strong"
-            >
+            <label for="totp-login-code" class="mb-1.5 block text-sm font-medium text-text-strong">
               {{ t('2fa.codeLabel') }}
               <span aria-hidden="true" class="text-danger-fg"> *</span>
             </label>
@@ -251,10 +252,10 @@ function backToCredentials() {
               maxlength="6"
               :placeholder="t('2fa.codePlaceholder')"
               :disabled="isVerifyingTotp"
-              class="w-full rounded-md border border-border-default bg-surface px-3 py-2 text-center font-mono text-lg tracking-[0.5em] text-text-strong placeholder:text-text-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              class="w-full rounded-md border border-border-default bg-surface px-3 py-2 text-center font-mono text-lg tracking-[0.5em] text-text-strong placeholder:text-text-subtle focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               aria-required="true"
               autofocus
-            >
+            />
           </div>
 
           <UButton
