@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Cursus",
+    "tagline": "The tech internship journey, structured and validated."
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "auth": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "email": "Email address",
+    "password": "Password",
+    "magicLink": "Receive a magic link",
+    "githubLogin": "Continue with GitHub"
+  },
+  "errors": {
+    "generic": "Something went wrong.",
+    "notFound": "Page not found.",
+    "unauthorized": "You don't have access to this resource.",
+    "supportRef": "Support reference"
+  }
+}

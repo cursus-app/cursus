@@ -58,12 +58,21 @@ export default defineNuxtConfig({
     asyncContext: true,
   },
 
-  // i18n — FR uniquement au MVP, EN ajouté en v1.1
+  // i18n — FR par défaut (sans préfixe), EN avec préfixe /en/
+  // Stratégie prefix_except_default : /cursus (FR), /en/cursus (EN)
   i18n: {
-    locales: [{ code: 'fr', language: 'fr-FR', name: 'Français', file: 'fr.json' }],
+    locales: [
+      { code: 'fr', language: 'fr-FR', name: 'Français', file: 'fr.json' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' },
+    ],
     defaultLocale: 'fr',
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
     langDir: '../locales/',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+    },
   },
 
   // Supabase — l'auth/storage/realtime continuent de passer par le client JS,
