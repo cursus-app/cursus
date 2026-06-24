@@ -1,8 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'node:path';
 
 const PORT = Number(process.env['PORT'] ?? 3000);
 const BASE_URL = process.env['PLAYWRIGHT_BASE_URL'] ?? `http://localhost:${PORT}`;
 const isCI = Boolean(process.env['CI']);
+
+// Fichier de session persistée entre setup et tests
+export const STORAGE_STATE = path.join(import.meta.dirname, 'tests/e2e/.auth/user.json');
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -35,12 +39,54 @@ export default defineConfig({
   },
 
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    // Projet setup : exécuté en premier, persiste la session auth
+    {
+      name: 'setup',
+      testMatch: '**/auth.setup.ts',
+    },
+
+    // Navigateurs desktop — dépendent du setup
+    {
+      name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: STORAGE_STATE,
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'firefox',
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: STORAGE_STATE,
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'webkit',
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: STORAGE_STATE,
+      },
+      dependencies: ['setup'],
+    },
     // Mobile en plus pour les parcours stagiaire
-    { name: 'mobile-chrome', use: { ...devices['Pixel 7'] } },
-    { name: 'mobile-safari', use: { ...devices['iPhone 14'] } },
+    {
+      name: 'mobile-chrome',
+      use: {
+        ...devices['Pixel 7'],
+        storageState: STORAGE_STATE,
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'mobile-safari',
+      use: {
+        ...devices['iPhone 14'],
+        storageState: STORAGE_STATE,
+      },
+      dependencies: ['setup'],
+    },
   ],
 
   webServer: {
