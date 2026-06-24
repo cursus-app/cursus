@@ -281,3 +281,38 @@ describe('getLoginAttemptService()', () => {
     expect(svc).not.toBeInstanceOf(NoopLoginAttemptService)
   })
 })
+
+// ---------------------------------------------------------------------------
+// checkIpRateLimit
+// ---------------------------------------------------------------------------
+
+describe('RedisLoginAttemptService — checkIpRateLimit', () => {
+  it('autorise si count ≤ 5', async () => {
+    const { redisMock } = buildFakeRedis({ pipelineResults: [3, 1] })
+    const svc = new RedisLoginAttemptService(redisMock as never)
+    const result = await svc.checkIpRateLimit('1.2.3.4')
+    expect(result.allowed).toBe(true)
+  })
+
+  it('refuse si count > 5', async () => {
+    const { redisMock } = buildFakeRedis({ pipelineResults: [6, 1] })
+    const svc = new RedisLoginAttemptService(redisMock as never)
+    const result = await svc.checkIpRateLimit('1.2.3.4')
+    expect(result.allowed).toBe(false)
+  })
+
+  it('refuse exactement au 6ème essai (seuil = 5)', async () => {
+    const { redisMock } = buildFakeRedis({ pipelineResults: [6, 1] })
+    const svc = new RedisLoginAttemptService(redisMock as never)
+    const result = await svc.checkIpRateLimit('5.5.5.5')
+    expect(result.allowed).toBe(false)
+  })
+})
+
+describe('NoopLoginAttemptService — checkIpRateLimit', () => {
+  it('autorise toujours (fail-open)', async () => {
+    const svc = new NoopLoginAttemptService()
+    const result = await svc.checkIpRateLimit('1.2.3.4')
+    expect(result.allowed).toBe(true)
+  })
+})

@@ -47,6 +47,12 @@ export interface LoginAttemptService {
   checkAndRecord(email: string, ip: string, success: boolean): Promise<LoginCheckResult>
 
   /**
+   * Rate limit par IP : 5 tentatives par minute (fenêtre glissante).
+   * Retourne allowed=false si l'IP dépasse la limite.
+   */
+  checkIpRateLimit(ip: string): Promise<{ allowed: boolean }>
+
+  /**
    * Lève manuellement le verrouillage (ex. : après reset par magic-link).
    */
   clearLockout(email: string): Promise<void>
@@ -71,9 +77,9 @@ interface RedisClient {
 // Utilitaire interne : hash email pour les clés Redis
 // ---------------------------------------------------------------------------
 
-function hashEmailForRedis(email: string): string {
+function hashForRedis(value: string): string {
   return createHash('sha256')
-    .update(email.toLowerCase().trim())
+    .update(value.toLowerCase().trim())
     .digest('hex')
     .slice(0, 16)
 }
@@ -94,7 +100,7 @@ export class RedisLoginAttemptService implements LoginAttemptService {
   }
 
   async isLocked(email: string): Promise<{ locked: boolean; lockedUntil?: Date }> {
-    const emailHash = hashEmailForRedis(email)
+    const emailHash = hashForRedis(email)
     const lockKey = `auth:lock:${emailHash}`
 
     const lockedUntil = await this.redis.get<string>(lockKey)
@@ -105,7 +111,7 @@ export class RedisLoginAttemptService implements LoginAttemptService {
   }
 
   async checkAndRecord(email: string, ip: string, success: boolean): Promise<LoginCheckResult> {
-    const emailHash = hashEmailForRedis(email)
+    const emailHash = hashForRedis(email)
     const lockKey = `auth:lock:${emailHash}`
     const key15m = `auth:attempts:${emailHash}:15m`
     const key1h = `auth:attempts:${emailHash}:1h`
@@ -116,7 +122,7 @@ export class RedisLoginAttemptService implements LoginAttemptService {
     if (existingLock) {
       const lockedUntil = new Date(existingLock)
       logger.warn(
-        { emailHash, event: 'auth.login.blocked_locked', ip_hash: hashEmailForRedis(ip) },
+        { emailHash, event: 'auth.login.blocked_locked', ip_hash: hashForRedis(ip) },
         'auth.account.already_locked',
       )
       return { allowed: false, lockedUntil }
@@ -176,8 +182,19 @@ export class RedisLoginAttemptService implements LoginAttemptService {
     return { allowed: true, remainingAttempts }
   }
 
+  async checkIpRateLimit(ip: string): Promise<{ allowed: boolean }> {
+    const ipHash = hashForRedis(ip)
+    const key = `auth:ip:${ipHash}:1m`
+    const pipe = this.redis.pipeline()
+    pipe.incr(key)
+    pipe.expire(key, 60)
+    const results = await pipe.exec()
+    const count = results[0] ?? 0
+    return { allowed: count <= 5 }
+  }
+
   async clearLockout(email: string): Promise<void> {
-    const emailHash = hashEmailForRedis(email)
+    const emailHash = hashForRedis(email)
     const lockKey = `auth:lock:${emailHash}`
     const key15m = `auth:attempts:${emailHash}:15m`
     const key1h = `auth:attempts:${emailHash}:1h`
@@ -209,6 +226,10 @@ export class NoopLoginAttemptService implements LoginAttemptService {
     _ip: string,
     _success: boolean,
   ): Promise<LoginCheckResult> {
+    return { allowed: true }
+  }
+
+  async checkIpRateLimit(_ip: string): Promise<{ allowed: boolean }> {
     return { allowed: true }
   }
 
