@@ -437,6 +437,27 @@ model FeatureFlag {
 }
 
 // ============================================================================
+// LEGAL — RGPD (ST-15.3)
+// ============================================================================
+
+/// Trace chaque acceptation de document légal (CGU, politique de confidentialité).
+/// Permet l'audit de conformité RGPD et la détection de versions non re-acceptées.
+model UserConsent {
+  id              String   @id @default(cuid())
+  userId          String   @map("user_id")
+  /// 'cgu' | 'privacy'
+  documentType    String   @map("document_type")
+  /// Ex : '1.0.0' — permet de détecter les mises à jour majeures (semver)
+  documentVersion String   @map("document_version")
+  acceptedAt      DateTime @default(now()) @map("accepted_at")
+  /// IP pseudonymisée (hashée) — jamais de PII brute en base
+  ipAddress       String?  @map("ip_address")
+
+  @@map("user_consents")
+  @@index([userId, documentType])
+}
+
+// ============================================================================
 // ENUMS
 // ============================================================================
 
