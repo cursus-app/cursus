@@ -118,7 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      NODE_ENV: production
+      # DB/Supabase placeholders pour Nuxt build (pas de vraie DB en CI)
       DATABASE_URL: postgresql://placeholder
       DIRECT_URL: postgresql://placeholder
       NUXT_PUBLIC_SUPABASE_URL: http://placeholder
@@ -132,9 +132,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
+      # NODE_ENV doit rester absent ici : pnpm install saute sinon les devDeps
+      # (nuxt prepare a besoin de @nuxt/eslint, qui est une devDep)
       - run: pnpm install --frozen-lockfile
       - run: pnpm prisma generate
-      - run: pnpm build
+      - name: Build prod
+        env:
+          NODE_ENV: production
+        run: pnpm build
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:

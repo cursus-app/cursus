@@ -16,6 +16,8 @@ jobs:
     name: Visual regression (Chromatic)
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Non-bloquant tant que CHROMATIC_PROJECT_TOKEN n'est pas configuré dans les secrets GitHub
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
