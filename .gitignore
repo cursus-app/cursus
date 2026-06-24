@@ -45,6 +45,8 @@ coverage/
 playwright-report/
 test-results/
 .vitest-cache/
+# Sessions Playwright persistées (jamais commiter)
+tests/e2e/.auth/
 
 # Storybook
 storybook-static/

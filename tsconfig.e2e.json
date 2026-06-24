@@ -1,0 +1,26 @@
+{
+  // tsconfig dédié aux tests Playwright E2E.
+  // Séparé du tsconfig Nuxt car les tests E2E tournent dans Node (pas dans Vite),
+  // et utilisent les types @playwright/test qui n'ont pas besoin des globals Nuxt.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": false,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": [
+    "playwright.config.ts",
+    "tests/e2e/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".nuxt"]
+}
