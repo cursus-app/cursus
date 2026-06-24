@@ -18,9 +18,7 @@ export function usePermission() {
     return (
       store.globalRole === 'FORMATEUR_PRINCIPAL' ||
       store.globalRole === 'CO_FORMATEUR' ||
-      store.memberships.some(
-        (m) => m.role === 'FORMATEUR_PRINCIPAL' || m.role === 'CO_FORMATEUR',
-      )
+      store.memberships.some((m) => m.role === 'FORMATEUR_PRINCIPAL' || m.role === 'CO_FORMATEUR')
     );
   }
 
@@ -50,9 +48,7 @@ export function usePermission() {
    * stagiaire dans l'une et formateur dans une autre.
    */
   function isStagiaire(cohorteId: string): boolean {
-    return store.memberships.some(
-      (m) => m.cohorteId === cohorteId && m.role === 'STAGIAIRE',
-    );
+    return store.memberships.some((m) => m.cohorteId === cohorteId && m.role === 'STAGIAIRE');
   }
 
   /** Peut créer/modifier un cursus (template). */

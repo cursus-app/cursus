@@ -47,7 +47,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
       const profile = await $fetch('/api/me');
       userStore.setUserContext({
         userId: profile['id'],
-        globalRole: profile['globalRole'] as Parameters<typeof userStore.setUserContext>[0]['globalRole'],
+        globalRole: profile['globalRole'] as Parameters<
+          typeof userStore.setUserContext
+        >[0]['globalRole'],
         memberships: profile['memberships'].map((m) => ({
           cohorteId: m['cohorteId'],
           role: m['role'] as 'STAGIAIRE' | 'FORMATEUR_PRINCIPAL' | 'CO_FORMATEUR',

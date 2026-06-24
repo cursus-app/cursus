@@ -473,10 +473,7 @@ describe('usePermission — utilisateur multi-cohortes', () => {
   });
 
   it('can be STAGIAIRE in cohorte A and CO_FORMATEUR in cohorte B simultaneously', async () => {
-    mockMemberships = [
-      memberOf(COHORTE_A, 'STAGIAIRE'),
-      memberOf(COHORTE_B, 'CO_FORMATEUR'),
-    ];
+    mockMemberships = [memberOf(COHORTE_A, 'STAGIAIRE'), memberOf(COHORTE_B, 'CO_FORMATEUR')];
     const { usePermission } = await import('~/composables/usePermission');
     const perms = usePermission();
 
