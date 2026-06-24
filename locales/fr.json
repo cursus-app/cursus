@@ -73,6 +73,84 @@
       "criterionNotMet": "Critère non rempli"
     }
   },
+  "profile": {
+    "title": "Mon profil",
+    "subtitle": "Gérer tes informations personnelles et tes préférences.",
+    "savedToast": "Modifications enregistrées",
+    "sections": {
+      "identity": "Identité",
+      "preferences": "Préférences",
+      "security": "Sécurité",
+      "danger": "Zone de danger"
+    },
+    "fields": {
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Prénom Nom",
+      "bio": "Bio courte",
+      "bioPlaceholder": "En quelques mots, qui es-tu ?",
+      "locale": "Langue",
+      "timezone": "Fuseau horaire",
+      "isPublic": "Profil public",
+      "isPublicDescription": "Rendre ton profil visible sur l'annuaire public",
+      "publicSlug": "Identifiant public (URL)",
+      "publicSlugPlaceholder": "mon-identifiant",
+      "publicSlugHint": "Uniquement des lettres minuscules, chiffres et tirets.",
+      "email": "Email (non modifiable)"
+    },
+    "avatar": {
+      "label": "Photo de profil",
+      "altText": "Photo de profil de {name}",
+      "altTextDefault": "Photo de profil",
+      "change": "Changer",
+      "remove": "Supprimer",
+      "uploadHint": "PNG, JPG ou WebP — 2 Mo max",
+      "uploading": "Upload en cours…",
+      "errors": {
+        "tooLarge": "Fichier trop volumineux (2 Mo max)",
+        "invalidType": "Format non supporté (PNG, JPG ou WebP uniquement)",
+        "uploadFailed": "Erreur lors de l'upload. Réessaie."
+      }
+    },
+    "security": {
+      "twoFaTitle": "Authentification à deux facteurs",
+      "twoFaEnabled": "Activée",
+      "twoFaDisabled": "Désactivée",
+      "manage2fa": "Gérer le 2FA"
+    },
+    "delete": {
+      "title": "Supprimer mon compte",
+      "description": "Cette action programmera la suppression définitive de ton compte dans 30 jours. Tu pourras annuler via le lien envoyé par email.",
+      "button": "Supprimer mon compte",
+      "confirmTitle": "Confirmer la suppression",
+      "confirmDescription": "Pour confirmer, saisis ton adresse email et ton mot de passe.",
+      "emailLabel": "Email de confirmation",
+      "passwordLabel": "Mot de passe",
+      "confirmButton": "Confirmer la suppression",
+      "scheduledMessage": "Ton compte sera supprimé le {date}. Consulte tes emails pour annuler.",
+      "errors": {
+        "emailMismatch": "L'adresse email ne correspond pas à ton compte.",
+        "passwordInvalid": "Mot de passe incorrect.",
+        "generic": "Erreur lors de la suppression. Réessaie."
+      }
+    },
+    "errors": {
+      "fullNameRequired": "Le nom ne peut pas être vide",
+      "fullNameTooLong": "100 caractères maximum",
+      "bioTooLong": "500 caractères maximum",
+      "timezoneTooLong": "Fuseau horaire invalide",
+      "slugTooShort": "3 caractères minimum",
+      "slugTooLong": "50 caractères maximum",
+      "slugInvalidChars": "Uniquement des lettres minuscules, chiffres et tirets",
+      "slugTaken": "Cet identifiant est déjà pris",
+      "emailInvalid": "Adresse email invalide",
+      "passwordRequired": "Le mot de passe est requis",
+      "saveFailed": "Impossible d'enregistrer les modifications."
+    },
+    "locales": {
+      "fr": "Français",
+      "en": "English"
+    }
+  },
   "errors": {
     "generic": "Quelque chose s'est mal passé.",
     "notFound": "Page introuvable.",
