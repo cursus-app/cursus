@@ -72,7 +72,7 @@ CREATE POLICY "users_select_cohorte_members" ON users
     EXISTS (
       SELECT 1 FROM memberships m1
       JOIN memberships m2 ON m1.cohorte_id = m2.cohorte_id
-      WHERE m1.user_id = id
+      WHERE m1.user_id = users.id
         AND m2.user_id = auth.uid()
         AND m2.left_at IS NULL
         AND m1.left_at IS NULL
@@ -160,7 +160,7 @@ CREATE POLICY "cohortes_select_member" ON cohortes
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM memberships m
-      WHERE m.cohorte_id = id
+      WHERE m.cohorte_id = cohortes.id
         AND m.user_id = auth.uid()
         AND m.left_at IS NULL
     )
@@ -181,7 +181,7 @@ CREATE POLICY "cohortes_manage_formateur_principal" ON cohortes
   FOR ALL USING (
     EXISTS (
       SELECT 1 FROM memberships m
-      WHERE m.cohorte_id = id
+      WHERE m.cohorte_id = cohortes.id
         AND m.user_id = auth.uid()
         AND m.role = 'FORMATEUR_PRINCIPAL'::"MembershipRole"
         AND m.left_at IS NULL
