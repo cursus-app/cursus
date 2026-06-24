@@ -19,9 +19,7 @@ test.describe('Stagiaire bloqué', () => {
     "Feature incomplète — nécessite le système d'alertes (EP-06) et Supabase Realtime",
   );
 
-  test('stagiaire clique "bloqué" → modal → notif formateur → résolution', async ({
-    browser,
-  }) => {
+  test('stagiaire clique "bloqué" → modal → notif formateur → résolution', async ({ browser }) => {
     // Deux contextes isolés : un pour le stagiaire, un pour le formateur
     const stagiaireCtx = await browser.newContext();
     const formateurCtx = await browser.newContext();
@@ -64,21 +62,22 @@ test.describe('Stagiaire bloqué', () => {
 
       // Notification visible pour le formateur (Realtime push)
       await formateurPage.goto('/dashboard');
-      await expect(
-        formateurPage.getByText(/stagiaire bloqué/i),
-      ).toBeVisible({ timeout: 15_000 });
+      await expect(formateurPage.getByText(/stagiaire bloqué/i)).toBeVisible({ timeout: 15_000 });
 
       // Formateur répond
-      await formateurPage.getByRole('button', { name: /répondre/i }).first().click();
+      await formateurPage
+        .getByRole('button', { name: /répondre/i })
+        .first()
+        .click();
       await formateurPage
         .getByLabel(/votre réponse/i)
         .fill('Voici un lien vers la doc Prisma : https://prisma.io/docs');
       await formateurPage.getByRole('button', { name: /envoyer la réponse/i }).click();
 
       // Stagiaire voit la réponse (Realtime)
-      await expect(
-        stagiairePage.getByText(/voici un lien vers la doc prisma/i),
-      ).toBeVisible({ timeout: 15_000 });
+      await expect(stagiairePage.getByText(/voici un lien vers la doc prisma/i)).toBeVisible({
+        timeout: 15_000,
+      });
 
       // Stagiaire marque comme résolu
       await stagiairePage.getByRole('button', { name: /marquer comme résolu/i }).click();

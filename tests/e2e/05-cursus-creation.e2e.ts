@@ -54,10 +54,7 @@ test.describe('Création cursus + cohorte', () => {
     // Étape 3 : Inviter des stagiaires
     await page.getByRole('button', { name: /inviter des stagiaires/i }).click();
 
-    const stagiaireEmails = [
-      'stagiaire1-e2e@test.cursus.app',
-      'stagiaire2-e2e@test.cursus.app',
-    ];
+    const stagiaireEmails = ['stagiaire1-e2e@test.cursus.app', 'stagiaire2-e2e@test.cursus.app'];
 
     for (const stagEmail of stagiaireEmails) {
       await page.getByLabel(/email du stagiaire/i).fill(stagEmail);
@@ -65,9 +62,7 @@ test.describe('Création cursus + cohorte', () => {
     }
 
     await page.getByRole('button', { name: /envoyer les invitations/i }).click();
-    await expect(
-      page.getByText(/2 invitations envoyées/i),
-    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/2 invitations envoyées/i)).toBeVisible({ timeout: 10_000 });
 
     // Vérifier que les invitations apparaissent dans la liste
     for (const stagEmail of stagiaireEmails) {

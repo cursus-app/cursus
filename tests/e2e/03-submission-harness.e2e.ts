@@ -23,9 +23,7 @@ test.describe('Soumission + harnais', () => {
   test.beforeAll(async () => {
     // Vérifier que le mock GitHub Actions est activé
     if (!process.env['PLAYWRIGHT_MOCK_GITHUB_ACTIONS']) {
-      throw new Error(
-        'PLAYWRIGHT_MOCK_GITHUB_ACTIONS doit être défini pour ce parcours E2E',
-      );
+      throw new Error('PLAYWRIGHT_MOCK_GITHUB_ACTIONS doit être défini pour ce parcours E2E');
     }
   });
 

@@ -28,10 +28,7 @@ setup('authenticate as test stagiaire', async ({ page }) => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFileSync(
-      authFile,
-      JSON.stringify({ cookies: [], origins: [] }, null, 2),
-    );
+    fs.writeFileSync(authFile, JSON.stringify({ cookies: [], origins: [] }, null, 2));
     return;
   }
 

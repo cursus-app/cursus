@@ -13,12 +13,7 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 // Pages accessibles sans auth dans main
-const PUBLIC_ROUTES_AVAILABLE = [
-  '/',
-  '/legal/cgu',
-  '/legal/privacy',
-  '/legal/cookies',
-] as const;
+const PUBLIC_ROUTES_AVAILABLE = ['/', '/legal/cgu', '/legal/privacy', '/legal/cookies'] as const;
 
 // Pages auth — disponibles dès ST-02.1 mergé
 const AUTH_ROUTES = ['/login', '/signup', '/forgot-password'] as const;
@@ -28,9 +23,7 @@ test.describe('Accessibilité WCAG 2.1 AA — pages publiques disponibles', () =
     test(`${route} — 0 violation critique`, async ({ page }) => {
       await page.goto(route);
 
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze();
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
       const criticalViolations = results.violations.filter((v) => v.impact === 'critical');
 
@@ -59,9 +52,7 @@ test.describe('Accessibilité WCAG 2.1 AA — pages auth (ST-02.1)', () => {
 
       await page.goto(route);
 
-      const results = await new AxeBuilder({ page })
-        .withTags(['wcag2a', 'wcag2aa'])
-        .analyze();
+      const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
 
       const criticalViolations = results.violations.filter((v) => v.impact === 'critical');
       expect(criticalViolations).toHaveLength(0);
@@ -75,12 +66,7 @@ test.describe('Accessibilité AAA — pages critiques business (full E2E)', () =
     'Nécessite toutes les features implémentées',
   );
 
-  const CRITICAL_ROUTES = [
-    '/login',
-    '/signup',
-    '/capstone',
-    '/certificat/verify',
-  ] as const;
+  const CRITICAL_ROUTES = ['/login', '/signup', '/capstone', '/certificat/verify'] as const;
 
   for (const route of CRITICAL_ROUTES) {
     test(`${route} — 0 violation sérieuse ou critique (AAA)`, async ({ page }) => {

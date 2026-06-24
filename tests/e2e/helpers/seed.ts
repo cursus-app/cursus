@@ -18,7 +18,9 @@ export async function seedTestUser(
   password: string,
   role: 'STAGIAIRE' | 'FORMATEUR' | 'ADMIN' = 'STAGIAIRE',
 ): Promise<{ email: string; password: string; role: string } | null> {
-  if (!hasServiceKey) { return null; }
+  if (!hasServiceKey) {
+    return null;
+  }
 
   // TODO (ST-02.1 merged) : appeler /api/admin/seed-user avec le service role key
   // pour créer un compte Supabase Auth + entrée Prisma User.
@@ -30,7 +32,9 @@ export async function seedTestUser(
  * No-op si SUPABASE_SERVICE_ROLE_KEY absent.
  */
 export async function cleanTestData(email: string): Promise<void> {
-  if (!hasServiceKey) { return; }
+  if (!hasServiceKey) {
+    return;
+  }
 
   // TODO (ST-02.1 merged) : appeler /api/admin/clean-test-data
   void email;
@@ -46,7 +50,9 @@ export async function seedTestCohort(options: {
   stagiaireEmails: string[];
   cursusSlug: string;
 }): Promise<{ cohortId: string } | null> {
-  if (!hasServiceKey) { return null; }
+  if (!hasServiceKey) {
+    return null;
+  }
 
   // TODO (ST-04.x merged) : seeder une cohorte complète pour les parcours E2E
   void options;

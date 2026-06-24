@@ -20,9 +20,7 @@ test.describe('Capstone complet', () => {
     'Feature incomplète — nécessite EP-08 (capstone) et EP-09 (certificats)',
   );
 
-  test('soumission capstone → soutenance → évaluation → certificat émis', async ({
-    browser,
-  }) => {
+  test('soumission capstone → soutenance → évaluation → certificat émis', async ({ browser }) => {
     const stagiaireCtx = await browser.newContext();
     const formateurCtx = await browser.newContext();
 
@@ -64,17 +62,23 @@ test.describe('Capstone complet', () => {
 
       // Étape 2 : Formateur planifie la soutenance
       await formateurPage.goto('/dashboard/soutenances');
-      await expect(
-        formateurPage.getByText(/capstone en attente/i),
-      ).toBeVisible({ timeout: 10_000 });
+      await expect(formateurPage.getByText(/capstone en attente/i)).toBeVisible({
+        timeout: 10_000,
+      });
 
-      await formateurPage.getByRole('button', { name: /planifier la soutenance/i }).first().click();
+      await formateurPage
+        .getByRole('button', { name: /planifier la soutenance/i })
+        .first()
+        .click();
       await formateurPage.getByLabel(/date de soutenance/i).fill('2026-08-01');
       await formateurPage.getByRole('button', { name: /confirmer/i }).click();
 
       // Étape 3 : Évaluation (note + commentaires)
       await formateurPage.goto('/dashboard/soutenances');
-      await formateurPage.getByRole('button', { name: /évaluer/i }).first().click();
+      await formateurPage
+        .getByRole('button', { name: /évaluer/i })
+        .first()
+        .click();
 
       await formateurPage.getByLabel(/note globale/i).fill('16');
       await formateurPage
@@ -87,9 +91,9 @@ test.describe('Capstone complet', () => {
       });
 
       // Étape 4 : Certificat généré automatiquement (Inngest)
-      await expect(
-        stagiairePage.getByText(/votre certificat est disponible/i),
-      ).toBeVisible({ timeout: 60_000 });
+      await expect(stagiairePage.getByText(/votre certificat est disponible/i)).toBeVisible({
+        timeout: 60_000,
+      });
 
       // Vérifier le téléchargement du certificat PDF
       const downloadPromise = stagiairePage.waitForEvent('download');
