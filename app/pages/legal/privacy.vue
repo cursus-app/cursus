@@ -124,7 +124,7 @@ useHead({
             <address
               class="mt-3 rounded-lg border border-border-subtle bg-surface px-4 py-3 text-sm not-italic"
             >
-              <strong class="text-text-strong">DPO Cursus</strong><br >
+              <strong class="text-text-strong">DPO Cursus</strong><br />
               <a
                 href="mailto:privacy@cursus.app"
                 class="font-medium text-accent-text underline-offset-2 hover:underline"
