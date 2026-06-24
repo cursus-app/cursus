@@ -21,7 +21,7 @@ definePageMeta({
 useSeoMeta({ title: 'Authentification à deux facteurs — Cursus', robots: 'noindex' })
 
 const { t } = useI18n()
-const { enroll, verify, createChallenge, unenroll, listFactors } = useTwoFa()
+const { enroll, verify, createChallenge, challengeAndVerify, unenroll, listFactors } = useTwoFa()
 const toast = useToast()
 
 // ─── État global ──────────────────────────────────────────────────────────────
