@@ -71,6 +71,19 @@
       "allValid": "Strong password — all criteria met.",
       "criterionMet": "Criterion met",
       "criterionNotMet": "Criterion not met"
+    },
+    "github": {
+      "connected": "GitHub connected",
+      "connecting": "Connecting to GitHub…",
+      "disconnected": "GitHub disconnected",
+      "required": "Connect your GitHub to submit your deliverables",
+      "handleAlreadyLinked": "This GitHub account is already linked to another Cursus account",
+      "handleConflict": "This GitHub account is already in use",
+      "connectButton": "Connect GitHub",
+      "reconnectButton": "Reconnect",
+      "oauthFailed": "GitHub connection failed. Please try again.",
+      "connectedAs": "Connected as",
+      "notConnected": "Not connected — required to submit deliverables"
     }
   },
   "profile": {

@@ -47,6 +47,19 @@
     "requestNewResetLink": "Demander un nouveau lien",
     "passwordResetSuccess": "Ton mot de passe a été mis à jour. Tu vas être redirigé vers la connexion.",
     "saveNewPassword": "Enregistrer le nouveau mot de passe",
+    "github": {
+      "connected": "GitHub connecté",
+      "connecting": "Connexion GitHub en cours…",
+      "disconnected": "GitHub déconnecté",
+      "required": "Connecte ton GitHub pour pouvoir soumettre tes livrables",
+      "handleAlreadyLinked": "Ce compte GitHub est déjà lié à un autre compte Cursus",
+      "handleConflict": "Ce compte GitHub est déjà utilisé",
+      "connectButton": "Connecter GitHub",
+      "reconnectButton": "Reconnecter",
+      "oauthFailed": "Échec de la connexion GitHub. Réessaie.",
+      "connectedAs": "Connecté en tant que",
+      "notConnected": "Non connecté — requis pour soumettre des livrables"
+    },
     "errors": {
       "emailInvalid": "Adresse email invalide",
       "passwordRequired": "Le mot de passe est requis",
