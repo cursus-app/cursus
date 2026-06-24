@@ -21,7 +21,7 @@
     "logout": "Sign out",
     "signup": "Create my account",
     "email": "Email address",
-    "emailPlaceholder": "you@example.com",
+    "emailPlaceholder": "you{'@'}example.com",
     "password": "Password",
     "passwordPlaceholder": "Your password",
     "newPasswordPlaceholder": "At least 12 characters",
