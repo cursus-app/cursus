@@ -64,3 +64,4 @@ _tmp_*
 *.pem
 *.key
 secrets/
+.claude/worktrees/
