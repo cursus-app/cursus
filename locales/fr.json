@@ -21,7 +21,7 @@
     "logout": "Se déconnecter",
     "signup": "Créer mon compte",
     "email": "Adresse email",
-    "emailPlaceholder": "toi@exemple.com",
+    "emailPlaceholder": "toi{'@'}exemple.com",
     "password": "Mot de passe",
     "passwordPlaceholder": "Ton mot de passe",
     "newPasswordPlaceholder": "12 caractères minimum",
