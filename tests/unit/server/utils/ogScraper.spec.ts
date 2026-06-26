@@ -276,9 +276,7 @@ describe('scrapeOgMetadata — full scrape with SSRF + timeout + DNS rebinding',
     // been flipped to the AWS metadata endpoint.
     mockDnsLookup.mockResolvedValueOnce({ address: '169.254.169.254', family: 4 });
 
-    await expect(scrapeOgMetadata('https://evil.attacker.com/path')).rejects.toThrow(
-      /SSRF|privée/,
-    );
+    await expect(scrapeOgMetadata('https://evil.attacker.com/path')).rejects.toThrow(/SSRF|privée/);
   });
 
   it('blocks DNS rebinding: public hostname resolving to RFC-1918 10.x address', async () => {
