@@ -102,11 +102,33 @@ export default defineEventHandler(async (event) => {
 
   // ── Autorisation ───────────────────────────────────────────────────────────
   const isAdmin = dbUser.globalRole === 'ADMIN';
-  const isFormateur =
-    dbUser.globalRole === 'FORMATEUR_PRINCIPAL' || dbUser.globalRole === 'CO_FORMATEUR';
   const isOwner = dbUser.id === progression.userId;
 
-  if (!isAdmin && !isFormateur && !isOwner) {
+  // Check if user has a formateur role globally
+  const hasFormateurRole =
+    dbUser.globalRole === 'FORMATEUR_PRINCIPAL' || dbUser.globalRole === 'CO_FORMATEUR';
+
+  // Scope formateur access to their assigned cohort only (prevent IDOR)
+  let isFormateurInCohort = false;
+  if (hasFormateurRole && !isAdmin) {
+    const membership = await prisma.membership.findFirst({
+      where: {
+        cohorteId: progression.cohortModule.cohorteId,
+        userId: dbUser.id,
+        role: { in: ['FORMATEUR_PRINCIPAL', 'CO_FORMATEUR'] },
+      },
+    });
+    if (!membership) {
+      logger.warn(
+        { progressionId: id, userIdHash: hashId(dbUser.id) },
+        'progressions.transition.formateur_not_in_cohort',
+      );
+      throw createError({ statusCode: 403, message: 'progressions.errors.forbidden' });
+    }
+    isFormateurInCohort = true;
+  }
+
+  if (!isAdmin && !isFormateurInCohort && !isOwner) {
     logger.warn(
       { progressionId: id, userIdHash: hashId(dbUser.id) },
       'progressions.transition.forbidden',
@@ -114,8 +136,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 403, message: 'progressions.errors.forbidden' });
   }
 
-  // Seuls les formateurs/admins peuvent déclencher VALIDE_OVERRIDE
-  if (to === 'VALIDE_OVERRIDE' && !isAdmin && !isFormateur) {
+  // Seuls les formateurs/admins de la cohorte peuvent déclencher VALIDE_OVERRIDE
+  if (to === 'VALIDE_OVERRIDE' && !isAdmin && !isFormateurInCohort) {
     logger.warn(
       { progressionId: id, userIdHash: hashId(dbUser.id), to },
       'progressions.transition.override_forbidden',
