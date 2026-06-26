@@ -479,5 +479,83 @@
       "privacy": "Privacy",
       "cookies": "Cookies"
     }
+  },
+  "cohortes": {
+    "title": "Cohorts",
+    "new": "Create cohort",
+    "edit": "Edit",
+    "delete": "Delete",
+    "start": "Start cohort",
+    "complete": "Mark as completed",
+    "archive": "Archive",
+    "createTitle": "Create a cohort",
+    "createSubtitle": "Configure the dates, curriculum and rhythm for your new cohort.",
+    "createButton": "Create cohort",
+    "noResults": "No cohorts found",
+    "noMembers": "No members yet",
+    "unknownMember": "Unknown member",
+    "name": "Cohort name",
+    "namePlaceholder": "E.g.: Fall 2026 Cohort",
+    "cursus": "Curriculum",
+    "cursusPlaceholder": "Select a published curriculum",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "rhythm": "Rhythm",
+    "members": "Members",
+    "archivedAt": "Archived on",
+    "status": {
+      "DRAFT": "Draft",
+      "ACTIVE": "Active",
+      "COMPLETED": "Completed",
+      "ARCHIVED": "Archived"
+    },
+    "rhythmLabel": {
+      "WEEKLY": "Weekly",
+      "BIWEEKLY": "Bi-weekly",
+      "MONTHLY": "Monthly",
+      "CUSTOM": "Custom"
+    },
+    "roles": {
+      "stagiaire": "Trainee",
+      "formateurPrincipal": "Lead instructor",
+      "coFormateur": "Co-instructor"
+    },
+    "createSuccess": "Cohort created successfully",
+    "startSuccess": "Cohort started",
+    "completeSuccess": "Cohort marked as completed",
+    "archiveSuccess": "Cohort archived",
+    "deleteSuccess": "Cohort deleted",
+    "saveSuccess": "Changes saved",
+    "confirmDelete": {
+      "title": "Delete this cohort?",
+      "description": "This action is irreversible. The cohort and its data will be deleted.",
+      "confirm": "Delete permanently"
+    },
+    "filter": {
+      "all": "All",
+      "byStatus": "Filter by status"
+    },
+    "errors": {
+      "nameTooShort": "Name must be at least 2 characters",
+      "nameTooLong": "Name cannot exceed 100 characters",
+      "cursusIdInvalid": "Invalid curriculum ID",
+      "startDateInvalid": "Invalid start date (YYYY-MM-DD format)",
+      "endDateInvalid": "Invalid end date (YYYY-MM-DD format)",
+      "endDateBeforeStart": "End date must be after start date",
+      "noPublishedCursus": "No published curriculum available. Publish a curriculum first.",
+      "cursusNotFound": "Curriculum not found",
+      "cursusNotPublished": "The selected curriculum is not published",
+      "noVersionFound": "No published version found for this curriculum",
+      "notFound": "Cohort not found",
+      "forbidden": "You do not have access to this cohort",
+      "cannotEditNonDraft": "Only draft cohorts can be edited",
+      "cannotDeleteActive": "Cannot delete an active cohort. Archive it instead.",
+      "cannotStartNonDraft": "Only draft cohorts can be started",
+      "cannotCompleteNonActive": "Only active cohorts can be marked as completed",
+      "alreadyArchived": "This cohort is already archived",
+      "cannotArchiveDraft": "A draft cohort cannot be archived directly",
+      "noStagiaires": "At least 1 trainee required to start",
+      "noFormateur": "At least 1 lead instructor required"
+    }
   }
 }

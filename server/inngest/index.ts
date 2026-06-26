@@ -1,2 +1,3 @@
 export { alertHarnessLatency } from './alerts/harness-latency';
 export { alertAuthFailure } from './alerts/auth-failure';
+export { archiveCompletedCohortes } from './archiveCompletedCohortes';
