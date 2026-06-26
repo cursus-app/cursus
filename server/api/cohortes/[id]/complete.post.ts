@@ -34,20 +34,27 @@ export default defineEventHandler(async (event) => {
   }
 
   const isAdmin = dbUser.globalRole === 'ADMIN';
-  const isFormateur =
-    dbUser.globalRole === 'FORMATEUR_PRINCIPAL' || dbUser.globalRole === 'CO_FORMATEUR';
-
-  if (!isAdmin && !isFormateur) {
-    throw createError({ statusCode: 403, message: 'cohortes.errors.forbidden' });
-  }
 
   const cohorte = await prisma.cohorte.findUnique({
     where: { id },
-    select: { id: true, status: true },
+    select: {
+      id: true,
+      status: true,
+      memberships: {
+        where: { userId: dbUser.id, role: 'FORMATEUR_PRINCIPAL' },
+        select: { userId: true },
+      },
+    },
   });
 
   if (!cohorte) {
     throw createError({ statusCode: 404, message: 'cohortes.errors.notFound' });
+  }
+
+  const isOwner = cohorte.memberships.length > 0;
+
+  if (!isAdmin && !isOwner) {
+    throw createError({ statusCode: 403, message: 'cohortes.errors.forbidden' });
   }
 
   if (cohorte.status !== 'ACTIVE') {
