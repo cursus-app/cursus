@@ -143,6 +143,7 @@
   --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 
   --duration-instant: 100ms;
+  --duration-subtle: 150ms; /* transitions de page, focus ring */
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 500ms;
@@ -352,7 +353,32 @@
 }
 
 /* ----------------------------------------------------------------------------
-   6 · UTILITAIRES PARTAGÉS — skeleton shimmer (loading)
+   6 · TRANSITIONS DE PAGE — fade subtil 150ms
+   Activées via <NuxtPage :transition="{ name: 'page', mode: 'out-in' }">
+   dans app.vue (désactivées si useReducedMotion() === true).
+   Fallback CSS media query en couche de défense supplémentaire.
+   --------------------------------------------------------------------------*/
+@layer utilities {
+  .page-enter-active,
+  .page-leave-active {
+    transition: opacity var(--duration-subtle) var(--ease-out);
+  }
+
+  .page-enter-from,
+  .page-leave-to {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page-enter-active,
+    .page-leave-active {
+      transition: none;
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   7 · UTILITAIRES PARTAGÉS — skeleton shimmer (loading)
    --------------------------------------------------------------------------*/
 @layer utilities {
   .skeleton {
