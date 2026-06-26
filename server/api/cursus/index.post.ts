@@ -116,10 +116,7 @@ export default defineEventHandler(async (event) => {
     throw err;
   }
 
-  logger.info(
-    { cursusId: cursus.id, userIdHash: hashId(dbUser.id) },
-    'cursus.created',
-  );
+  logger.info({ cursusId: cursus.id, userIdHash: hashId(dbUser.id) }, 'cursus.created');
 
   return cursus;
 });

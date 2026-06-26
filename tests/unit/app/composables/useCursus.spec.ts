@@ -304,7 +304,9 @@ describe('useCursus — deleteCursus()', () => {
 
   it('propagates $fetch error to the caller', async () => {
     mockFetch.mockRejectedValueOnce(
-      Object.assign(new Error('Conflict'), { data: { message: 'cursus.errors.deleteBlockedByCohortes' } }),
+      Object.assign(new Error('Conflict'), {
+        data: { message: 'cursus.errors.deleteBlockedByCohortes' },
+      }),
     );
     const { useCursus } = await import('~/composables/useCursus');
     const { deleteCursus } = useCursus();
@@ -351,7 +353,9 @@ describe('useCursus — publishCursus()', () => {
 
   it('does not track analytics event when publish fails', async () => {
     mockFetch.mockRejectedValueOnce(
-      Object.assign(new Error('Unprocessable'), { data: { message: 'cursus.errors.noModulesForPublish' } }),
+      Object.assign(new Error('Unprocessable'), {
+        data: { message: 'cursus.errors.noModulesForPublish' },
+      }),
     );
     const { useCursus } = await import('~/composables/useCursus');
     const { publishCursus } = useCursus();
@@ -407,7 +411,9 @@ describe('useCursus — archiveCursus()', () => {
 
   it('does not track analytics event when archive fails', async () => {
     mockFetch.mockRejectedValueOnce(
-      Object.assign(new Error('Unprocessable'), { data: { message: 'cursus.errors.mustBePublishedToArchive' } }),
+      Object.assign(new Error('Unprocessable'), {
+        data: { message: 'cursus.errors.mustBePublishedToArchive' },
+      }),
     );
     const { useCursus } = await import('~/composables/useCursus');
     const { archiveCursus } = useCursus();

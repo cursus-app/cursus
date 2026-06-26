@@ -28,7 +28,7 @@ const userStore = useUserStore();
 
 const cursusId = computed(() => {
   const rawId = route.params['id'];
-  return Array.isArray(rawId) ? rawId[0] ?? '' : rawId ?? '';
+  return Array.isArray(rawId) ? (rawId[0] ?? '') : (rawId ?? '');
 });
 
 useSeoMeta({ title: 'Modifier le cursus — Cursus', robots: 'noindex' });
@@ -47,8 +47,7 @@ async function loadCursus() {
     useSeoMeta({ title: `Modifier — ${data.title} — Cursus`, robots: 'noindex' });
 
     // Vérification des droits
-    const isOwnerOrAdmin =
-      userStore.userId === data.ownerId || userStore.globalRole === 'ADMIN';
+    const isOwnerOrAdmin = userStore.userId === data.ownerId || userStore.globalRole === 'ADMIN';
 
     if (!isOwnerOrAdmin || !canManageCursus()) {
       await navigateTo(`/cursus/${cursusId.value}`);
@@ -78,7 +77,6 @@ async function loadCursus() {
   } catch (err: unknown) {
     const fetchErr = err as { statusCode?: number };
     if (fetchErr.statusCode === 404) {
-       
       await navigateTo('/cursus');
     } else {
       toast.add({
@@ -117,7 +115,9 @@ const levelOptions = [
 ];
 
 const onSubmit = form.handleSubmit(async (values) => {
-  if (!cursus.value) {return;}
+  if (!cursus.value) {
+    return;
+  }
   isSaved.value = false;
   try {
     const updated = await updateCursus(cursus.value.id, values);
@@ -147,7 +147,10 @@ const onSubmit = form.handleSubmit(async (values) => {
     <UBreadcrumb
       :items="[
         { label: t('cursus.title'), to: '/cursus' },
-        { label: cursus?.title ?? '…', ...(cursusId ? { to: `/cursus/${cursusId}` as string } : {}) },
+        {
+          label: cursus?.title ?? '…',
+          ...(cursusId ? { to: `/cursus/${cursusId}` as string } : {}),
+        },
         { label: t('cursus.edit') },
       ]"
       class="mb-6"

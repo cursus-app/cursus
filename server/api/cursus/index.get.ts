@@ -61,9 +61,8 @@ export default defineEventHandler(async (event) => {
     conditions.push({ level });
   }
 
-  const where: NonNullable<CursusWhere> = conditions.length === 1
-    ? (conditions[0] ?? {})
-    : { AND: conditions };
+  const where: NonNullable<CursusWhere> =
+    conditions.length === 1 ? (conditions[0] ?? {}) : { AND: conditions };
 
   const [total, data] = await Promise.all([
     prisma.cursus.count({ where }),

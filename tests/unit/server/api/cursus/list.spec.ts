@@ -188,9 +188,7 @@ describe('GET /api/cursus — pagination', () => {
     const { default: handler } = await importHandler();
     await handler(makeEvent());
 
-    expect(mockCursusFindMany).toHaveBeenCalledWith(
-      expect.objectContaining({ skip: 0, take: 20 }),
-    );
+    expect(mockCursusFindMany).toHaveBeenCalledWith(expect.objectContaining({ skip: 0, take: 20 }));
   });
 
   it('computes skip = 40 for page 3 with limit 20', async () => {

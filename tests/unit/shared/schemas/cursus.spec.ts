@@ -102,7 +102,9 @@ describe('createCursusSchema', () => {
   });
 
   it('accepts title of exactly 200 characters', () => {
-    expect(createCursusSchema.safeParse({ ...validBase, title: 'a'.repeat(200) }).success).toBe(true);
+    expect(createCursusSchema.safeParse({ ...validBase, title: 'a'.repeat(200) }).success).toBe(
+      true,
+    );
   });
 
   // ── domain ─────────────────────────────────────────────────────────────────
@@ -173,7 +175,9 @@ describe('createCursusSchema', () => {
   // ── slug ───────────────────────────────────────────────────────────────────
 
   it('accepts valid slug format (lowercase alphanumeric and dashes)', () => {
-    expect(createCursusSchema.safeParse({ ...validBase, slug: 'mon-cursus-123' }).success).toBe(true);
+    expect(createCursusSchema.safeParse({ ...validBase, slug: 'mon-cursus-123' }).success).toBe(
+      true,
+    );
   });
 
   it('rejects slug with uppercase letters', () => {
@@ -321,7 +325,9 @@ describe('listCursusQuerySchema', () => {
   it('accepts valid status filter PUBLISHED', () => {
     const result = listCursusQuerySchema.safeParse({ status: 'PUBLISHED' });
     expect(result.success).toBe(true);
-    if (result.success) {expect(result.data.status).toBe('PUBLISHED');}
+    if (result.success) {
+      expect(result.data.status).toBe('PUBLISHED');
+    }
   });
 
   it('accepts valid status filter DRAFT', () => {
@@ -337,13 +343,17 @@ describe('listCursusQuerySchema', () => {
   it('accepts valid domain filter', () => {
     const result = listCursusQuerySchema.safeParse({ domain: 'ia' });
     expect(result.success).toBe(true);
-    if (result.success) {expect(result.data.domain).toBe('ia');}
+    if (result.success) {
+      expect(result.data.domain).toBe('ia');
+    }
   });
 
   it('accepts valid level filter', () => {
     const result = listCursusQuerySchema.safeParse({ level: 'ADVANCED' });
     expect(result.success).toBe(true);
-    if (result.success) {expect(result.data.level).toBe('ADVANCED');}
+    if (result.success) {
+      expect(result.data.level).toBe('ADVANCED');
+    }
   });
 
   it('rejects invalid status value', () => {

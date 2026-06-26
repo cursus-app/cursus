@@ -79,23 +79,34 @@ export default defineEventHandler(async (event) => {
     slug?: string;
   } = {};
 
-  if (body.title !== undefined) {data.title = body.title;}
-  if (body.domain !== undefined) {data.domain = body.domain;}
-  if (body.level !== undefined) {data.level = body.level;}
-  if (body.durationWeeks !== undefined) {data.durationWeeks = body.durationWeeks;}
-  if (body.description !== undefined) {data.description = body.description;}
-  if (body.prerequisites !== undefined) {data.prerequisites = body.prerequisites;}
-  if (body.slug !== undefined) {data.slug = body.slug;}
+  if (body.title !== undefined) {
+    data.title = body.title;
+  }
+  if (body.domain !== undefined) {
+    data.domain = body.domain;
+  }
+  if (body.level !== undefined) {
+    data.level = body.level;
+  }
+  if (body.durationWeeks !== undefined) {
+    data.durationWeeks = body.durationWeeks;
+  }
+  if (body.description !== undefined) {
+    data.description = body.description;
+  }
+  if (body.prerequisites !== undefined) {
+    data.prerequisites = body.prerequisites;
+  }
+  if (body.slug !== undefined) {
+    data.slug = body.slug;
+  }
 
   const updated = await prisma.cursus.update({
     where: { id },
     data,
   });
 
-  logger.info(
-    { cursusId: id, userIdHash: hashId(supabaseUser['id']) },
-    'cursus.updated',
-  );
+  logger.info({ cursusId: id, userIdHash: hashId(supabaseUser['id']) }, 'cursus.updated');
 
   return updated;
 });

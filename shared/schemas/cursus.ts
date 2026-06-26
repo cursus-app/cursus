@@ -8,29 +8,19 @@ import { z } from 'zod';
  * côté serveur (le client les traduit à la réception).
  */
 
-export const cursusDomainsEnum = z.enum([
-  'dev-web',
-  'ingenierie-web',
-  'ia',
-  'cybersec',
-  'autre',
-]);
+export const cursusDomainsEnum = z.enum(['dev-web', 'ingenierie-web', 'ia', 'cybersec', 'autre']);
 
 export const cursusLevelEnum = z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']);
 
 export const cursusStatusEnum = z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']);
 
 export const createCursusSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'cursus.errors.titleRequired')
-    .max(200, 'cursus.errors.titleTooLong'),
+  title: z.string().min(1, 'cursus.errors.titleRequired').max(200, 'cursus.errors.titleTooLong'),
   domain: cursusDomainsEnum,
   level: cursusLevelEnum,
   // z.coerce.number() : fonctionne aussi bien depuis un body JSON (déjà number)
   // que depuis un champ HTML input[type=number] (string → coercé en number).
-  durationWeeks: z
-    .coerce
+  durationWeeks: z.coerce
     .number({
       required_error: 'cursus.errors.durationRequired',
       invalid_type_error: 'cursus.errors.durationInvalid',

@@ -70,10 +70,7 @@ export default defineEventHandler(async (event) => {
 
   await prisma.cursus.delete({ where: { id } });
 
-  logger.info(
-    { cursusId: id, userIdHash: hashId(supabaseUser['id']) },
-    'cursus.deleted',
-  );
+  logger.info({ cursusId: id, userIdHash: hashId(supabaseUser['id']) }, 'cursus.deleted');
 
   return { success: true };
 });

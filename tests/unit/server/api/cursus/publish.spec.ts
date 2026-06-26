@@ -105,10 +105,12 @@ const PUBLISHED_CURSUS = { ...DRAFT_CURSUS, status: 'PUBLISHED' };
  * Builds a mock transaction client that records all calls.
  * The handler uses tx.cursus.updateMany, tx.cursusVersion.create, tx.cursus.findUniqueOrThrow.
  */
-function makeTxProxy(opts: {
-  updateManyResult?: { count: number };
-  findResult?: Record<string, unknown>;
-} = {}) {
+function makeTxProxy(
+  opts: {
+    updateManyResult?: { count: number };
+    findResult?: Record<string, unknown>;
+  } = {},
+) {
   const mockUpdateMany = vi.fn().mockResolvedValue(opts.updateManyResult ?? { count: 1 });
   const mockCreate = vi.fn().mockResolvedValue({ id: 'ver-1', version: 1 });
   const mockFindUniqueOrThrow = vi.fn().mockResolvedValue(opts.findResult ?? PUBLISHED_CURSUS);
@@ -224,9 +226,7 @@ describe('POST /api/cursus/:id/publish — happy path', () => {
     mockCursusFindUnique.mockResolvedValue(DRAFT_CURSUS);
 
     txMock = makeTxProxy();
-    mockPrismaTransaction.mockImplementation(
-      async (fn: (tx: unknown) => unknown) => fn(txMock.tx),
-    );
+    mockPrismaTransaction.mockImplementation(async (fn: (tx: unknown) => unknown) => fn(txMock.tx));
   });
 
   it('returns the updated cursus with PUBLISHED status', async () => {

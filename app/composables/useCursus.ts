@@ -2,7 +2,11 @@
  * Composable de gestion des cursus — toutes les opérations CRUD passent ici.
  * Cf. ST-03.1 — CRUD cursus avec brouillon/publié/archivé.
  */
-import type { CreateCursusInput, UpdateCursusInput, ListCursusQuery } from '~~/shared/schemas/cursus';
+import type {
+  CreateCursusInput,
+  UpdateCursusInput,
+  ListCursusQuery,
+} from '~~/shared/schemas/cursus';
 
 export interface CursusListItem {
   id: string;
@@ -58,9 +62,10 @@ export function useCursus() {
     error.value = null;
     try {
       const cleanQuery = query
-        ? (Object.fromEntries(
-            Object.entries(query).filter(([, v]) => v !== undefined),
-          ) as Record<string, string | number>)
+        ? (Object.fromEntries(Object.entries(query).filter(([, v]) => v !== undefined)) as Record<
+            string,
+            string | number
+          >)
         : null;
       return await $fetch<CursusListResponse>('/api/cursus', {
         ...(cleanQuery ? { query: cleanQuery } : {}),

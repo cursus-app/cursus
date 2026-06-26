@@ -181,7 +181,11 @@ describe('POST /api/cursus — creation behaviour', () => {
   });
 
   it('auto-generates slug from title when slug not provided', async () => {
-    mockReadValidatedBody.mockResolvedValue({ ...VALID_BODY, title: 'Mon Super Cursus', slug: undefined });
+    mockReadValidatedBody.mockResolvedValue({
+      ...VALID_BODY,
+      title: 'Mon Super Cursus',
+      slug: undefined,
+    });
     mockCursusFindUnique.mockResolvedValue(null);
     mockCursusCreate.mockResolvedValue({ id: 'c2', slug: 'mon-super-cursus', status: 'DRAFT' });
 
@@ -193,7 +197,11 @@ describe('POST /api/cursus — creation behaviour', () => {
   });
 
   it('normalizes accented characters in auto-generated slug', async () => {
-    mockReadValidatedBody.mockResolvedValue({ ...VALID_BODY, title: 'Développement Avancé', slug: undefined });
+    mockReadValidatedBody.mockResolvedValue({
+      ...VALID_BODY,
+      title: 'Développement Avancé',
+      slug: undefined,
+    });
     mockCursusFindUnique.mockResolvedValue(null);
     mockCursusCreate.mockResolvedValue({ id: 'c3', slug: 'developpement-avance', status: 'DRAFT' });
 
@@ -218,11 +226,15 @@ describe('POST /api/cursus — creation behaviour', () => {
   });
 
   it('resolves slug collision by appending -2 suffix', async () => {
-    mockReadValidatedBody.mockResolvedValue({ ...VALID_BODY, title: 'Mon Cursus', slug: undefined });
+    mockReadValidatedBody.mockResolvedValue({
+      ...VALID_BODY,
+      title: 'Mon Cursus',
+      slug: undefined,
+    });
     // First findUnique call: slug taken, second: suffix free
     mockCursusFindUnique
       .mockResolvedValueOnce({ id: 'existing-1' }) // 'mon-cursus' exists
-      .mockResolvedValueOnce(null);                // 'mon-cursus-2' free
+      .mockResolvedValueOnce(null); // 'mon-cursus-2' free
     mockCursusCreate.mockResolvedValue({ id: 'c5', slug: 'mon-cursus-2', status: 'DRAFT' });
 
     const { default: handler } = await importHandler();
@@ -233,11 +245,15 @@ describe('POST /api/cursus — creation behaviour', () => {
   });
 
   it('resolves slug collision by incrementing suffix from -2 to -3', async () => {
-    mockReadValidatedBody.mockResolvedValue({ ...VALID_BODY, title: 'Mon Cursus', slug: undefined });
+    mockReadValidatedBody.mockResolvedValue({
+      ...VALID_BODY,
+      title: 'Mon Cursus',
+      slug: undefined,
+    });
     mockCursusFindUnique
       .mockResolvedValueOnce({ id: 'existing-1' }) // 'mon-cursus' exists
       .mockResolvedValueOnce({ id: 'existing-2' }) // 'mon-cursus-2' exists
-      .mockResolvedValueOnce(null);                // 'mon-cursus-3' free
+      .mockResolvedValueOnce(null); // 'mon-cursus-3' free
     mockCursusCreate.mockResolvedValue({ id: 'c6', slug: 'mon-cursus-3', status: 'DRAFT' });
 
     const { default: handler } = await importHandler();

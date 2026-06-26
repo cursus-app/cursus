@@ -19,8 +19,12 @@ const userStore = useUserStore();
 
 const cursusId = computed(() => {
   const rawId = route.params['id'];
-  return Array.isArray(rawId) ? rawId[0] ?? '' : rawId ?? '';
+  return Array.isArray(rawId) ? (rawId[0] ?? '') : (rawId ?? '');
 });
+
+function tDynamic(key: string): string {
+  return t(key as Parameters<typeof t>[0]);
+}
 
 useSeoMeta({ title: 'Cursus — Cursus' });
 
@@ -39,7 +43,6 @@ async function loadCursus() {
   } catch (err: unknown) {
     const fetchErr = err as { data?: { message?: string }; statusCode?: number };
     if (fetchErr.statusCode === 404 || fetchErr.data?.message === 'cursus.errors.notFound') {
-       
       await navigateTo('/cursus');
     } else {
       toast.add({
@@ -60,11 +63,10 @@ onMounted(() => {
 // ─── Permissions ─────────────────────────────────────────────────────────────
 
 const isOwnerOrAdmin = computed(() => {
-  if (!cursus.value) {return false;}
-  return (
-    userStore.userId === cursus.value.ownerId ||
-    userStore.globalRole === 'ADMIN'
-  );
+  if (!cursus.value) {
+    return false;
+  }
+  return userStore.userId === cursus.value.ownerId || userStore.globalRole === 'ADMIN';
 });
 
 const canEdit = computed(
@@ -83,7 +85,9 @@ const canDelete = computed(
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
 async function handlePublish() {
-  if (!cursus.value) {return;}
+  if (!cursus.value) {
+    return;
+  }
   try {
     const updated = await publishCursus(cursus.value.id);
     cursus.value = { ...cursus.value, ...updated };
@@ -104,7 +108,9 @@ async function handlePublish() {
 }
 
 async function handleArchive() {
-  if (!cursus.value) {return;}
+  if (!cursus.value) {
+    return;
+  }
   try {
     const updated = await archiveCursus(cursus.value.id);
     cursus.value = { ...cursus.value, ...updated };
@@ -125,7 +131,9 @@ async function handleArchive() {
 }
 
 async function handleDelete() {
-  if (!cursus.value) {return;}
+  if (!cursus.value) {
+    return;
+  }
   isDeleting.value = true;
   try {
     await deleteCursus(cursus.value.id);
@@ -135,7 +143,7 @@ async function handleDelete() {
       color: 'success',
       icon: 'i-tabler-check',
     });
-     
+
     await navigateTo('/cursus');
   } catch (err: unknown) {
     const fetchErr = err as { data?: { message?: string; data?: { count?: number } } };
@@ -154,20 +162,32 @@ async function handleDelete() {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function statusBadgeClass(status: string): string {
-  if (status === 'PUBLISHED') {return 'bg-success-bg text-success-fg';}
-  if (status === 'ARCHIVED') {return 'bg-danger-bg text-danger-fg';}
+  if (status === 'PUBLISHED') {
+    return 'bg-success-bg text-success-fg';
+  }
+  if (status === 'ARCHIVED') {
+    return 'bg-danger-bg text-danger-fg';
+  }
   return 'bg-muted text-text-muted';
 }
 
 function statusLabel(status: string): string {
-  if (status === 'PUBLISHED') {return t('cursus.published');}
-  if (status === 'ARCHIVED') {return t('cursus.archived');}
+  if (status === 'PUBLISHED') {
+    return t('cursus.published');
+  }
+  if (status === 'ARCHIVED') {
+    return t('cursus.archived');
+  }
   return t('cursus.draft');
 }
 
 function levelLabel(level: string): string {
-  if (level === 'BEGINNER') {return t('cursus.level.BEGINNER');}
-  if (level === 'INTERMEDIATE') {return t('cursus.level.INTERMEDIATE');}
+  if (level === 'BEGINNER') {
+    return t('cursus.level.BEGINNER');
+  }
+  if (level === 'INTERMEDIATE') {
+    return t('cursus.level.INTERMEDIATE');
+  }
   return t('cursus.level.ADVANCED');
 }
 </script>
@@ -177,10 +197,7 @@ function levelLabel(level: string): string {
     <!-- Fil d'Ariane -->
     <!-- eslint-disable-next-line link-checker/valid-route -->
     <UBreadcrumb
-      :items="[
-        { label: t('cursus.title'), to: '/cursus' },
-        { label: cursus?.title ?? '…' },
-      ]"
+      :items="[{ label: t('cursus.title'), to: '/cursus' }, { label: cursus?.title ?? '…' }]"
       class="mb-6"
     />
 
@@ -262,21 +279,21 @@ function levelLabel(level: string): string {
       <UCard class="mb-6 border border-border-subtle bg-surface">
         <div class="grid gap-4 sm:grid-cols-3">
           <div>
-            <p class="text-xs font-medium uppercase tracking-wide text-text-subtle">
+            <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
               {{ t('cursus.fields.domain') }}
             </p>
             <p class="mt-1 text-sm text-text-default">
-              {{ t(`cursus.domain.${cursus.domain}` as Parameters<typeof t>[0]) }}
+              {{ tDynamic(`cursus.domain.${cursus.domain}`) }}
             </p>
           </div>
           <div>
-            <p class="text-xs font-medium uppercase tracking-wide text-text-subtle">
+            <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
               {{ t('cursus.fields.level') }}
             </p>
             <p class="mt-1 text-sm text-text-default">{{ levelLabel(cursus.level) }}</p>
           </div>
           <div>
-            <p class="text-xs font-medium uppercase tracking-wide text-text-subtle">
+            <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
               {{ t('cursus.fields.durationWeeks') }}
             </p>
             <p class="mt-1 text-sm text-text-default">{{ cursus.durationWeeks }} sem.</p>
@@ -284,19 +301,19 @@ function levelLabel(level: string): string {
         </div>
 
         <div v-if="cursus.description" class="mt-4 border-t border-border-subtle pt-4">
-          <p class="text-xs font-medium uppercase tracking-wide text-text-subtle">
+          <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
             {{ t('cursus.fields.description') }}
           </p>
-          <p class="mt-1 whitespace-pre-wrap text-sm text-text-default">
+          <p class="mt-1 text-sm whitespace-pre-wrap text-text-default">
             {{ cursus.description }}
           </p>
         </div>
 
         <div v-if="cursus.prerequisites" class="mt-4 border-t border-border-subtle pt-4">
-          <p class="text-xs font-medium uppercase tracking-wide text-text-subtle">
+          <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
             {{ t('cursus.fields.prerequisites') }}
           </p>
-          <p class="mt-1 whitespace-pre-wrap text-sm text-text-default">
+          <p class="mt-1 text-sm whitespace-pre-wrap text-text-default">
             {{ cursus.prerequisites }}
           </p>
         </div>
@@ -309,19 +326,14 @@ function levelLabel(level: string): string {
             <p class="font-medium text-text-strong">
               {{ t('cursus.modules.count', { n: cursus._count.modules }) }}
             </p>
-            <p class="mt-0.5 text-xs text-text-muted">
-              {{ t('cursus.filter.all') }} — ST-03.2
-            </p>
+            <p class="mt-0.5 text-xs text-text-muted">{{ t('cursus.filter.all') }} — ST-03.2</p>
           </div>
           <UIcon name="i-tabler-stack" class="size-8 text-text-subtle" />
         </div>
       </UCard>
 
       <!-- Versions publiées -->
-      <UCard
-        v-if="cursus.versions.length > 0"
-        class="border border-border-subtle bg-surface"
-      >
+      <UCard v-if="cursus.versions.length > 0" class="border border-border-subtle bg-surface">
         <template #header>
           <h2 class="text-sm font-medium text-text-strong">
             {{ t('cursus.versionsPublished') }}

@@ -92,20 +92,32 @@ const levelOptions = [
 // ─── Helpers d'affichage ──────────────────────────────────────────────────────
 
 function statusBadgeClass(status: string): string {
-  if (status === 'PUBLISHED') {return 'bg-success-bg text-success-fg';}
-  if (status === 'ARCHIVED') {return 'bg-danger-bg text-danger-fg';}
+  if (status === 'PUBLISHED') {
+    return 'bg-success-bg text-success-fg';
+  }
+  if (status === 'ARCHIVED') {
+    return 'bg-danger-bg text-danger-fg';
+  }
   return 'bg-muted text-text-muted';
 }
 
 function statusLabel(status: string): string {
-  if (status === 'PUBLISHED') {return t('cursus.published');}
-  if (status === 'ARCHIVED') {return t('cursus.archived');}
+  if (status === 'PUBLISHED') {
+    return t('cursus.published');
+  }
+  if (status === 'ARCHIVED') {
+    return t('cursus.archived');
+  }
   return t('cursus.draft');
 }
 
 function levelLabel(level: string): string {
-  if (level === 'BEGINNER') {return t('cursus.level.BEGINNER');}
-  if (level === 'INTERMEDIATE') {return t('cursus.level.INTERMEDIATE');}
+  if (level === 'BEGINNER') {
+    return t('cursus.level.BEGINNER');
+  }
+  if (level === 'INTERMEDIATE') {
+    return t('cursus.level.INTERMEDIATE');
+  }
   return t('cursus.level.ADVANCED');
 }
 
@@ -125,16 +137,9 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize));
         <h1 class="text-2xl font-semibold tracking-tight text-text-strong">
           {{ t('cursus.title') }}
         </h1>
-        <p v-if="total > 0" class="mt-1 text-sm text-text-muted">
-          {{ total }} cursus
-        </p>
+        <p v-if="total > 0" class="mt-1 text-sm text-text-muted">{{ total }} cursus</p>
       </div>
-      <UButton
-        v-if="canManageCursus()"
-        to="/cursus/new"
-        icon="i-tabler-plus"
-        color="primary"
-      >
+      <UButton v-if="canManageCursus()" to="/cursus/new" icon="i-tabler-plus" color="primary">
         {{ t('cursus.new') }}
       </UButton>
     </div>
@@ -174,7 +179,11 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize));
           value-attribute="value"
           :placeholder="t('cursus.filter.byDomain')"
           class="min-w-[180px]"
-          @update:model-value="(v: string) => { domainFilter = v || undefined }"
+          @update:model-value="
+            (v: string) => {
+              domainFilter = v || undefined;
+            }
+          "
         />
         <USelect
           :model-value="levelFilter ?? ''"
@@ -183,7 +192,11 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize));
           value-attribute="value"
           :placeholder="t('cursus.filter.byLevel')"
           class="min-w-[160px]"
-          @update:model-value="(v: string) => { levelFilter = v ? (v as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED') : undefined }"
+          @update:model-value="
+            (v: string) => {
+              levelFilter = v ? (v as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED') : undefined;
+            }
+          "
         />
       </div>
     </div>
@@ -259,11 +272,7 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize));
 
     <!-- Pagination -->
     <div v-if="totalPages > 1" class="mt-8 flex justify-center">
-      <UPagination
-        v-model:page="currentPage"
-        :total="total"
-        :page-size="pageSize"
-      />
+      <UPagination v-model:page="currentPage" :total="total" :page-size="pageSize" />
     </div>
   </div>
 </template>

@@ -23,7 +23,6 @@ const { canManageCursus } = usePermission();
 // Redirection si pas les droits.
 onMounted(() => {
   if (!canManageCursus()) {
-     
     void navigateTo('/cursus');
   }
 });
@@ -79,10 +78,7 @@ const onSubmit = form.handleSubmit(async (values) => {
     <!-- Fil d'Ariane -->
     <!-- eslint-disable-next-line link-checker/valid-route -->
     <UBreadcrumb
-      :items="[
-        { label: t('cursus.title'), to: '/cursus' },
-        { label: t('cursus.new') },
-      ]"
+      :items="[{ label: t('cursus.title'), to: '/cursus' }, { label: t('cursus.new') }]"
       class="mb-6"
     />
 
@@ -154,9 +150,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             max="52"
             class="w-full"
             :model-value="String(form.values.durationWeeks ?? 8)"
-            @update:model-value="
-              form.setFieldValue('durationWeeks', Number($event))
-            "
+            @update:model-value="form.setFieldValue('durationWeeks', Number($event))"
             @blur="form.validateField('durationWeeks')"
           />
         </UFormField>
@@ -211,13 +205,7 @@ const onSubmit = form.handleSubmit(async (values) => {
             {{ t('cursus.actions.createDraft') }}
           </UButton>
           <!-- eslint-disable-next-line link-checker/valid-route -->
-          <UButton
-            type="button"
-            to="/cursus"
-            color="neutral"
-            variant="ghost"
-            :disabled="loading"
-          >
+          <UButton type="button" to="/cursus" color="neutral" variant="ghost" :disabled="loading">
             {{ t('common.cancel') }}
           </UButton>
         </div>

@@ -59,10 +59,7 @@ export default defineEventHandler(async (event) => {
     data: { status: 'ARCHIVED' },
   });
 
-  logger.info(
-    { cursusId: id, userIdHash: hashId(supabaseUser['id']) },
-    'cursus.archived',
-  );
+  logger.info({ cursusId: id, userIdHash: hashId(supabaseUser['id']) }, 'cursus.archived');
 
   return updated;
 });
