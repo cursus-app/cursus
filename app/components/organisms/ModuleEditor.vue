@@ -2,10 +2,11 @@
 /**
  * ModuleEditor — panneau d'édition détaillée d'un module (expandable).
  * Cf. ST-03.2 — TT-03.2.2.
+ * Cf. ST-03.4 — intègre DelivrableEditor pour les checks harnais.
  *
  * - Titre, semaine, objectifs (markdown avec preview), XP.
  * - Ressources : liste {label, url} avec add/remove.
- * - Livrable : description, repoRequired, deployRequired.
+ * - Livrable : DelivrableEditor (description Markdown + checks harnais + YAML preview).
  * - Auto-save via l'émission de l'événement `update`.
  */
 import type { ModuleItem, ModuleResource, DeliverableSpec } from '~/composables/useModules';
@@ -90,8 +91,8 @@ function onObjectivesChange(v: string): void {
   emitUpdate();
 }
 
-function onDeliverableDescChange(v: string): void {
-  deliverable.value = { ...deliverable.value, description: v };
+function onDeliverableChange(v: DeliverableSpec): void {
+  deliverable.value = v;
   emitUpdate();
 }
 
@@ -248,19 +249,11 @@ const objectivesPreview = computed(() =>
         </button>
       </div>
 
-      <!-- Livrable -->
+      <!-- Livrable — DelivrableEditor (ST-03.4) -->
       <div class="sm:col-span-2">
         <p class="mb-3 text-sm font-medium text-text-strong">{{ t('modules.deliverable') }}</p>
 
-        <div class="space-y-3">
-          <CTextarea
-            :model-value="deliverable.description"
-            :label="t('modules.fields.deliverableDescription')"
-            :placeholder="t('modules.fields.deliverableDescriptionPlaceholder')"
-            :rows="3"
-            @update:model-value="onDeliverableDescChange"
-          />
-
+        <div class="mb-3 flex gap-4">
           <CSwitch
             :model-value="deliverable.repoRequired"
             :label="t('modules.fields.repoRequired')"
@@ -275,6 +268,12 @@ const objectivesPreview = computed(() =>
             @update:model-value="onDeployRequiredChange"
           />
         </div>
+
+        <DelivrableEditor
+          :model-value="deliverable"
+          :module-title="title"
+          @update:model-value="onDeliverableChange"
+        />
       </div>
 
       <!-- Actions -->
