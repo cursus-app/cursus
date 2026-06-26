@@ -48,7 +48,7 @@ async function onDisconnect(): Promise<void> {
     });
     // Recharger la page profil pour mettre à jour l'état
     // /profil est créé dans ST-03.x — route connue mais page pas encore générée.
-    // eslint-disable-next-line link-checker/valid-route
+
     await navigateTo('/profil', { replace: true });
   } catch {
     toast.add({

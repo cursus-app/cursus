@@ -3,6 +3,17 @@
     "name": "Cursus",
     "tagline": "The tech internship journey, structured and validated."
   },
+  "nav": {
+    "skipToContent": "Skip to content"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode",
+    "switchToSystem": "Use system preference",
+    "system": "Follow system",
+    "light": "Light mode",
+    "dark": "Dark mode"
+  },
   "common": {
     "loading": "Loading…",
     "retry": "Retry",
