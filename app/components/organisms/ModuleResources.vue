@@ -29,11 +29,18 @@ const emit = defineEmits<{
   'update:modelValue': [resources: Resource[]];
 }>();
 
+// ─── i18n ─────────────────────────────────────────────────────────────────────
+
+const { t } = useI18n();
+
 // ─── State ────────────────────────────────────────────────────────────────────
 
 const newResourceSchema = z.object({
-  url: z.string().url('URL invalide').max(2000),
-  title: z.string().min(1, 'Titre requis').max(100, 'Titre trop long (max 100 caractères)'),
+  url: z.string().url(t('cursus.modules.resources.errors.urlInvalid')).max(2000),
+  title: z
+    .string()
+    .min(1, t('cursus.modules.resources.errors.titleRequired'))
+    .max(100, t('cursus.modules.resources.errors.titleTooLong')),
   type: resourceTypeEnum,
   duration: z.number().int().min(0).max(600).optional(),
 });
@@ -69,21 +76,35 @@ const ogErrorIds = ref<Set<string>>(new Set());
 
 // ─── Resource type options ────────────────────────────────────────────────────
 
-const typeOptions = [
-  { value: 'link', label: 'Lien', icon: 'i-tabler-link' },
-  { value: 'video', label: 'Vidéo', icon: 'i-tabler-video' },
-  { value: 'pdf', label: 'PDF', icon: 'i-tabler-file-type-pdf' },
-  { value: 'article', label: 'Article', icon: 'i-tabler-article' },
-  { value: 'doc', label: 'Documentation', icon: 'i-tabler-book' },
-  { value: 'course', label: 'Cours', icon: 'i-tabler-school' },
-] as const;
+interface TypeOption {
+  value: ResourceType;
+  label: string;
+  icon: string;
+}
+
+const typeOptions = computed<TypeOption[]>(() => [
+  { value: 'link', label: t('cursus.modules.resources.types.link'), icon: 'i-tabler-link' },
+  { value: 'video', label: t('cursus.modules.resources.types.video'), icon: 'i-tabler-video' },
+  {
+    value: 'pdf',
+    label: t('cursus.modules.resources.types.pdf'),
+    icon: 'i-tabler-file-type-pdf',
+  },
+  {
+    value: 'article',
+    label: t('cursus.modules.resources.types.article'),
+    icon: 'i-tabler-article',
+  },
+  { value: 'doc', label: t('cursus.modules.resources.types.doc'), icon: 'i-tabler-book' },
+  { value: 'course', label: t('cursus.modules.resources.types.course'), icon: 'i-tabler-school' },
+]);
 
 function getTypeIcon(type: ResourceType): string {
-  return typeOptions.find((o) => o.value === type)?.icon ?? 'i-tabler-link';
+  return typeOptions.value.find((o) => o.value === type)?.icon ?? 'i-tabler-link';
 }
 
 function getTypeLabel(type: ResourceType): string {
-  return typeOptions.find((o) => o.value === type)?.label ?? type;
+  return typeOptions.value.find((o) => o.value === type)?.label ?? type;
 }
 
 // ─── OG scraping ─────────────────────────────────────────────────────────────
@@ -135,8 +156,13 @@ async function persistResources(): Promise<void> {
     });
     emit('update:modelValue', [...localResources.value]);
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Erreur lors de la sauvegarde des ressources';
-    useToast().add({ title: 'Erreur', description: msg, color: 'error' });
+    const msg =
+      err instanceof Error ? err.message : t('cursus.modules.resources.saveErrorFallback');
+    useToast().add({
+      title: t('cursus.modules.resources.saveErrorTitle'),
+      description: msg,
+      color: 'error',
+    });
   } finally {
     isSaving.value = false;
   }
@@ -147,8 +173,8 @@ async function persistResources(): Promise<void> {
 const handleAdd = handleAddSubmit(async (values) => {
   if (localResources.value.length >= 20) {
     useToast().add({
-      title: 'Limite atteinte',
-      description: 'Maximum 20 ressources par module.',
+      title: t('cursus.modules.resources.limitReachedTitle'),
+      description: t('cursus.modules.resources.limitReachedDesc'),
       color: 'warning',
     });
     return;
@@ -238,7 +264,7 @@ function safeHref(url: string): string {
       <div class="flex items-center gap-2">
         <span class="i-tabler-books text-lg text-text-muted" aria-hidden="true" />
         <h3 class="text-sm font-semibold text-text-strong">
-          Ressources
+          {{ t('cursus.modules.resources.title') }}
           <span v-if="localResources.length > 0" class="ml-1 font-normal text-text-muted"
             >({{ localResources.length }}/20)</span
           >
@@ -253,7 +279,7 @@ function safeHref(url: string): string {
         :disabled="isAdding"
         @click="isAdding = true"
       >
-        Ajouter
+        {{ t('cursus.modules.resources.add') }}
       </UButton>
     </div>
 
@@ -262,47 +288,53 @@ function safeHref(url: string): string {
       v-if="isAdding"
       class="space-y-3 rounded-lg border border-border-subtle bg-surface p-4"
       role="form"
-      aria-label="Ajouter une ressource"
+      :aria-label="t('cursus.modules.resources.formAriaLabel')"
     >
       <div class="grid gap-3 sm:grid-cols-2">
         <div class="space-y-1">
-          <label for="resource-url" class="text-xs font-medium text-text-muted">URL *</label>
+          <label for="resource-url" class="text-xs font-medium text-text-muted">{{
+            t('cursus.modules.resources.urlLabel')
+          }}</label>
           <UInput
             id="resource-url"
             :model-value="urlField ?? ''"
-            @update:model-value="urlField = $event"
             v-bind="urlAttrs"
-            placeholder="https://..."
+            :placeholder="t('cursus.modules.resources.urlPlaceholder')"
             type="url"
             size="sm"
             :status="addErrors.url ? 'error' : undefined"
+            @update:model-value="urlField = $event"
           />
           <p v-if="addErrors.url" class="text-xs text-danger-fg">{{ addErrors.url }}</p>
         </div>
 
         <div class="space-y-1">
-          <label for="resource-title" class="text-xs font-medium text-text-muted">Titre *</label>
+          <label for="resource-title" class="text-xs font-medium text-text-muted">{{
+            t('cursus.modules.resources.titleLabel')
+          }}</label>
           <UInput
             id="resource-title"
             :model-value="titleField ?? ''"
-            @update:model-value="titleField = $event"
             v-bind="titleAttrs"
-            placeholder="Titre de la ressource"
+            :placeholder="t('cursus.modules.resources.titlePlaceholder')"
             size="sm"
             :status="addErrors.title ? 'error' : undefined"
+            @update:model-value="titleField = $event"
           />
           <p v-if="addErrors.title" class="text-xs text-danger-fg">{{ addErrors.title }}</p>
         </div>
       </div>
 
       <div class="space-y-1">
-        <label for="resource-type" class="text-xs font-medium text-text-muted">Type</label>
+        <label for="resource-type" class="text-xs font-medium text-text-muted">{{
+          t('cursus.modules.resources.typeLabel')
+        }}</label>
         <USelect
           id="resource-type"
           :model-value="typeField ?? 'link'"
-          @update:model-value="typeField = $event as ResourceType"
           size="sm"
           :options="typeOptions.map((o) => ({ label: o.label, value: o.value }))"
+          @update:model-value="typeField = $event as ResourceType"
         />
       </div>
 
@@ -315,7 +347,7 @@ function safeHref(url: string): string {
             resetForm();
           "
         >
-          Annuler
+          {{ t('common.cancel') }}
         </UButton>
         <UButton
           size="xs"
@@ -325,7 +357,7 @@ function safeHref(url: string): string {
             }
           "
         >
-          Ajouter la ressource
+          {{ t('cursus.modules.resources.addResource') }}
         </UButton>
       </div>
     </div>
@@ -339,9 +371,9 @@ function safeHref(url: string): string {
         class="i-tabler-books mx-auto mb-2 block text-2xl text-text-subtle"
         aria-hidden="true"
       />
-      <p class="text-sm text-text-muted">Aucune ressource pour ce module.</p>
+      <p class="text-sm text-text-muted">{{ t('cursus.modules.resources.emptyState') }}</p>
       <p v-if="!readonly" class="mt-1 text-xs text-text-subtle">
-        Cliquez sur « Ajouter » pour ajouter une ressource.
+        {{ t('cursus.modules.resources.emptyStateHint') }}
       </p>
     </div>
 
@@ -349,7 +381,7 @@ function safeHref(url: string): string {
     <ul
       v-else-if="localResources.length > 0"
       class="space-y-2"
-      aria-label="Liste des ressources du module"
+      :aria-label="t('cursus.modules.resources.listAriaLabel')"
     >
       <li
         v-for="(resource, idx) in localResources"
@@ -425,7 +457,7 @@ function safeHref(url: string): string {
                 role="status"
               >
                 <span class="i-tabler-alert-triangle text-xs" aria-hidden="true" />
-                Lien cassé
+                {{ t('cursus.modules.resources.brokenLink') }}
               </span>
 
               <!-- OG loading indicator -->
@@ -435,7 +467,7 @@ function safeHref(url: string): string {
                 aria-live="polite"
               >
                 <span class="i-tabler-loader-2 animate-spin text-xs" aria-hidden="true" />
-                Chargement de l&apos;aperçu…
+                {{ t('cursus.modules.resources.ogLoading') }}
               </span>
 
               <!-- OG error -->
@@ -444,7 +476,7 @@ function safeHref(url: string): string {
                 class="inline-flex items-center gap-1 text-xs text-text-subtle"
               >
                 <span class="i-tabler-photo-off text-xs" aria-hidden="true" />
-                Aperçu indisponible
+                {{ t('cursus.modules.resources.ogError') }}
               </span>
             </div>
           </div>
@@ -460,7 +492,7 @@ function safeHref(url: string): string {
               variant="ghost"
               icon="i-tabler-chevron-up"
               :disabled="idx === 0"
-              :aria-label="`Monter la ressource « ${resource.title} »`"
+              :aria-label="t('cursus.modules.resources.moveUpAriaLabel', { title: resource.title })"
               @click="moveUp(idx)"
             />
             <!-- Move down -->
@@ -469,7 +501,9 @@ function safeHref(url: string): string {
               variant="ghost"
               icon="i-tabler-chevron-down"
               :disabled="idx === localResources.length - 1"
-              :aria-label="`Descendre la ressource « ${resource.title} »`"
+              :aria-label="
+                t('cursus.modules.resources.moveDownAriaLabel', { title: resource.title })
+              "
               @click="moveDown(idx)"
             />
             <!-- Delete -->
@@ -478,7 +512,7 @@ function safeHref(url: string): string {
               variant="ghost"
               icon="i-tabler-trash"
               color="error"
-              :aria-label="`Supprimer la ressource « ${resource.title} »`"
+              :aria-label="t('cursus.modules.resources.removeAriaLabel', { title: resource.title })"
               @click="removeResource(resource.id)"
             />
           </div>
@@ -493,7 +527,7 @@ function safeHref(url: string): string {
       aria-live="polite"
     >
       <span class="i-tabler-loader-2 animate-spin" aria-hidden="true" />
-      Enregistrement…
+      {{ t('cursus.modules.resources.saving') }}
     </div>
   </div>
 </template>
