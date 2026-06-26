@@ -114,26 +114,23 @@ describe('transition() — transitions invalides', () => {
   it('A_VENIR → SOUMIS lève InvalidTransitionError', async () => {
     const { prisma } = makePrisma('A_VENIR');
 
-    await expect(
-       
-      transition(prisma as any, 'prog-1', 'A_VENIR', 'SOUMIS'),
-    ).rejects.toBeInstanceOf(InvalidTransitionError);
+    await expect(transition(prisma as any, 'prog-1', 'A_VENIR', 'SOUMIS')).rejects.toBeInstanceOf(
+      InvalidTransitionError,
+    );
   });
 
   it('VALIDE → EN_COURS lève InvalidTransitionError (état terminal)', async () => {
     const { prisma } = makePrisma('VALIDE');
 
-    await expect(
-       
-      transition(prisma as any, 'prog-1', 'VALIDE', 'EN_COURS'),
-    ).rejects.toBeInstanceOf(InvalidTransitionError);
+    await expect(transition(prisma as any, 'prog-1', 'VALIDE', 'EN_COURS')).rejects.toBeInstanceOf(
+      InvalidTransitionError,
+    );
   });
 
   it('VALIDE_OVERRIDE → EN_COURS lève InvalidTransitionError (état terminal)', async () => {
     const { prisma } = makePrisma('VALIDE_OVERRIDE');
 
     await expect(
-       
       transition(prisma as any, 'prog-1', 'VALIDE_OVERRIDE', 'EN_COURS'),
     ).rejects.toBeInstanceOf(InvalidTransitionError);
   });
@@ -141,13 +138,9 @@ describe('transition() — transitions invalides', () => {
   it('InvalidTransitionError expose from et to', async () => {
     const { prisma } = makePrisma('A_VENIR');
 
-    const err = await transition(
-       
-      prisma as any,
-      'prog-1',
-      'A_VENIR',
-      'SOUMIS',
-    ).catch((e: unknown) => e);
+    const err = await transition(prisma as any, 'prog-1', 'A_VENIR', 'SOUMIS').catch(
+      (e: unknown) => e,
+    );
 
     expect(err).toBeInstanceOf(InvalidTransitionError);
     expect((err as InvalidTransitionError).from).toBe('A_VENIR');
@@ -158,7 +151,6 @@ describe('transition() — transitions invalides', () => {
     const { prisma } = makePrisma('EN_COURS');
 
     await expect(
-       
       transition(prisma as any, 'prog-1', 'EN_COURS', 'VALIDE_OVERRIDE'),
     ).rejects.toBeInstanceOf(InvalidTransitionError);
   });
@@ -167,7 +159,6 @@ describe('transition() — transitions invalides', () => {
     const { prisma } = makePrisma('EN_COURS');
 
     await expect(
-       
       transition(prisma as any, 'prog-1', 'EN_COURS', 'VALIDE_OVERRIDE', '  '),
     ).rejects.toBeInstanceOf(InvalidTransitionError);
   });
@@ -182,7 +173,6 @@ describe('transition() — transitions valides', () => {
       status: 'EN_COURS',
     });
 
-     
     const result = await transition(prisma as any, 'prog-1', 'A_VENIR', 'EN_COURS');
 
     expect(result.status).toBe('EN_COURS');
@@ -201,7 +191,6 @@ describe('transition() — transitions valides', () => {
       submittedAt: new Date(),
     });
 
-     
     await transition(prisma as any, 'prog-1', 'EN_COURS', 'SOUMIS');
 
     const updateData = progressionUpdate.mock.calls[0]?.[0];
@@ -215,7 +204,6 @@ describe('transition() — transitions valides', () => {
       validatedAt: new Date(),
     });
 
-     
     await transition(prisma as any, 'prog-1', 'SOUMIS', 'VALIDE');
 
     const updateData = progressionUpdate.mock.calls[0]?.[0];
@@ -229,7 +217,6 @@ describe('transition() — transitions valides', () => {
     });
 
     await transition(
-       
       prisma as any,
       'prog-1',
       'EN_COURS',
@@ -247,15 +234,7 @@ describe('transition() — transitions valides', () => {
     const { prisma } = makePrisma('VALIDE');
 
     await expect(
-      transition(
-         
-        prisma as any,
-        'prog-1',
-        'VALIDE',
-        'VALIDE_OVERRIDE',
-        'raison',
-        'formateur',
-      ),
+      transition(prisma as any, 'prog-1', 'VALIDE', 'VALIDE_OVERRIDE', 'raison', 'formateur'),
     ).rejects.toBeInstanceOf(InvalidTransitionError);
   });
 });
@@ -274,10 +253,9 @@ describe('transition() — protection race condition', () => {
       }),
     };
 
-    await expect(
-       
-      transition(prisma as any, 'prog-1', 'EN_COURS', 'SOUMIS'),
-    ).rejects.toThrow(/Race condition/);
+    await expect(transition(prisma as any, 'prog-1', 'EN_COURS', 'SOUMIS')).rejects.toThrow(
+      /Race condition/,
+    );
   });
 
   it('lève une erreur si la progression est introuvable', async () => {
@@ -290,10 +268,9 @@ describe('transition() — protection race condition', () => {
       }),
     };
 
-    await expect(
-       
-      transition(prisma as any, 'prog-missing', 'EN_COURS', 'SOUMIS'),
-    ).rejects.toThrow(/introuvable/);
+    await expect(transition(prisma as any, 'prog-missing', 'EN_COURS', 'SOUMIS')).rejects.toThrow(
+      /introuvable/,
+    );
   });
 });
 

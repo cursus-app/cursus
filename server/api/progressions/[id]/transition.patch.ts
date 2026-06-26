@@ -18,10 +18,7 @@ import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
 import { hashId } from '~~/server/utils/hash';
 import { checkRateLimit } from '~~/server/utils/inMemoryRateLimit';
-import {
-  transition,
-  InvalidTransitionError,
-} from '~~/server/utils/progressionStateMachine';
+import { transition, InvalidTransitionError } from '~~/server/utils/progressionStateMachine';
 import type { ProgressionStatus } from '@prisma/client';
 
 const PROGRESSION_STATUS_VALUES = [
@@ -67,9 +64,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // ── Body validation ────────────────────────────────────────────────────────
-  const body = await readValidatedBody(event, (raw) =>
-    TransitionBodySchema.safeParse(raw),
-  );
+  const body = await readValidatedBody(event, (raw) => TransitionBodySchema.safeParse(raw));
 
   if (!body.success) {
     throw createError({
@@ -150,14 +145,7 @@ export default defineEventHandler(async (event) => {
 
   // ── Exécuter la transition ─────────────────────────────────────────────────
   try {
-    const updated = await transition(
-      prisma,
-      id,
-      progression.status,
-      to,
-      reason,
-      dbUser.id,
-    );
+    const updated = await transition(prisma, id, progression.status, to, reason, dbUser.id);
 
     return updated;
   } catch (err) {

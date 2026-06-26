@@ -39,19 +39,19 @@
 
 ## Matrice des transitions
 
-| From          | To              | Déclencheur                         | Acteur         |
-|---------------|-----------------|-------------------------------------|----------------|
-| `A_VENIR`     | `EN_COURS`      | Cohorte démarre                     | Système (auto) |
-| `EN_COURS`    | `SOUMIS`        | User soumet un livrable             | Stagiaire      |
-| `EN_COURS`    | `BLOQUE`        | User déclare être bloqué            | Stagiaire      |
-| `SOUMIS`      | `VALIDE`        | Harnais valide                      | Harnais CI     |
-| `SOUMIS`      | `EN_COURS`      | Harnais échoue (retry)              | Harnais CI     |
-| `EN_COURS`    | `EN_ALERTE`     | J-1 deadline (job nocturne)         | Système (cron) |
-| `SOUMIS`      | `EN_ALERTE`     | J-1 deadline (job nocturne)         | Système (cron) |
-| `EN_COURS`    | `EN_RETARD`     | J+0 deadline passée (job nocturne)  | Système (cron) |
-| `SOUMIS`      | `EN_RETARD`     | J+0 deadline passée (job nocturne)  | Système (cron) |
-| `EN_ALERTE`   | `EN_RETARD`     | J+0 deadline passée (job nocturne)  | Système (cron) |
-| `*`           | `VALIDE_OVERRIDE` | Formateur override (reason requis)| Formateur      |
+| From        | To                | Déclencheur                        | Acteur         |
+| ----------- | ----------------- | ---------------------------------- | -------------- |
+| `A_VENIR`   | `EN_COURS`        | Cohorte démarre                    | Système (auto) |
+| `EN_COURS`  | `SOUMIS`          | User soumet un livrable            | Stagiaire      |
+| `EN_COURS`  | `BLOQUE`          | User déclare être bloqué           | Stagiaire      |
+| `SOUMIS`    | `VALIDE`          | Harnais valide                     | Harnais CI     |
+| `SOUMIS`    | `EN_COURS`        | Harnais échoue (retry)             | Harnais CI     |
+| `EN_COURS`  | `EN_ALERTE`       | J-1 deadline (job nocturne)        | Système (cron) |
+| `SOUMIS`    | `EN_ALERTE`       | J-1 deadline (job nocturne)        | Système (cron) |
+| `EN_COURS`  | `EN_RETARD`       | J+0 deadline passée (job nocturne) | Système (cron) |
+| `SOUMIS`    | `EN_RETARD`       | J+0 deadline passée (job nocturne) | Système (cron) |
+| `EN_ALERTE` | `EN_RETARD`       | J+0 deadline passée (job nocturne) | Système (cron) |
+| `*`         | `VALIDE_OVERRIDE` | Formateur override (reason requis) | Formateur      |
 
 ## États terminaux
 

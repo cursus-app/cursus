@@ -40,10 +40,7 @@ export const VALID_TRANSITIONS = new Map<ProgressionStatus, ProgressionStatus[]>
 ]);
 
 /** États depuis lesquels aucune transition ordinaire n'est possible. */
-const TERMINAL_STATES: ReadonlySet<ProgressionStatus> = new Set([
-  'VALIDE',
-  'VALIDE_OVERRIDE',
-]);
+const TERMINAL_STATES: ReadonlySet<ProgressionStatus> = new Set(['VALIDE', 'VALIDE_OVERRIDE']);
 
 // ─── Transition ───────────────────────────────────────────────────────────────
 
@@ -83,10 +80,7 @@ export async function transition(
     // Transition ordinaire : vérifier la matrice
     const allowed = VALID_TRANSITIONS.get(from);
     if (!allowed || !allowed.includes(to)) {
-      logger.warn(
-        { progressionId, from, to, byUserId },
-        'progression.transition.invalid',
-      );
+      logger.warn({ progressionId, from, to, byUserId }, 'progression.transition.invalid');
       throw new InvalidTransitionError(from, to);
     }
   }
@@ -124,8 +118,12 @@ export async function transition(
       extra.validatedAt = new Date();
     }
     if (to === 'VALIDE_OVERRIDE') {
-      if (byUserId) { extra.overrideBy = byUserId; }
-      if (reason) { extra.overrideReason = reason.trim(); }
+      if (byUserId) {
+        extra.overrideBy = byUserId;
+      }
+      if (reason) {
+        extra.overrideReason = reason.trim();
+      }
     }
 
     const result = await tx.progression.update({
@@ -136,10 +134,7 @@ export async function transition(
       },
     });
 
-    logger.info(
-      { progressionId, from, to, byUserId },
-      'progression.transitioned',
-    );
+    logger.info({ progressionId, from, to, byUserId }, 'progression.transitioned');
 
     return result;
   });
@@ -156,6 +151,8 @@ export function isTerminal(status: ProgressionStatus): boolean {
 
 /** Retourne les transitions disponibles depuis un statut (liste vide si terminal). */
 export function availableTransitions(status: ProgressionStatus): ProgressionStatus[] {
-  if (TERMINAL_STATES.has(status)) { return []; }
+  if (TERMINAL_STATES.has(status)) {
+    return [];
+  }
   return VALID_TRANSITIONS.get(status) ?? [];
 }

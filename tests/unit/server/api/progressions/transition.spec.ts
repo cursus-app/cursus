@@ -113,8 +113,7 @@ function makeEvent() {
   return { node: { req: {}, res: {} } };
 }
 
-const importHandler = () =>
-  import('~~/server/api/progressions/[id]/transition.patch');
+const importHandler = () => import('~~/server/api/progressions/[id]/transition.patch');
 
 // ─── Tests — Auth ─────────────────────────────────────────────────────────────
 
