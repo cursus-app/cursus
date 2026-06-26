@@ -33,12 +33,8 @@ vi.mock('#i18n', () => ({
 }));
 
 // Import après le mock
-const {
-  useAppI18n,
-  isSupportedLocale,
-  normalizeSupportedLocale,
-  SUPPORTED_LOCALES,
-} = await import('../../../../app/composables/useAppI18n');
+const { useAppI18n, isSupportedLocale, normalizeSupportedLocale, SUPPORTED_LOCALES } =
+  await import('../../../../app/composables/useAppI18n');
 
 // ── Helpers JSON ──────────────────────────────────────────────────────────────
 
@@ -211,7 +207,7 @@ describe('locales/en.json — aucune clé non traduite', () => {
     expect(todoKeys, `Clés non traduites : ${todoKeys.join(', ')}`).toHaveLength(0);
   });
 
-  it('aucune valeur n\'est vide', () => {
+  it("aucune valeur n'est vide", () => {
     const flatEn = flattenKeys(enJson);
     const emptyKeys: string[] = [];
 

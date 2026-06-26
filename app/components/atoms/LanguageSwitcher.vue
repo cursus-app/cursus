@@ -35,10 +35,7 @@ const buttonLabel = computed(() => locale.value.toUpperCase());
 </script>
 
 <template>
-  <UDropdownMenu
-    :items="items"
-    :content="{ align: 'end', side: 'bottom' }"
-  >
+  <UDropdownMenu :items="items" :content="{ align: 'end', side: 'bottom' }">
     <UButton
       color="neutral"
       variant="ghost"

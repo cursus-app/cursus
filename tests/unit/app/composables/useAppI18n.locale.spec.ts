@@ -65,7 +65,7 @@ describe('middleware/locale — parseAcceptLanguage', () => {
     expect(parseAcceptLanguage('fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7')).toBe('fr');
   });
 
-  it('respecte l\'ordre de qualité : en;q=0.9 prioritaire sur fr;q=0.5', () => {
+  it("respecte l'ordre de qualité : en;q=0.9 prioritaire sur fr;q=0.5", () => {
     expect(parseAcceptLanguage('en-US,en;q=0.9,fr;q=0.5')).toBe('en');
   });
 
