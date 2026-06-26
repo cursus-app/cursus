@@ -499,82 +499,55 @@
       "cookies": "Cookies"
     }
   },
-  "cohortes": {
-    "title": "Cohortes",
-    "new": "Créer une cohorte",
-    "edit": "Modifier",
-    "delete": "Supprimer",
-    "start": "Démarrer la cohorte",
-    "complete": "Marquer comme terminée",
-    "archive": "Archiver",
-    "createTitle": "Créer une cohorte",
-    "createSubtitle": "Configurez les dates, le cursus et le rythme de votre nouvelle cohorte.",
-    "createButton": "Créer la cohorte",
-    "noResults": "Aucune cohorte trouvée",
-    "noMembers": "Aucun membre pour l'instant",
-    "unknownMember": "Membre inconnu",
-    "name": "Nom de la cohorte",
-    "namePlaceholder": "Ex : Promo Automne 2026",
-    "cursus": "Cursus",
-    "cursusPlaceholder": "Sélectionner un cursus publié",
-    "startDate": "Date de début",
-    "endDate": "Date de fin",
-    "rhythm": "Rythme",
-    "members": "Membres",
-    "archivedAt": "Archivée le",
-    "status": {
-      "DRAFT": "Brouillon",
-      "ACTIVE": "Active",
-      "COMPLETED": "Terminée",
-      "ARCHIVED": "Archivée"
+  "invitations": {
+    "modalTitle": "Inviter des stagiaires",
+    "modalSubtitle": "Envoyez des invitations par email ou importez un fichier CSV.",
+    "tabs": {
+      "emails": "Emails",
+      "csv": "Fichier CSV"
     },
-    "rhythmLabel": {
-      "WEEKLY": "Hebdomadaire",
-      "BIWEEKLY": "Bihebdomadaire",
-      "MONTHLY": "Mensuel",
-      "CUSTOM": "Personnalisé"
+    "emailsLabel": "Adresses email",
+    "emailsPlaceholder": "Collez des emails séparés par des virgules ou des retours à la ligne…",
+    "emailsFound": "{count} email(s) valide(s) trouvé(s)",
+    "invalidEmails": "{count} email(s) invalide(s) ignoré(s)",
+    "andMore": "… et {count} autre(s)",
+    "sendButton": "Inviter ({count})",
+    "successTitle": "{count} invitation(s) envoyée(s)",
+    "deduplicatedNote": "{count} email(s) ignoré(s) (déjà membre ou déjà invité)",
+    "summary": "{invited} invitation(s) envoyée(s) sur {total} email(s)",
+    "csv": {
+      "dropzone": "Déposez un fichier CSV ici",
+      "dropzoneLabel": "Zone de dépôt de fichier CSV",
+      "fileInputLabel": "Sélectionner un fichier CSV",
+      "browse": "Parcourir",
+      "format": "Colonnes attendues : email, prenom, nom",
+      "missingEmail": "Colonne email manquante ou vide",
+      "invalidEmail": "Email invalide : {email}",
+      "notACsv": "Le fichier déposé n'est pas un CSV",
+      "errors": "{count} erreur(s) dans le CSV",
+      "line": "Ligne {line} :"
     },
-    "roles": {
-      "stagiaire": "Stagiaire",
-      "formateurPrincipal": "Formateur principal",
-      "coFormateur": "Co-formateur"
+    "confirm": {
+      "title": "Envoyer {count} invitations ?",
+      "description": "Vous êtes sur le point d'envoyer un grand nombre d'invitations. Confirmez-vous cette action ?",
+      "proceed": "Confirmer l'envoi"
     },
-    "createSuccess": "Cohorte créée avec succès",
-    "startSuccess": "Cohorte démarrée",
-    "completeSuccess": "Cohorte marquée comme terminée",
-    "archiveSuccess": "Cohorte archivée",
-    "deleteSuccess": "Cohorte supprimée",
-    "saveSuccess": "Modifications enregistrées",
-    "confirmDelete": {
-      "title": "Supprimer cette cohorte ?",
-      "description": "Cette action est irréversible. La cohorte et ses données seront supprimées.",
-      "confirm": "Supprimer définitivement"
-    },
-    "filter": {
-      "all": "Toutes",
-      "byStatus": "Filtrer par statut"
-    },
+    "inviteButton": "Inviter des stagiaires",
+    "resend": "Renvoyer",
+    "resendSuccess": "Invitation renvoyée",
+    "pending": "En attente",
+    "expired": "Expirée",
+    "accepted": "Acceptée",
+    "invitedAt": "Invité le",
+    "expiresAt": "Expire le",
     "errors": {
-      "nameTooShort": "Le nom doit contenir au moins 2 caractères",
-      "nameTooLong": "Le nom ne peut pas dépasser 100 caractères",
-      "cursusIdInvalid": "Identifiant de cursus invalide",
-      "startDateInvalid": "Date de début invalide (format YYYY-MM-DD)",
-      "endDateInvalid": "Date de fin invalide (format YYYY-MM-DD)",
-      "endDateBeforeStart": "La date de fin doit être après la date de début",
-      "noPublishedCursus": "Aucun cursus publié disponible. Publiez un cursus d'abord.",
-      "cursusNotFound": "Cursus introuvable",
-      "cursusNotPublished": "Le cursus sélectionné n'est pas publié",
-      "noVersionFound": "Aucune version publiée trouvée pour ce cursus",
-      "notFound": "Cohorte introuvable",
-      "forbidden": "Vous n'avez pas accès à cette cohorte",
-      "cannotEditNonDraft": "Seules les cohortes en brouillon peuvent être modifiées",
-      "cannotDeleteActive": "Impossible de supprimer une cohorte active. Archivez-la à la place.",
-      "cannotStartNonDraft": "Seules les cohortes en brouillon peuvent être démarrées",
-      "cannotCompleteNonActive": "Seules les cohortes actives peuvent être marquées comme terminées",
-      "alreadyArchived": "Cette cohorte est déjà archivée",
-      "cannotArchiveDraft": "Une cohorte en brouillon ne peut pas être archivée directement",
-      "noStagiaires": "Au moins 1 stagiaire requis pour démarrer",
-      "noFormateur": "Au moins 1 formateur principal requis"
+      "emailInvalid": "Adresse email invalide",
+      "emailRequired": "Au moins un email est requis",
+      "tooManyEmails": "Maximum 50 emails par envoi",
+      "forbidden": "Action non autorisée",
+      "notFound": "Invitation introuvable",
+      "alreadyAccepted": "Cette invitation a déjà été acceptée",
+      "revoked": "Cette invitation a été révoquée"
     }
   }
 }
