@@ -52,3 +52,33 @@ export const listCohortesQuerySchema = z.object({
 export type CohorteCreateInput = z.infer<typeof cohorteCreateSchema>;
 export type CohorteUpdateInput = z.infer<typeof cohorteUpdateSchema>;
 export type ListCohortesQuery = z.infer<typeof listCohortesQuerySchema>;
+
+// ─── Co-formateurs ────────────────────────────────────────────────────────────
+
+/**
+ * Body de POST /api/cohortes/:id/co-formateurs
+ * Ajout d'un co-formateur par email ou userId.
+ * moduleIds: null/undefined → accès global, string[] → limité aux modules listés.
+ */
+export const coFormateurAddSchema = z
+  .object({
+    email: z.string().email('cohortes.errors.emailInvalid').optional(),
+    userId: z.string().uuid('cohortes.errors.userIdInvalid').optional(),
+    moduleIds: z.array(z.string().uuid('cohortes.errors.moduleIdInvalid')).nullable().optional(),
+  })
+  .refine((d) => d.email !== undefined || d.userId !== undefined, {
+    message: 'cohortes.errors.emailOrUserIdRequired',
+    path: ['email'],
+  });
+
+/**
+ * Body de PATCH /api/cohortes/:id/co-formateurs/:userId
+ * Met à jour les modules assignés.
+ * moduleIds: null → global, string[] → accès limité.
+ */
+export const coFormateurUpdateSchema = z.object({
+  moduleIds: z.array(z.string().uuid('cohortes.errors.moduleIdInvalid')).nullable(),
+});
+
+export type CoFormateurAddInput = z.infer<typeof coFormateurAddSchema>;
+export type CoFormateurUpdateInput = z.infer<typeof coFormateurUpdateSchema>;

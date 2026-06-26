@@ -451,6 +451,28 @@
       "all": "Toutes",
       "byStatus": "Filtrer par statut"
     },
+    "team": {
+      "title": "Équipe (co-formateurs)",
+      "add": "Ajouter un co-formateur",
+      "addTitle": "Ajouter un co-formateur",
+      "addDescription": "Entrez l'adresse email du co-formateur à ajouter à cette cohorte.",
+      "emailLabel": "Adresse email",
+      "emailPlaceholder": "exemple@domaine.fr",
+      "emailInvalid": "Adresse email invalide",
+      "addSuccess": "Co-formateur {name} ajouté",
+      "removeSuccess": "{name} a été retiré",
+      "modulesUpdated": "Modules assignés mis à jour",
+      "remove": "Retirer ce co-formateur",
+      "editModules": "Modifier les modules assignés",
+      "editModulesTitle": "Modules assignés",
+      "editModulesFor": "Modifier les modules pour {name}",
+      "globalAccess": "Accès global",
+      "modulesCount": "{count} module(s) assigné(s)",
+      "globalAccessLabel": "Accès global (toute la cohorte)",
+      "limitedAccessLabel": "Limiter à des modules spécifiques",
+      "noModulesAvailable": "Aucun module disponible pour ce cursus",
+      "empty": "Aucun co-formateur pour l'instant"
+    },
     "errors": {
       "nameTooShort": "Le nom doit contenir au moins 2 caractères",
       "nameTooLong": "Le nom ne peut pas dépasser 100 caractères",
@@ -471,7 +493,15 @@
       "alreadyArchived": "Cette cohorte est déjà archivée",
       "cannotArchiveDraft": "Une cohorte en brouillon ne peut pas être archivée directement",
       "noStagiaires": "Au moins 1 stagiaire requis pour démarrer",
-      "noFormateur": "Au moins 1 formateur principal requis"
+      "noFormateur": "Au moins 1 formateur principal requis",
+      "emailInvalid": "Adresse email invalide",
+      "userIdInvalid": "Identifiant utilisateur invalide",
+      "moduleIdInvalid": "Identifiant de module invalide",
+      "emailOrUserIdRequired": "Email ou identifiant utilisateur requis",
+      "userNotFound": "Utilisateur introuvable",
+      "alreadyFormateurPrincipal": "Cet utilisateur est déjà formateur principal de cette cohorte",
+      "coFormateurNotFound": "Co-formateur introuvable dans cette cohorte",
+      "notCoFormateur": "Cet utilisateur n'est pas co-formateur de cette cohorte"
     }
   },
   "legal": {

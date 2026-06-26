@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 //
-// Tests unitaires pour les schémas Zod de la feature cohorte (ST-04.1).
+// Tests unitaires pour les schémas Zod de la feature cohorte (ST-04.1, ST-04.3).
 // Valide la symétrie client/serveur des règles de validation.
 
 import { describe, expect, it } from 'vitest';
@@ -8,6 +8,8 @@ import {
   cohorteCreateSchema,
   cohorteUpdateSchema,
   listCohortesQuerySchema,
+  coFormateurAddSchema,
+  coFormateurUpdateSchema,
 } from '~~/shared/schemas/cohorte';
 
 const VALID_CREATE = {
@@ -176,6 +178,95 @@ describe('listCohortesQuerySchema', () => {
 
   it('rejects limit greater than 100', () => {
     const result = listCohortesQuerySchema.safeParse({ limit: '200' });
+    expect(result.success).toBe(false);
+  });
+});
+
+// ─── coFormateurAddSchema (ST-04.3) ───────────────────────────────────────────
+
+describe('coFormateurAddSchema', () => {
+  const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
+
+  it('accepts email with null moduleIds (global)', () => {
+    const result = coFormateurAddSchema.safeParse({ email: 'test@example.fr', moduleIds: null });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts userId with moduleIds array', () => {
+    const result = coFormateurAddSchema.safeParse({ userId: VALID_UUID, moduleIds: [VALID_UUID] });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts email only (no moduleIds → undefined)', () => {
+    const result = coFormateurAddSchema.safeParse({ email: 'test@example.fr' });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects when neither email nor userId is provided', () => {
+    const result = coFormateurAddSchema.safeParse({ moduleIds: null });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe('cohortes.errors.emailOrUserIdRequired');
+    }
+  });
+
+  it('rejects invalid email format', () => {
+    const result = coFormateurAddSchema.safeParse({ email: 'not-an-email' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects invalid userId (not a UUID)', () => {
+    const result = coFormateurAddSchema.safeParse({ userId: 'not-a-uuid' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects moduleIds containing invalid UUIDs', () => {
+    const result = coFormateurAddSchema.safeParse({
+      email: 'test@example.fr',
+      moduleIds: ['not-a-uuid'],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts empty moduleIds array', () => {
+    const result = coFormateurAddSchema.safeParse({ email: 'test@example.fr', moduleIds: [] });
+    expect(result.success).toBe(true);
+  });
+});
+
+// ─── coFormateurUpdateSchema (ST-04.3) ────────────────────────────────────────
+
+describe('coFormateurUpdateSchema', () => {
+  const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
+
+  it('accepts null (global access)', () => {
+    const result = coFormateurUpdateSchema.safeParse({ moduleIds: null });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.moduleIds).toBeNull();
+    }
+  });
+
+  it('accepts empty array (no modules)', () => {
+    const result = coFormateurUpdateSchema.safeParse({ moduleIds: [] });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts array of valid UUIDs', () => {
+    const result = coFormateurUpdateSchema.safeParse({ moduleIds: [VALID_UUID] });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.moduleIds).toEqual([VALID_UUID]);
+    }
+  });
+
+  it('rejects missing moduleIds field', () => {
+    const result = coFormateurUpdateSchema.safeParse({});
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects moduleIds containing non-UUID values', () => {
+    const result = coFormateurUpdateSchema.safeParse({ moduleIds: ['invalid-id'] });
     expect(result.success).toBe(false);
   });
 });

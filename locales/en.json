@@ -451,6 +451,28 @@
       "all": "All",
       "byStatus": "Filter by status"
     },
+    "team": {
+      "title": "Team (co-instructors)",
+      "add": "Add co-instructor",
+      "addTitle": "Add a co-instructor",
+      "addDescription": "Enter the email address of the co-instructor to add to this cohort.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "example@domain.com",
+      "emailInvalid": "Invalid email address",
+      "addSuccess": "Co-instructor {name} added",
+      "removeSuccess": "{name} has been removed",
+      "modulesUpdated": "Assigned modules updated",
+      "remove": "Remove co-instructor",
+      "editModules": "Edit assigned modules",
+      "editModulesTitle": "Assigned modules",
+      "editModulesFor": "Edit modules for {name}",
+      "globalAccess": "Global access",
+      "modulesCount": "{count} module(s) assigned",
+      "globalAccessLabel": "Global access (full cohort)",
+      "limitedAccessLabel": "Limit to specific modules",
+      "noModulesAvailable": "No modules available for this curriculum",
+      "empty": "No co-instructors yet"
+    },
     "errors": {
       "nameTooShort": "Name must be at least 2 characters",
       "nameTooLong": "Name cannot exceed 100 characters",
@@ -471,7 +493,15 @@
       "alreadyArchived": "This cohort is already archived",
       "cannotArchiveDraft": "A draft cohort cannot be archived directly",
       "noStagiaires": "At least 1 trainee required to start",
-      "noFormateur": "At least 1 lead instructor required"
+      "noFormateur": "At least 1 lead instructor required",
+      "emailInvalid": "Invalid email address",
+      "userIdInvalid": "Invalid user identifier",
+      "moduleIdInvalid": "Invalid module identifier",
+      "emailOrUserIdRequired": "Email or user ID required",
+      "userNotFound": "User not found",
+      "alreadyFormateurPrincipal": "This user is already the lead instructor of this cohort",
+      "coFormateurNotFound": "Co-instructor not found in this cohort",
+      "notCoFormateur": "This user is not a co-instructor of this cohort"
     }
   },
   "legal": {

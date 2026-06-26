@@ -24,6 +24,8 @@ export interface CohorteCursusVersion {
 export interface CohorteMember {
   id: string;
   role: MembershipRole;
+  /** Pour les CO_FORMATEUR : null = accès global, string[] = limité aux modules listés. */
+  moduleIds: string[] | null;
   joinedAt: string;
   leftAt: string | null;
   user: {
