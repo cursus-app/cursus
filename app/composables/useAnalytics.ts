@@ -5,7 +5,11 @@ type AnalyticsEvent =
   | 'harness_validated'
   | 'capstone_submitted'
   | 'certificate_issued'
-  | 'feature_flag_activated';
+  | 'feature_flag_activated'
+  | 'cursus_created'
+  | 'cursus_published'
+  | 'cursus_archived'
+  | 'cursus_deleted';
 
 type AnalyticsProps = Record<string, string | number | boolean>;
 
