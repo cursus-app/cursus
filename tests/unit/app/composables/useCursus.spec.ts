@@ -559,7 +559,9 @@ describe('useCursus — getRoadmapCatalog()', () => {
 
   it('sets error.value and rethrows when $fetch rejects', async () => {
     mockFetch.mockRejectedValueOnce(
-      Object.assign(new Error('Unavailable'), { data: { message: 'cursus.importRoadmap.errors.catalogUnavailable' } }),
+      Object.assign(new Error('Unavailable'), {
+        data: { message: 'cursus.importRoadmap.errors.catalogUnavailable' },
+      }),
     );
     const { useCursus } = await import('~/composables/useCursus');
     const { getRoadmapCatalog, error } = useCursus();
@@ -649,18 +651,24 @@ describe('useCursus — importRoadmap()', () => {
     const { useCursus } = await import('~/composables/useCursus');
     const { importRoadmap } = useCursus();
 
-    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(() => undefined);
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(
+      () => undefined,
+    );
     expect(mockTrack).not.toHaveBeenCalled();
   });
 
   it('sets error.value and rethrows when $fetch rejects', async () => {
     mockFetch.mockRejectedValueOnce(
-      Object.assign(new Error('Bad request'), { data: { message: 'cursus.importRoadmap.errors.invalidJson' } }),
+      Object.assign(new Error('Bad request'), {
+        data: { message: 'cursus.importRoadmap.errors.invalidJson' },
+      }),
     );
     const { useCursus } = await import('~/composables/useCursus');
     const { importRoadmap, error } = useCursus();
 
-    await expect(importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const })).rejects.toThrow();
+    await expect(
+      importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }),
+    ).rejects.toThrow();
     expect(error.value).toBe('cursus.importRoadmap.errors.invalidJson');
   });
 
@@ -678,7 +686,9 @@ describe('useCursus — importRoadmap()', () => {
     const { useCursus } = await import('~/composables/useCursus');
     const { importRoadmap, loading } = useCursus();
 
-    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(() => undefined);
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(
+      () => undefined,
+    );
     expect(loading.value).toBe(false);
   });
 });
