@@ -6,7 +6,12 @@ const meta: Meta<typeof CButton> = {
   component: CButton,
   tags: ['autodocs'],
   parameters: {
-    chromatic: { modes: { light: true, dark: true } },
+    chromatic: {
+      modes: {
+        light: { theme: 'light' },
+        dark: { theme: 'dark' },
+      },
+    },
   },
   argTypes: {
     variant: {
