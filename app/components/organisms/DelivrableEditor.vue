@@ -31,6 +31,10 @@ const emit = defineEmits<{
   'update:modelValue': [value: DeliverableSpec];
 }>();
 
+// ─── i18n ─────────────────────────────────────────────────────────────────────
+
+const { t } = useI18n();
+
 // ─── État local ───────────────────────────────────────────────────────────────
 
 const showDescPreview = ref(false);
@@ -144,17 +148,20 @@ const yamlResult = computed(() =>
 const yamlWarnings = computed<WorkflowWarning[]>(() => yamlResult.value.warnings);
 const yamlContent = computed<string>(() => yamlResult.value.yaml);
 
-// ─── Labels check (i18n simplifié — clés directes en FR pour le MVP) ──────────
+// ─── Check labels (i18n) ──────────────────────────────────────────────────────
 
-const CHECK_LABELS: Record<HarnessCheck['type'], string> = {
-  branches: 'Branches requises',
-  linter_pass: 'Linter (ESLint)',
-  readme_present: 'README présent',
-  signed_commits: 'Commits signés',
-  tests_pass: 'Suite de tests',
-  deploy_up: 'Déploiement accessible',
-  lighthouse_score: 'Score Lighthouse',
-};
+function getCheckLabel(type: HarnessCheck['type']): string {
+  const labels: Record<HarnessCheck['type'], string> = {
+    branches: t('cursus.modules.delivrable.checks.branches'),
+    linter_pass: t('cursus.modules.delivrable.checks.linter_pass'),
+    readme_present: t('cursus.modules.delivrable.checks.readme_present'),
+    signed_commits: t('cursus.modules.delivrable.checks.signed_commits'),
+    tests_pass: t('cursus.modules.delivrable.checks.tests_pass'),
+    deploy_up: t('cursus.modules.delivrable.checks.deploy_up'),
+    lighthouse_score: t('cursus.modules.delivrable.checks.lighthouse_score'),
+  };
+  return labels[type];
+}
 
 const CHECK_ICONS: Record<HarnessCheck['type'], string> = {
   branches: 'i-tabler-git-branch',
@@ -202,7 +209,7 @@ const warningMessage = computed<string>(() => {
     <div>
       <div class="mb-1.5 flex items-center justify-between">
         <label class="text-sm font-medium text-text-strong" for="delivrable-desc">
-          Description du livrable
+          {{ t('cursus.modules.delivrable.descriptionLabel') }}
         </label>
         <button
           type="button"
@@ -211,7 +218,7 @@ const warningMessage = computed<string>(() => {
           @click="showDescPreview = !showDescPreview"
         >
           <UIcon name="i-tabler-eye" class="size-3.5" />
-          {{ showDescPreview ? 'Éditer' : 'Prévisualiser' }}
+          {{ showDescPreview ? t('cursus.modules.delivrable.edit') : t('cursus.modules.delivrable.preview') }}
         </button>
       </div>
 
@@ -221,7 +228,7 @@ const warningMessage = computed<string>(() => {
         v-if="showDescPreview"
         class="min-h-24 rounded-lg border border-border-subtle bg-surface px-3 py-2 text-sm text-text-default"
         aria-live="polite"
-        aria-label="Prévisualisation de la description"
+        :aria-label="t('cursus.modules.delivrable.descriptionPreviewAriaLabel')"
         v-html="descriptionPreview"
       />
 
@@ -229,18 +236,20 @@ const warningMessage = computed<string>(() => {
         v-else
         id="delivrable-desc"
         :model-value="descriptionInput"
-        placeholder="Décrivez le livrable attendu (Markdown supporté)…"
+        :placeholder="t('cursus.modules.delivrable.descriptionPlaceholder')"
         :rows="4"
         @update:model-value="onDescriptionChange"
       />
       <span class="mt-0.5 block text-xs text-text-subtle">
-        {{ descriptionInput.length }}/10000 — Markdown supporté
+        {{ t('cursus.modules.delivrable.charCount', { count: descriptionInput.length }) }}
       </span>
     </div>
 
     <!-- Checks harnais -->
     <div>
-      <p class="mb-3 text-sm font-medium text-text-strong">Critères de validation (harnais)</p>
+      <p class="mb-3 text-sm font-medium text-text-strong">
+        {{ t('cursus.modules.delivrable.checksTitle') }}
+      </p>
 
       <!-- Warning a11y — aria-live pour les lecteurs d'écran -->
       <div
@@ -259,11 +268,11 @@ const warningMessage = computed<string>(() => {
           <div class="flex items-center gap-3">
             <CSwitch
               :model-value="getCheck(type)?.enabled ?? false"
-              :aria-label="`Activer le check ${CHECK_LABELS[type]}`"
+              :aria-label="t('cursus.modules.delivrable.toggleCheckAriaLabel', { label: getCheckLabel(type) })"
               @update:model-value="() => toggleCheck(type)"
             />
             <UIcon :name="CHECK_ICONS[type]" class="size-4 text-text-muted" />
-            <span class="flex-1 text-sm text-text-default">{{ CHECK_LABELS[type] }}</span>
+            <span class="flex-1 text-sm text-text-default">{{ getCheckLabel(type) }}</span>
           </div>
 
           <!-- Paramètres conditionnels (visibles quand le check est actif) -->
@@ -272,11 +281,14 @@ const warningMessage = computed<string>(() => {
             <template v-if="type === 'branches'">
               <CInput
                 :model-value="getCheckBranches()"
-                label="Branches attendues (séparées par des virgules)"
-                placeholder="main, feature/login, feature/footer"
+                :label="t('cursus.modules.delivrable.branchesLabel')"
+                :placeholder="t('cursus.modules.delivrable.branchesPlaceholder')"
                 @update:model-value="updateBranchesParam"
               />
-              <p class="text-xs text-text-subtle">Ex. : <code>main, develop, feature/auth</code></p>
+              <p class="text-xs text-text-subtle">
+                {{ t('cursus.modules.delivrable.branchesExampleLabel') }}
+                <code>main, develop, feature/auth</code>
+              </p>
             </template>
 
             <!-- Lighthouse score -->
@@ -284,8 +296,8 @@ const warningMessage = computed<string>(() => {
               <CInput
                 :model-value="String(getCheckLighthouseScore())"
                 type="number"
-                label="Score minimal (0–100)"
-                placeholder="80"
+                :label="t('cursus.modules.delivrable.lighthouseLabel')"
+                :placeholder="t('cursus.modules.delivrable.lighthousePlaceholder')"
                 @update:model-value="updateLighthouseScore"
               />
             </template>
@@ -295,21 +307,25 @@ const warningMessage = computed<string>(() => {
               <CInput
                 :model-value="getCheckDeployUrl()"
                 type="url"
-                label="URL de déploiement (optionnel — sinon issue de la soumission)"
-                placeholder="https://mon-projet.vercel.app"
+                :label="t('cursus.modules.delivrable.deployLabel')"
+                :placeholder="t('cursus.modules.delivrable.deployPlaceholder')"
                 @update:model-value="updateDeployUrl"
               />
             </template>
 
             <!-- Checks sans paramètres -->
             <template v-else>
-              <p class="text-xs text-text-subtle">Ce check ne nécessite aucun paramètre.</p>
+              <p class="text-xs text-text-subtle">
+                {{ t('cursus.modules.delivrable.noParams') }}
+              </p>
             </template>
           </div>
         </div>
       </div>
 
-      <p class="mt-1.5 text-xs text-text-subtle">{{ activeChecks.length }}/15 checks actifs</p>
+      <p class="mt-1.5 text-xs text-text-subtle">
+        {{ t('cursus.modules.delivrable.checksActive', { count: activeChecks.length }) }}
+      </p>
     </div>
 
     <!-- Bouton prévisualisation YAML -->
@@ -321,12 +337,12 @@ const warningMessage = computed<string>(() => {
         icon="i-tabler-code"
         @click="showYamlModal = true"
       >
-        Prévisualiser le workflow GitHub Actions
+        {{ t('cursus.modules.delivrable.previewYamlButton') }}
       </UButton>
     </div>
 
     <!-- Modal YAML -->
-    <UModal v-model:open="showYamlModal" title="Workflow GitHub Actions généré">
+    <UModal v-model:open="showYamlModal" :title="t('cursus.modules.delivrable.yamlModalTitle')">
       <template #body>
         <div class="space-y-3">
           <!-- Warnings dans le modal -->
@@ -334,7 +350,7 @@ const warningMessage = computed<string>(() => {
             v-if="yamlWarnings.length > 0"
             class="space-y-2"
             role="region"
-            aria-label="Avertissements"
+            :aria-label="t('cursus.modules.delivrable.yamlWarningsAriaLabel')"
           >
             <div
               v-for="warning in yamlWarnings"
@@ -347,7 +363,7 @@ const warningMessage = computed<string>(() => {
           </div>
 
           <!-- Bloc YAML en lecture seule -->
-          <div role="region" aria-label="YAML généré — lecture seule">
+          <div role="region" :aria-label="t('cursus.modules.delivrable.yamlContentAriaLabel')">
             <pre
               class="overflow-auto rounded-lg bg-muted px-4 py-3 text-xs text-text-default"
             ><code>{{ yamlContent }}</code></pre>
@@ -356,7 +372,9 @@ const warningMessage = computed<string>(() => {
       </template>
 
       <template #footer>
-        <UButton type="button" variant="ghost" @click="showYamlModal = false"> Fermer </UButton>
+        <UButton type="button" variant="ghost" @click="showYamlModal = false">
+          {{ t('common.close') }}
+        </UButton>
       </template>
     </UModal>
   </div>
