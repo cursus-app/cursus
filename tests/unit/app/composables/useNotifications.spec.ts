@@ -141,7 +141,7 @@ describe('useNotifications — markRead', () => {
     expect(unreadCount.value).toBe(0);
   });
 
-  it("ne marque pas une notif déjà lue (idempotent)", async () => {
+  it('ne marque pas une notif déjà lue (idempotent)', async () => {
     mockFetch.mockResolvedValueOnce(makeDefaultResponse()); // fetch initial
 
     const { fetch, markRead } = await buildComposable();

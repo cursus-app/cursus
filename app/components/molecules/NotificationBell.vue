@@ -26,13 +26,17 @@ const isOpen = ref(false);
 
 /** Badge affiché (max 99+). */
 const badgeLabel = computed(() => {
-  if (unreadCount.value > 99) {return '99+';}
+  if (unreadCount.value > 99) {
+    return '99+';
+  }
   return unreadCount.value > 0 ? String(unreadCount.value) : null;
 });
 
 /** Label a11y du bouton cloche. */
 const bellAriaLabel = computed(() => {
-  if (unreadCount.value === 0) {return 'Notifications — aucune non lue';}
+  if (unreadCount.value === 0) {
+    return 'Notifications — aucune non lue';
+  }
   return `Notifications — ${unreadCount.value} non lue${unreadCount.value > 1 ? 's' : ''}`;
 });
 
@@ -62,7 +66,9 @@ onUnmounted(() => {
 function handlePanelBlur(event: FocusEvent) {
   const target = event.relatedTarget as HTMLElement | null;
   const panel = document.getElementById('notification-panel');
-  if (panel && target && panel.contains(target)) {return;}
+  if (panel && target && panel.contains(target)) {
+    return;
+  }
   isOpen.value = false;
 }
 </script>
@@ -93,14 +99,11 @@ function handlePanelBlur(event: FocusEvent) {
     </UButton>
 
     <!-- Annonce a11y pour nouvelles notifs (hors écran) -->
-    <div
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      class="sr-only"
-    >
+    <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">
       <span v-if="unreadCount > 0">
-        {{ unreadCount }} nouvelle{{ unreadCount > 1 ? 's' : '' }} notification{{ unreadCount > 1 ? 's' : '' }}
+        {{ unreadCount }} nouvelle{{ unreadCount > 1 ? 's' : '' }} notification{{
+          unreadCount > 1 ? 's' : ''
+        }}
       </span>
     </div>
 
@@ -118,7 +121,7 @@ function handlePanelBlur(event: FocusEvent) {
         id="notification-panel"
         role="region"
         aria-label="Centre de notifications"
-        class="absolute right-0 top-full z-50 mt-2 w-80 rounded-xl border border-border-subtle bg-surface shadow-lg focus:outline-none"
+        class="absolute top-full right-0 z-50 mt-2 w-80 rounded-xl border border-border-subtle bg-surface shadow-lg focus:outline-none"
         tabindex="-1"
       >
         <!-- En-tête -->
@@ -173,11 +176,7 @@ function handlePanelBlur(event: FocusEvent) {
 
         <!-- Pied de panneau — lien vers /notifications ajouté dans ST-12.3 -->
         <div class="border-t border-border-subtle px-4 py-2 text-center">
-          <button
-            type="button"
-            class="text-xs text-accent hover:underline"
-            @click="isOpen = false"
-          >
+          <button type="button" class="text-xs text-accent hover:underline" @click="isOpen = false">
             Voir toutes les notifications
           </button>
         </div>

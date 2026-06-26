@@ -20,14 +20,12 @@ vi.mock('#supabase/server', () => ({
   serverSupabaseUser: mockServerSupabaseUser,
 }));
 
-const mockCreateError = vi.fn(
-  (opts: { statusCode: number; message: string }) => {
-    const err = new Error(opts.message);
-    // @ts-expect-error — propriétés H3Error simulées pour tests
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+const mockCreateError = vi.fn((opts: { statusCode: number; message: string }) => {
+  const err = new Error(opts.message);
+  // @ts-expect-error — propriétés H3Error simulées pour tests
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue('notif-abc'));
@@ -56,7 +54,7 @@ describe('DELETE /api/notifications/:id', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 401 });
   });
 
-  it('retourne 404 si la notification n\'existe pas', async () => {
+  it("retourne 404 si la notification n'existe pas", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: USER_A });
     mockPrismaNotification.findUnique.mockResolvedValue(null);
 

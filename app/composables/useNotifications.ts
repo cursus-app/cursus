@@ -59,8 +59,7 @@ export function useNotifications() {
       notifications.value = res.data.map((n) => ({ ...n }));
       unreadCount.value = res.meta.unreadCount;
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Erreur de chargement des notifications';
+      const message = err instanceof Error ? err.message : 'Erreur de chargement des notifications';
       error.value = message;
     } finally {
       isLoading.value = false;
@@ -70,10 +69,14 @@ export function useNotifications() {
   /** Marque une notification comme lue (optimistic update). */
   async function markRead(id: string) {
     const index = notifications.value.findIndex((n) => n.id === id);
-    if (index === -1) {return;}
+    if (index === -1) {
+      return;
+    }
 
     const prev = notifications.value[index];
-    if (!prev || prev.readAt !== null) {return;} // déjà lue
+    if (!prev || prev.readAt !== null) {
+      return;
+    } // déjà lue
 
     // Optimistic
     notifications.value[index] = { ...prev, readAt: new Date().toISOString() };
