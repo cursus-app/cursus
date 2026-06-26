@@ -200,6 +200,86 @@
       }
     }
   },
+  "cursus": {
+    "title": "Mes cursus",
+    "new": "Nouveau cursus",
+    "edit": "Modifier le cursus",
+    "create": "Créer un cursus",
+    "noResults": "Aucun cursus trouvé",
+    "draft": "Brouillon",
+    "published": "Publié",
+    "archived": "Archivé",
+    "domain": {
+      "dev-web": "Développement Web",
+      "ingenierie-web": "Ingénierie Web",
+      "ia": "Intelligence Artificielle",
+      "cybersec": "Cybersécurité",
+      "autre": "Autre"
+    },
+    "level": {
+      "BEGINNER": "Débutant",
+      "INTERMEDIATE": "Intermédiaire",
+      "ADVANCED": "Avancé"
+    },
+    "fields": {
+      "title": "Titre du cursus",
+      "titlePlaceholder": "Ex : Développeur Web Fullstack",
+      "domain": "Domaine",
+      "level": "Niveau",
+      "durationWeeks": "Durée (semaines)",
+      "description": "Description",
+      "descriptionPlaceholder": "Décris le cursus en quelques phrases…",
+      "prerequisites": "Prérequis",
+      "prerequisitesPlaceholder": "Connaissances requises avant de commencer…",
+      "slug": "Identifiant URL",
+      "slugPlaceholder": "auto-généré"
+    },
+    "actions": {
+      "publish": "Publier",
+      "archive": "Archiver",
+      "delete": "Supprimer",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "saveDraft": "Enregistrer le brouillon",
+      "createDraft": "Créer le brouillon"
+    },
+    "errors": {
+      "titleRequired": "Le titre est requis",
+      "titleTooLong": "Le titre ne peut pas dépasser 200 caractères",
+      "durationRequired": "La durée est requise",
+      "durationInvalid": "La durée doit être entre 1 et 52 semaines",
+      "slugInvalid": "L'identifiant ne peut contenir que des lettres, chiffres et tirets",
+      "slugTaken": "Cet identifiant est déjà utilisé",
+      "noModulesForPublish": "Ajoutez au moins un module avant de publier",
+      "deleteBlockedByCohortes": "Ce cursus est utilisé par {count} cohorte(s) active(s). Archivez-le à la place.",
+      "notFound": "Cursus introuvable",
+      "forbidden": "Vous n'avez pas accès à ce cursus",
+      "cannotEditArchived": "Un cursus archivé ne peut pas être modifié",
+      "mustBeDraftToPublish": "Seul un brouillon peut être publié",
+      "mustBePublishedToArchive": "Seul un cursus publié peut être archivé"
+    },
+    "confirmDelete": {
+      "title": "Supprimer ce cursus ?",
+      "description": "Cette action est irréversible. Toutes les données liées seront supprimées.",
+      "confirm": "Supprimer définitivement",
+      "cancel": "Annuler"
+    },
+    "publishSuccess": "Cursus publié avec succès",
+    "archiveSuccess": "Cursus archivé",
+    "deleteSuccess": "Cursus supprimé",
+    "createSuccess": "Brouillon créé",
+    "saveSuccess": "Modifications enregistrées",
+    "modules": {
+      "count": "{n} module | {n} modules"
+    },
+    "versionsPublished": "Versions publiées",
+    "filter": {
+      "all": "Tous",
+      "byStatus": "Statut",
+      "byDomain": "Domaine",
+      "byLevel": "Niveau"
+    }
+  },
   "legal": {
     "cookieBanner": {
       "message": "Cursus utilise uniquement des cookies essentiels au fonctionnement du site (session, préférences). Pas de tracking publicitaire.",
