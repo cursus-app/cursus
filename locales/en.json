@@ -211,6 +211,86 @@
       }
     }
   },
+  "cursus": {
+    "title": "My courses",
+    "new": "New course",
+    "edit": "Edit course",
+    "create": "Create a course",
+    "noResults": "No courses found",
+    "draft": "Draft",
+    "published": "Published",
+    "archived": "Archived",
+    "domain": {
+      "dev-web": "Web Development",
+      "ingenierie-web": "Web Engineering",
+      "ia": "Artificial Intelligence",
+      "cybersec": "Cybersecurity",
+      "autre": "Other"
+    },
+    "level": {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
+    "fields": {
+      "title": "Course title",
+      "titlePlaceholder": "E.g.: Full-Stack Web Developer",
+      "domain": "Domain",
+      "level": "Level",
+      "durationWeeks": "Duration (weeks)",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the course in a few sentences…",
+      "prerequisites": "Prerequisites",
+      "prerequisitesPlaceholder": "Knowledge required before starting…",
+      "slug": "URL identifier",
+      "slugPlaceholder": "auto-generated"
+    },
+    "actions": {
+      "publish": "Publish",
+      "archive": "Archive",
+      "delete": "Delete",
+      "edit": "Edit",
+      "save": "Save",
+      "saveDraft": "Save draft",
+      "createDraft": "Create draft"
+    },
+    "errors": {
+      "titleRequired": "Title is required",
+      "titleTooLong": "Title cannot exceed 200 characters",
+      "durationRequired": "Duration is required",
+      "durationInvalid": "Duration must be between 1 and 52 weeks",
+      "slugInvalid": "Identifier can only contain letters, digits and hyphens",
+      "slugTaken": "This identifier is already taken",
+      "noModulesForPublish": "Add at least one module before publishing",
+      "deleteBlockedByCohortes": "This course is used by {count} active cohort(s). Archive it instead.",
+      "notFound": "Course not found",
+      "forbidden": "You don't have access to this course",
+      "cannotEditArchived": "An archived course cannot be edited",
+      "mustBeDraftToPublish": "Only a draft can be published",
+      "mustBePublishedToArchive": "Only a published course can be archived"
+    },
+    "confirmDelete": {
+      "title": "Delete this course?",
+      "description": "This action is irreversible. All related data will be deleted.",
+      "confirm": "Delete permanently",
+      "cancel": "Cancel"
+    },
+    "publishSuccess": "Course published successfully",
+    "archiveSuccess": "Course archived",
+    "deleteSuccess": "Course deleted",
+    "createSuccess": "Draft created",
+    "saveSuccess": "Changes saved",
+    "modules": {
+      "count": "{n} module | {n} modules"
+    },
+    "versionsPublished": "Published versions",
+    "filter": {
+      "all": "All",
+      "byStatus": "Status",
+      "byDomain": "Domain",
+      "byLevel": "Level"
+    }
+  },
   "legal": {
     "cookieBanner": {
       "message": "Cursus only uses cookies essential to the site's operation (session, preferences). No advertising tracking.",
