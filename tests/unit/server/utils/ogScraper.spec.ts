@@ -1,7 +1,7 @@
 // @vitest-environment node
 //
 // Tests unitaires pour server/utils/ogScraper.ts (ST-03.3).
-// Couvre : protection SSRF, parsing OG, timeout, sanitization.
+// Couvre : protection SSRF, DNS rebinding, parsing OG, timeout, sanitization.
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
@@ -13,6 +13,21 @@ import {
 
 vi.mock('~~/server/utils/logger', () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
+}));
+
+// Mock node:dns so tests don't make real DNS lookups.
+// Default: any hostname resolves to a public IP (1.2.3.4, family 4).
+// Individual tests may override via mockDnsLookup.mockResolvedValueOnce().
+//
+// vi.hoisted() is required here so the function reference is available at
+// module evaluation time — vi.mock() factories are hoisted before import
+// statements, so a plain `const mockDnsLookup = vi.fn()` would not yet be
+// initialised when the factory runs.
+const mockDnsLookup = vi.hoisted(() => vi.fn());
+vi.mock('node:dns', () => ({
+  promises: {
+    lookup: mockDnsLookup,
+  },
 }));
 
 // ─── isBlockedHost ────────────────────────────────────────────────────────────
@@ -226,9 +241,11 @@ describe('parseOgFromHtml — OG metadata parser', () => {
 
 // ─── scrapeOgMetadata ─────────────────────────────────────────────────────────
 
-describe('scrapeOgMetadata — full scrape with SSRF + timeout', () => {
+describe('scrapeOgMetadata — full scrape with SSRF + timeout + DNS rebinding', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Default: hostname resolves to a safe public IP so existing tests are unaffected.
+    mockDnsLookup.mockResolvedValue({ address: '1.2.3.4', family: 4 });
   });
 
   afterEach(() => {
@@ -251,6 +268,37 @@ describe('scrapeOgMetadata — full scrape with SSRF + timeout', () => {
 
   it('throws for protocol other than http/https', async () => {
     await expect(scrapeOgMetadata('ftp://example.com')).rejects.toThrow(/autorisés/);
+  });
+
+  it('blocks DNS rebinding: public hostname resolving to AWS metadata IP 169.254.169.254', async () => {
+    // Simulate DNS rebinding attack: evil.attacker.com initially returns a public IP
+    // (passes the string-level SSRF check), but by the time we resolve it, DNS has
+    // been flipped to the AWS metadata endpoint.
+    mockDnsLookup.mockResolvedValueOnce({ address: '169.254.169.254', family: 4 });
+
+    await expect(scrapeOgMetadata('https://evil.attacker.com/path')).rejects.toThrow(/SSRF|privée/);
+  });
+
+  it('blocks DNS rebinding: public hostname resolving to RFC-1918 10.x address', async () => {
+    mockDnsLookup.mockResolvedValueOnce({ address: '10.0.0.1', family: 4 });
+
+    await expect(scrapeOgMetadata('https://evil.attacker.com/internal')).rejects.toThrow(
+      /SSRF|privée/,
+    );
+  });
+
+  it('blocks DNS rebinding: public hostname resolving to loopback 127.0.0.1', async () => {
+    mockDnsLookup.mockResolvedValueOnce({ address: '127.0.0.1', family: 4 });
+
+    await expect(scrapeOgMetadata('https://legit-looking.com')).rejects.toThrow(/SSRF|privée/);
+  });
+
+  it('throws when DNS resolution itself fails (fail-closed)', async () => {
+    mockDnsLookup.mockRejectedValueOnce(new Error('ENOTFOUND nonexistent.invalid'));
+
+    await expect(scrapeOgMetadata('https://nonexistent.invalid')).rejects.toThrow(
+      /résoudre|domaine/i,
+    );
   });
 
   it('returns OG metadata for a successful public URL fetch', async () => {
