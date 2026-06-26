@@ -1,10 +1,10 @@
 <script setup lang="ts">
 /**
  * Page /cohortes/:id — vue détaillée d'une cohorte.
- * Actions disponibles selon le statut + onglet membres + invitations.
- * Cf. ST-04.1 — TT-04.1.3, ST-04.2 — invitation stagiaires.
+ * Actions disponibles selon le statut + onglet membres + invitations + section Équipe co-formateurs.
+ * Cf. ST-04.1 — TT-04.1.3, ST-04.2 — invitation stagiaires, ST-04.3 — TT-04.3.2
  */
-import type { CohorteFull } from '~/composables/useCohorte';
+import type { CohorteFull, CohorteMember } from '~/composables/useCohorte';
 import type { InvitationItem } from '~/composables/useInvitation';
 
 definePageMeta({
@@ -18,6 +18,12 @@ const route = useRoute();
 const { getCohorte, startCohorte, completeCohorte, archiveCohorte, deleteCohorte, loading } =
   useCohorte();
 const { listInvitations, resendInvitation, loading: invLoading } = useInvitation();
+const {
+  addCoFormateur,
+  removeCoFormateur,
+  updateCoFormateurModules,
+  loading: teamLoading,
+} = useCoFormateurCohorte();
 const { canManageCohorte } = usePermission();
 
 const cohorteId = computed(() => {
@@ -213,6 +219,152 @@ async function handleDelete() {
     isDeleting.value = false;
   }
 }
+
+// ─── Section Équipe — co-formateurs ──────────────────────────────────────────
+
+const coFormateurs = computed<CohorteMember[]>(() =>
+  (cohorte.value?.memberships ?? []).filter((m) => m.role === 'CO_FORMATEUR'),
+);
+
+// Ajouter un co-formateur
+const showAddModal = ref(false);
+const addEmail = ref('');
+const addEmailError = ref<string | null>(null);
+
+async function handleAddCoFormateur() {
+  addEmailError.value = null;
+  const email = addEmail.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    addEmailError.value = t('cohortes.team.emailInvalid');
+    return;
+  }
+  try {
+    const membership = await addCoFormateur(cohorteId.value, { email, moduleIds: null });
+    // Recharger la cohorte pour avoir la liste à jour
+    cohorte.value = await getCohorte(cohorteId.value);
+    toast.add({
+      title: t('cohortes.team.addSuccess', {
+        name: membership.user.fullName ?? membership.user.githubHandle ?? email,
+      }),
+      color: 'success',
+      icon: 'i-tabler-user-check',
+    });
+    showAddModal.value = false;
+    addEmail.value = '';
+  } catch (err: unknown) {
+    const fetchErr = err as { data?: { message?: string } };
+    const msgKey = fetchErr.data?.message ?? 'errors.generic';
+    addEmailError.value = t(msgKey as Parameters<typeof t>[0]);
+  }
+}
+
+// Retirer un co-formateur
+const removingUserId = ref<string | null>(null);
+
+async function handleRemoveCoFormateur(userId: string, displayName: string) {
+  removingUserId.value = userId;
+  try {
+    await removeCoFormateur(cohorteId.value, userId);
+    cohorte.value = await getCohorte(cohorteId.value);
+    toast.add({
+      title: t('cohortes.team.removeSuccess', { name: displayName }),
+      color: 'success',
+      icon: 'i-tabler-user-minus',
+    });
+  } catch (err: unknown) {
+    const fetchErr = err as { data?: { message?: string } };
+    toast.add({
+      title: t((fetchErr.data?.message ?? 'errors.generic') as Parameters<typeof t>[0]),
+      color: 'error',
+      icon: 'i-tabler-circle-x',
+    });
+  } finally {
+    removingUserId.value = null;
+  }
+}
+
+// Modifier les modules assignés à un co-formateur
+const editingMember = ref<CohorteMember | null>(null);
+const editModuleIds = ref<string[]>([]);
+const showEditModulesModal = ref(false);
+
+interface ModuleOption {
+  id: string;
+  title: string;
+  week: number;
+}
+const availableModules = ref<ModuleOption[]>([]);
+const isLoadingModules = ref(false);
+
+async function openEditModulesModal(member: CohorteMember) {
+  editingMember.value = member;
+  editModuleIds.value = member.moduleIds ? [...member.moduleIds] : [];
+  showEditModulesModal.value = true;
+
+  // Charger les modules du cursus si pas déjà fait
+  if (availableModules.value.length === 0 && cohorte.value) {
+    isLoadingModules.value = true;
+    try {
+      const cursusId = cohorte.value.cursusVersion.cursus.id;
+      const modules = await $fetch<ModuleOption[]>(`/api/cursus/${cursusId}/modules`);
+      availableModules.value = modules;
+    } catch {
+      // Non bloquant : l'utilisateur peut entrer les IDs manuellement
+    } finally {
+      isLoadingModules.value = false;
+    }
+  }
+}
+
+function toggleModule(moduleId: string) {
+  const idx = editModuleIds.value.indexOf(moduleId);
+  if (idx === -1) {
+    editModuleIds.value = [...editModuleIds.value, moduleId];
+  } else {
+    editModuleIds.value = editModuleIds.value.filter((id) => id !== moduleId);
+  }
+}
+
+function setGlobalAccess() {
+  editModuleIds.value = [];
+}
+
+async function handleSaveModules() {
+  if (!editingMember.value) {
+    return;
+  }
+  const userId = editingMember.value.user.id;
+  const moduleIds = editModuleIds.value.length > 0 ? editModuleIds.value : null;
+  try {
+    await updateCoFormateurModules(cohorteId.value, userId, { moduleIds });
+    cohorte.value = await getCohorte(cohorteId.value);
+    toast.add({
+      title: t('cohortes.team.modulesUpdated'),
+      color: 'success',
+      icon: 'i-tabler-check',
+    });
+    showEditModulesModal.value = false;
+    editingMember.value = null;
+  } catch (err: unknown) {
+    const fetchErr = err as { data?: { message?: string } };
+    toast.add({
+      title: t((fetchErr.data?.message ?? 'errors.generic') as Parameters<typeof t>[0]),
+      color: 'error',
+      icon: 'i-tabler-circle-x',
+    });
+  }
+}
+
+function coFormateurScopeLabel(member: CohorteMember): string {
+  if (!member.moduleIds || member.moduleIds.length === 0) {
+    return t('cohortes.team.globalAccess');
+  }
+  return t('cohortes.team.modulesCount', { count: member.moduleIds.length });
+}
+
+function memberDisplayName(member: CohorteMember): string {
+  return member.user.fullName ?? member.user.githubHandle ?? t('cohortes.unknownMember');
+}
 </script>
 
 <template>
@@ -373,6 +525,91 @@ async function handleDelete() {
         </div>
       </UCard>
 
+      <!-- Section Équipe (co-formateurs) -->
+      <UCard class="mb-6 border border-border-subtle bg-surface">
+        <template #header>
+          <div class="flex items-center justify-between gap-4">
+            <h2 class="text-base font-semibold text-text-strong">
+              {{ t('cohortes.team.title') }}
+              <span class="ml-1 text-sm font-normal text-text-muted">
+                ({{ coFormateurs.length }})
+              </span>
+            </h2>
+            <UButton
+              v-if="canManage"
+              icon="i-tabler-user-plus"
+              color="primary"
+              variant="outline"
+              size="sm"
+              @click="showAddModal = true"
+            >
+              {{ t('cohortes.team.add') }}
+            </UButton>
+          </div>
+        </template>
+
+        <div v-if="coFormateurs.length === 0" class="py-8 text-center text-text-muted">
+          {{ t('cohortes.team.empty') }}
+        </div>
+
+        <ul v-else class="divide-y divide-border-subtle">
+          <li v-for="member in coFormateurs" :key="member.id" class="flex items-center gap-3 py-3">
+            <!-- Avatar -->
+            <div
+              class="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted"
+              aria-hidden="true"
+            >
+              <img
+                v-if="member.user.avatarUrl"
+                :src="member.user.avatarUrl"
+                :alt="memberDisplayName(member)"
+                class="size-9 rounded-full object-cover"
+              />
+              <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
+            </div>
+
+            <!-- Nom + scope -->
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-medium text-text-strong">
+                {{ memberDisplayName(member) }}
+              </p>
+              <p class="flex items-center gap-1 text-xs text-text-muted">
+                <UIcon
+                  :name="
+                    member.moduleIds && member.moduleIds.length > 0
+                      ? 'i-tabler-layout-grid'
+                      : 'i-tabler-globe'
+                  "
+                  class="size-3.5 shrink-0"
+                />
+                {{ coFormateurScopeLabel(member) }}
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div v-if="canManage" class="flex shrink-0 items-center gap-2">
+              <UButton
+                icon="i-tabler-pencil"
+                color="neutral"
+                variant="ghost"
+                size="xs"
+                :aria-label="t('cohortes.team.editModules')"
+                @click="openEditModulesModal(member)"
+              />
+              <UButton
+                icon="i-tabler-user-minus"
+                color="error"
+                variant="ghost"
+                size="xs"
+                :loading="removingUserId === member.user.id && teamLoading"
+                :aria-label="t('cohortes.team.remove')"
+                @click="handleRemoveCoFormateur(member.user.id, memberDisplayName(member))"
+              />
+            </div>
+          </li>
+        </ul>
+      </UCard>
+
       <!-- Membres -->
       <UCard class="border border-border-subtle bg-surface">
         <template #header>
@@ -473,7 +710,7 @@ async function handleDelete() {
       @invited="loadInvitations"
     />
 
-    <!-- Modal suppression -->
+    <!-- Modal suppression cohorte -->
     <UModal v-model:open="showDeleteModal">
       <template #content>
         <div class="p-6">
@@ -494,6 +731,140 @@ async function handleDelete() {
             </UButton>
             <UButton color="error" :loading="isDeleting" @click="handleDelete">
               {{ t('cohortes.confirmDelete.confirm') }}
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Modal ajout co-formateur -->
+    <UModal v-model:open="showAddModal">
+      <template #content>
+        <div class="p-6">
+          <h3 class="mb-1 text-lg font-semibold text-text-strong">
+            {{ t('cohortes.team.addTitle') }}
+          </h3>
+          <p class="mb-4 text-sm text-text-muted">
+            {{ t('cohortes.team.addDescription') }}
+          </p>
+
+          <div class="mb-4">
+            <label for="coformateur-email" class="mb-1 block text-sm font-medium text-text-strong">
+              {{ t('cohortes.team.emailLabel') }}
+            </label>
+            <UInput
+              id="coformateur-email"
+              v-model="addEmail"
+              type="email"
+              :placeholder="t('cohortes.team.emailPlaceholder')"
+              autocomplete="email"
+              :status="addEmailError ? 'error' : undefined"
+              @keydown.enter="handleAddCoFormateur"
+            />
+            <p v-if="addEmailError" class="mt-1 text-xs text-danger-fg" role="alert">
+              {{ addEmailError }}
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              :disabled="teamLoading"
+              @click="showAddModal = false"
+            >
+              {{ t('common.cancel') }}
+            </UButton>
+            <UButton
+              icon="i-tabler-user-plus"
+              color="primary"
+              :loading="teamLoading"
+              @click="handleAddCoFormateur"
+            >
+              {{ t('cohortes.team.add') }}
+            </UButton>
+          </div>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Modal édition modules co-formateur -->
+    <UModal v-model:open="showEditModulesModal">
+      <template #content>
+        <div class="p-6">
+          <h3 class="mb-1 text-lg font-semibold text-text-strong">
+            {{ t('cohortes.team.editModulesTitle') }}
+          </h3>
+          <p v-if="editingMember" class="mb-4 text-sm text-text-muted">
+            {{ t('cohortes.team.editModulesFor', { name: memberDisplayName(editingMember) }) }}
+          </p>
+
+          <!-- Accès global -->
+          <div class="mb-4 flex items-center gap-2">
+            <input
+              id="scope-global"
+              type="radio"
+              :checked="editModuleIds.length === 0"
+              class="accent-accent"
+              @change="setGlobalAccess"
+            />
+            <label for="scope-global" class="cursor-pointer text-sm text-text-default">
+              {{ t('cohortes.team.globalAccessLabel') }}
+            </label>
+          </div>
+
+          <!-- Sélection par modules -->
+          <div class="mb-4">
+            <p class="mb-2 text-sm font-medium text-text-default">
+              {{ t('cohortes.team.limitedAccessLabel') }}
+            </p>
+            <div v-if="isLoadingModules" class="py-4 text-center text-sm text-text-muted">
+              {{ t('common.loading') }}
+            </div>
+            <ul v-else-if="availableModules.length > 0" class="max-h-56 space-y-1 overflow-y-auto">
+              <li
+                v-for="mod in availableModules"
+                :key="mod.id"
+                class="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-muted"
+              >
+                <input
+                  :id="`module-${mod.id}`"
+                  type="checkbox"
+                  :value="mod.id"
+                  :checked="editModuleIds.includes(mod.id)"
+                  class="accent-accent"
+                  @change="toggleModule(mod.id)"
+                />
+                <label
+                  :for="`module-${mod.id}`"
+                  class="flex-1 cursor-pointer text-sm text-text-default"
+                >
+                  <span class="text-text-muted">S{{ mod.week }}</span>
+                  {{ mod.title }}
+                </label>
+              </li>
+            </ul>
+            <p v-else class="text-sm text-text-muted">
+              {{ t('cohortes.team.noModulesAvailable') }}
+            </p>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              :disabled="teamLoading"
+              @click="showEditModulesModal = false"
+            >
+              {{ t('common.cancel') }}
+            </UButton>
+            <UButton
+              icon="i-tabler-check"
+              color="primary"
+              :loading="teamLoading"
+              @click="handleSaveModules"
+            >
+              {{ t('common.save') }}
             </UButton>
           </div>
         </div>

@@ -214,6 +214,10 @@ model Membership {
   userId     String           @map("user_id") @db.Uuid
   cohorteId  String           @map("cohorte_id") @db.Uuid
   role       MembershipRole
+  // Pour les CO_FORMATEUR : liste des module IDs (UUID string[]) assignés.
+  // null → accès global à toute la cohorte.
+  // [...moduleId] → accès limité aux modules listés.
+  moduleIds  Json?            @map("module_ids")
   joinedAt   DateTime         @default(now()) @map("joined_at")
   leftAt     DateTime?        @map("left_at")
 
