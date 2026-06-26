@@ -18,14 +18,12 @@ vi.mock('#supabase/server', () => ({
   serverSupabaseUser: mockServerSupabaseUser,
 }));
 
-const mockCreateError = vi.fn(
-  (opts: { statusCode: number; message: string }) => {
-    const err = new Error(opts.message);
-    // @ts-expect-error — propriétés H3Error simulées pour tests
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+const mockCreateError = vi.fn((opts: { statusCode: number; message: string }) => {
+  const err = new Error(opts.message);
+  // @ts-expect-error — propriétés H3Error simulées pour tests
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 

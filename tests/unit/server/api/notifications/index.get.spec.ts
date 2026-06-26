@@ -22,14 +22,12 @@ vi.mock('#supabase/server', () => ({
   serverSupabaseUser: mockServerSupabaseUser,
 }));
 
-const mockCreateError = vi.fn(
-  (opts: { statusCode: number; message: string }) => {
-    const err = new Error(opts.message);
-    // @ts-expect-error — propriétés H3Error simulées pour tests
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+const mockCreateError = vi.fn((opts: { statusCode: number; message: string }) => {
+  const err = new Error(opts.message);
+  // @ts-expect-error — propriétés H3Error simulées pour tests
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 vi.stubGlobal('getQuery', vi.fn().mockReturnValue({}));
@@ -84,7 +82,7 @@ describe('GET /api/notifications', () => {
     mockServerSupabaseUser.mockResolvedValue({ id: USER_A });
     mockPrismaNotification.findMany.mockResolvedValue([notifA1, notifA2]);
     mockPrismaNotification.count
-      .mockResolvedValueOnce(2)  // total
+      .mockResolvedValueOnce(2) // total
       .mockResolvedValueOnce(1); // unreadCount
 
     const { default: handler } = await importHandler();

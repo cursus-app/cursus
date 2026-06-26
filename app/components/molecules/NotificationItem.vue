@@ -39,10 +39,15 @@ const icon = computed(() => iconByType[props.type] ?? 'i-tabler-bell');
 
 /** Couleur de l'icône selon l'importance du type. */
 const iconColorClass = computed<string>(() => {
-  if (props.type === 'ALERT_RAISED') {return 'text-warning-fg';}
-  if (props.type === 'SUBMISSION_FAILED') {return 'text-danger-fg';}
-  if (props.type === 'SUBMISSION_VALIDATED' || props.type === 'BADGE_AWARDED')
-    {return 'text-success-fg';}
+  if (props.type === 'ALERT_RAISED') {
+    return 'text-warning-fg';
+  }
+  if (props.type === 'SUBMISSION_FAILED') {
+    return 'text-danger-fg';
+  }
+  if (props.type === 'SUBMISSION_VALIDATED' || props.type === 'BADGE_AWARDED') {
+    return 'text-success-fg';
+  }
   return 'text-text-muted';
 });
 
@@ -52,11 +57,17 @@ const isUnread = computed(() => props.readAt === null);
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) {return 'à l\'instant';}
+  if (seconds < 60) {
+    return "à l'instant";
+  }
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {return `il y a ${minutes} min`;}
+  if (minutes < 60) {
+    return `il y a ${minutes} min`;
+  }
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) {return `il y a ${hours} h`;}
+  if (hours < 24) {
+    return `il y a ${hours} h`;
+  }
   const days = Math.floor(hours / 24);
   return `il y a ${days} j`;
 }
@@ -67,7 +78,7 @@ const timeAgo = computed(() => relativeTime(props.createdAt));
 <template>
   <li
     :class="[
-      'flex items-start gap-3 px-4 py-3 transition-colors cursor-pointer',
+      'flex cursor-pointer items-start gap-3 px-4 py-3 transition-colors',
       'hover:bg-muted',
       isUnread ? 'bg-accent/5' : 'bg-surface',
     ]"
@@ -75,10 +86,7 @@ const timeAgo = computed(() => relativeTime(props.createdAt));
     @click="emit('click', props.id)"
   >
     <!-- Icône -->
-    <span
-      :class="['mt-0.5 shrink-0 text-xl', iconColorClass]"
-      :aria-label="props.type"
-    >
+    <span :class="['mt-0.5 shrink-0 text-xl', iconColorClass]" :aria-label="props.type">
       <UIcon :name="icon" />
     </span>
 
@@ -86,13 +94,13 @@ const timeAgo = computed(() => relativeTime(props.createdAt));
     <div class="min-w-0 flex-1">
       <p
         :class="[
-          'text-sm truncate',
+          'truncate text-sm',
           isUnread ? 'font-semibold text-text-strong' : 'font-normal text-text-default',
         ]"
       >
         {{ props.title }}
       </p>
-      <p v-if="props.body" class="mt-0.5 text-xs text-text-muted line-clamp-2">
+      <p v-if="props.body" class="mt-0.5 line-clamp-2 text-xs text-text-muted">
         {{ props.body }}
       </p>
       <p class="mt-1 text-xs text-text-subtle">{{ timeAgo }}</p>
