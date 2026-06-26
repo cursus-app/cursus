@@ -40,15 +40,12 @@ vi.mock('~~/server/utils/inMemoryRateLimit', () => ({
 }));
 
 // Nitro/H3 globals
-vi.stubGlobal(
-  'createError',
-  (opts: { statusCode: number; message: string }) => {
-    const err = new Error(opts.message);
-    // @ts-expect-error — H3Error statusCode non présent sur Error natif
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+vi.stubGlobal('createError', (opts: { statusCode: number; message: string }) => {
+  const err = new Error(opts.message);
+  // @ts-expect-error — H3Error statusCode non présent sur Error natif
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 
 const mockGetRouterParam = vi.fn();

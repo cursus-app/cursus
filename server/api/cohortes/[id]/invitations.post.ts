@@ -61,10 +61,7 @@ export default defineEventHandler(async (event) => {
       select: { id: true },
     });
     if (!membership) {
-      logger.warn(
-        { userIdHash: hashId(dbUser.id), cohorteId },
-        'invitation.batch.forbidden',
-      );
+      logger.warn({ userIdHash: hashId(dbUser.id), cohorteId }, 'invitation.batch.forbidden');
       throw createError({ statusCode: 403, message: 'invitations.errors.forbidden' });
     }
   }
@@ -100,9 +97,7 @@ export default defineEventHandler(async (event) => {
     select: { userId: true },
   });
 
-  const existingMemberIds = new Set(
-    existingMemberships.map((m: { userId: string }) => m.userId),
-  );
+  const existingMemberIds = new Set(existingMemberships.map((m: { userId: string }) => m.userId));
 
   // Invitations actives (non acceptées, non révoquées, non expirées)
   const existingInvitations = await prisma.invitation.findMany({
@@ -131,20 +126,14 @@ export default defineEventHandler(async (event) => {
     const userId = existingUsersByEmail.get(email);
     if (userId !== undefined && existingMemberIds.has(userId)) {
       deduplicated.push(email);
-      logger.info(
-        { emailHash: hashEmail(email), cohorteId },
-        'invitation.batch.deduplicated',
-      );
+      logger.info({ emailHash: hashEmail(email), cohorteId }, 'invitation.batch.deduplicated');
       continue;
     }
 
     // Déjà invitation active pour cette cohorte ?
     if (alreadyInvitedEmails.has(email)) {
       deduplicated.push(email);
-      logger.info(
-        { emailHash: hashEmail(email), cohorteId },
-        'invitation.batch.deduplicated',
-      );
+      logger.info({ emailHash: hashEmail(email), cohorteId }, 'invitation.batch.deduplicated');
       continue;
     }
 

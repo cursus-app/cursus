@@ -42,15 +42,12 @@ vi.mock('~~/server/utils/inMemoryRateLimit', () => ({
 }));
 
 // Nitro/H3 globals
-vi.stubGlobal(
-  'createError',
-  (opts: { statusCode: number; message: string; data?: unknown }) => {
-    const err = new Error(opts.message);
-    // @ts-expect-error — H3Error statusCode non présent sur Error natif
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+vi.stubGlobal('createError', (opts: { statusCode: number; message: string; data?: unknown }) => {
+  const err = new Error(opts.message);
+  // @ts-expect-error — H3Error statusCode non présent sur Error natif
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 
 const mockGetRouterParam = vi.fn();
@@ -86,7 +83,9 @@ function setupHappy(emails: string[] = ['karim@ex.com', 'sarah@ex.com']) {
   mockMembershipFindMany.mockResolvedValue([]);
   mockInvitationFindMany.mockResolvedValue([]);
   mockInvitationCreate.mockResolvedValue({ id: 'inv-uuid' });
-  mockCheckRateLimitBulk.mockImplementation(() => {/* no throw */});
+  mockCheckRateLimitBulk.mockImplementation(() => {
+    /* no throw */
+  });
 }
 
 const importHandler = () => import('~~/server/api/cohortes/[id]/invitations.post');
@@ -117,7 +116,9 @@ describe('POST /api/cohortes/:id/invitations — auth', () => {
     mockGetRouterParam.mockReturnValue(COHORTE_ID);
     mockServerSupabaseUser.mockResolvedValue({ id: 'stagiaire-uuid' });
     mockReadValidatedBody.mockResolvedValue({ emails: ['test@ex.com'] });
-    mockCheckRateLimitBulk.mockImplementation(() => {/* no throw */});
+    mockCheckRateLimitBulk.mockImplementation(() => {
+      /* no throw */
+    });
     mockUserFindUnique.mockResolvedValue({ id: 'stagiaire-uuid', globalRole: 'STAGIAIRE' });
     mockMembershipFindFirst.mockResolvedValue(null);
 

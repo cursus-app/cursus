@@ -16,10 +16,7 @@ export function useInvitation() {
    * Invite une liste d'emails dans une cohorte.
    * Accepte entre 1 et 50 emails par appel.
    */
-  async function inviteEmails(
-    cohorteId: string,
-    emails: string[],
-  ): Promise<InvitationBatchResult> {
+  async function inviteEmails(cohorteId: string, emails: string[]): Promise<InvitationBatchResult> {
     loading.value = true;
     error.value = null;
     try {

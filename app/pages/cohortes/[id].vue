@@ -55,7 +55,9 @@ async function loadCohorte() {
 }
 
 async function loadInvitations() {
-  if (!canManage.value) { return; }
+  if (!canManage.value) {
+    return;
+  }
   try {
     invitations.value = await listInvitations(cohorteId.value);
   } catch {
@@ -146,7 +148,9 @@ const canManage = computed(() => canManageCohorte(cohorteId.value));
 
 // Charger les invitations dès que les droits sont connus
 watch(canManage, (val) => {
-  if (val && cohorteId.value) { void loadInvitations(); }
+  if (val && cohorteId.value) {
+    void loadInvitations();
+  }
 });
 
 async function handleStart() {
@@ -431,11 +435,7 @@ async function handleDelete() {
         </template>
 
         <ul class="divide-y divide-border-subtle">
-          <li
-            v-for="inv in invitations"
-            :key="inv.id"
-            class="flex items-center gap-3 py-3"
-          >
+          <li v-for="inv in invitations" :key="inv.id" class="flex items-center gap-3 py-3">
             <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted">
               <UIcon name="i-tabler-mail" class="size-5 text-text-subtle" />
             </div>

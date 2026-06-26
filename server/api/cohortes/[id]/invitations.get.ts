@@ -52,10 +52,7 @@ export default defineEventHandler(async (event) => {
       select: { id: true },
     });
     if (!membership) {
-      logger.warn(
-        { userIdHash: hashId(dbUser.id), cohorteId },
-        'invitation.list.forbidden',
-      );
+      logger.warn({ userIdHash: hashId(dbUser.id), cohorteId }, 'invitation.list.forbidden');
       throw createError({ statusCode: 403, message: 'invitations.errors.forbidden' });
     }
   }

@@ -120,7 +120,9 @@ function processCsvFile(file: File): void {
 function onFileInput(event: Event): void {
   const input = event.target as HTMLInputElement;
   const file = input.files?.[0];
-  if (file) { processCsvFile(file); }
+  if (file) {
+    processCsvFile(file);
+  }
 }
 
 function onDragOver(event: DragEvent): void {
@@ -360,11 +362,7 @@ watch(
               :class="csvFileName ? 'text-success-fg' : 'text-text-subtle'"
             />
             <p class="text-sm font-medium text-text-default">
-              {{
-                csvFileName
-                  ? csvFileName
-                  : t('invitations.csv.dropzone')
-              }}
+              {{ csvFileName ? csvFileName : t('invitations.csv.dropzone') }}
             </p>
             <p class="mt-1 text-xs text-text-muted">
               {{ t('invitations.csv.format') }}
@@ -413,11 +411,7 @@ watch(
         </div>
 
         <!-- Résumé aria-live -->
-        <div
-          aria-live="polite"
-          aria-atomic="true"
-          class="mt-3"
-        >
+        <div aria-live="polite" aria-atomic="true" class="mt-3">
           <div
             v-if="summary"
             class="rounded-md border border-border-subtle bg-success-bg px-3 py-2 text-sm text-success-fg"

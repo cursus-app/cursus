@@ -57,7 +57,7 @@ describe('inviteBatchSchema', () => {
     expect(result.success).toBe(false);
   });
 
-  it("accepte les emails avec des caractères accentués dans le nom de domaine (IDN)", () => {
+  it('accepte les emails avec des caractères accentués dans le nom de domaine (IDN)', () => {
     // Adresses avec caractères accentués dans la partie locale — RFC 6530
     const result = inviteBatchSchema.safeParse({ emails: ['étudiant@example.com'] });
     // Note : Zod accepte ces emails car ils matchent son regex interne
