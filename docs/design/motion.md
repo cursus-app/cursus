@@ -36,15 +36,15 @@ const reducedMotion = useReducedMotion(); // ComputedRef<boolean>
 
 ## motionPresets
 
-| Preset | Duree | Description |
-|---|---|---|
-| `fadeIn` | 200ms | Opacite 0 → 1 |
-| `slideDown` | 200ms | -8px + fade (Cmd+K palette) |
-| `popover` | 150ms | Scale 0.95 → 1 + fade |
-| `modalMobile` | 300ms | Slide depuis le bas |
-| `modalDesktop` | 250ms | Scale 0.95 → 1 + fade |
-| `bounce` | 300ms | Keyframes scale — badge XP validation |
-| `staggerItem(i)` | 200ms + delai | Listes — 20ms/item, plafond 200ms |
+| Preset           | Duree         | Description                           |
+| ---------------- | ------------- | ------------------------------------- |
+| `fadeIn`         | 200ms         | Opacite 0 → 1                         |
+| `slideDown`      | 200ms         | -8px + fade (Cmd+K palette)           |
+| `popover`        | 150ms         | Scale 0.95 → 1 + fade                 |
+| `modalMobile`    | 300ms         | Slide depuis le bas                   |
+| `modalDesktop`   | 250ms         | Scale 0.95 → 1 + fade                 |
+| `bounce`         | 300ms         | Keyframes scale — badge XP validation |
+| `staggerItem(i)` | 200ms + delai | Listes — 20ms/item, plafond 200ms     |
 
 > **Presets > 200ms** : `modalMobile`, `modalDesktop`, `bounce`. Verifier `useReducedMotion()`.
 
@@ -55,8 +55,7 @@ const reducedMotion = useReducedMotion(); // ComputedRef<boolean>
 <div v-motion="motionPresets.fadeIn" />
 
 <!-- Stagger sur liste -->
-<div v-for="(item, i) in items" :key="item.id"
-     v-motion="motionPresets.staggerItem(i)" />
+<div v-for="(item, i) in items" :key="item.id" v-motion="motionPresets.staggerItem(i)" />
 
 <!-- Avec garde reduced-motion -->
 <div :v-motion="reducedMotion ? undefined : motionPresets.bounce" />
@@ -67,6 +66,7 @@ const reducedMotion = useReducedMotion(); // ComputedRef<boolean>
 ## Transitions de page
 
 Configurees dans `app/app.vue` via `<NuxtPage :transition>` :
+
 - Nom : `page` → classes CSS `.page-enter-*` / `.page-leave-*` dans `assets/css/main.css`
 - Duree : `--duration-subtle` (150ms)
 - Easing : `--ease-out`
@@ -76,10 +76,10 @@ Configurees dans `app/app.vue` via `<NuxtPage :transition>` :
 
 ## Tokens de duree (main.css)
 
-| Token | Valeur | Usage |
-|---|---|---|
-| `--duration-instant` | 100ms | Interactions immediates |
-| `--duration-subtle` | 150ms | Transitions de page, focus ring |
-| `--duration-fast` | 200ms | Fade, slide, stagger |
-| `--duration-base` | 300ms | Modals, bounce |
-| `--duration-slow` | 500ms | Transitions complexes |
+| Token                | Valeur | Usage                           |
+| -------------------- | ------ | ------------------------------- |
+| `--duration-instant` | 100ms  | Interactions immediates         |
+| `--duration-subtle`  | 150ms  | Transitions de page, focus ring |
+| `--duration-fast`    | 200ms  | Fade, slide, stagger            |
+| `--duration-base`    | 300ms  | Modals, bounce                  |
+| `--duration-slow`    | 500ms  | Transitions complexes           |

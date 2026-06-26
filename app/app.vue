@@ -11,9 +11,7 @@ useHead({
 const reducedMotion = useReducedMotion();
 
 const pageTransition = computed(() =>
-  reducedMotion.value
-    ? false
-    : ({ name: 'page', mode: 'out-in' } as const),
+  reducedMotion.value ? false : ({ name: 'page', mode: 'out-in' } as const),
 );
 </script>
 
