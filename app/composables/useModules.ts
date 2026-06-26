@@ -5,18 +5,14 @@
  * Gère le CRUD des modules et l'auto-save débounce (1 s).
  */
 import type { ComputedRef } from 'vue';
-import type { ModuleInput, UpdateModuleInput } from '~~/shared/schemas/module';
+import type { ModuleInput, UpdateModuleInput, DeliverableSpec } from '~~/shared/schemas/module';
 
 export interface ModuleResource {
   label: string;
   url: string;
 }
 
-export interface DeliverableSpec {
-  description: string;
-  repoRequired: boolean;
-  deployRequired: boolean;
-}
+export type { DeliverableSpec };
 
 export interface ModuleItem {
   id: string;
