@@ -35,6 +35,7 @@
     "prisma:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "prisma db seed",
+    "check:i18n": "node scripts/check-i18n.mjs",
     "prepare": "lefthook install"
   },
   "dependencies": {

@@ -175,6 +175,19 @@
       "en": "English"
     }
   },
+  "index": {
+    "description": "Cursus helps interns and trainers from onboarding to certificate delivery, with automatic deliverable validation via a GitHub Actions harness.",
+    "learnMore": "Learn more",
+    "systemStatus": "System status",
+    "refresh": "Refresh",
+    "version": "Version",
+    "status": {
+      "checking": "Checking…",
+      "error": "Error",
+      "ok": "Operational",
+      "degraded": "Degraded"
+    }
+  },
   "errors": {
     "generic": "Something went wrong.",
     "notFound": "Page not found.",
