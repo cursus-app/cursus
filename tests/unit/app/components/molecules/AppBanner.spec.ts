@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 /**
@@ -77,7 +77,9 @@ describe('AppBanner', () => {
   });
 
   it('hides dismiss button when dismissible=false', async () => {
-    const wrapper = mount(AppBanner, { props: { id: 'test', message: 'Info', dismissible: false } });
+    const wrapper = mount(AppBanner, {
+      props: { id: 'test', message: 'Info', dismissible: false },
+    });
     await wrapper.vm.$nextTick();
     expect(wrapper.find('[data-testid="dismiss-btn"]').exists()).toBe(false);
   });

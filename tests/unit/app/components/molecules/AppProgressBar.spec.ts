@@ -17,12 +17,18 @@ const AppProgressBar = {
   },
   computed: {
     percent() {
-      if (this.indeterminate) return null;
+      if (this.indeterminate) {
+        return null;
+      }
       return Math.round((this.value / this.max) * 100);
     },
     ariaLabel() {
-      if (this.label) return this.label;
-      if (this.percent !== null) return `Progression : ${this.percent} %`;
+      if (this.label) {
+        return this.label;
+      }
+      if (this.percent !== null) {
+        return `Progression : ${this.percent} %`;
+      }
       return 'Chargement…';
     },
   },

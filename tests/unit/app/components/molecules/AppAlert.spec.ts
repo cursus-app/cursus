@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 
-/**
- * Tests unitaires de AppAlert.
- * Stub standalone pour éviter le runtime Nuxt.
- */
-type AlertVariant = 'success' | 'warning' | 'danger' | 'info';
-
 const AppAlert = {
   props: {
     variant: { type: String, default: 'info' },

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 /**
@@ -23,12 +23,15 @@ function createAppToastLogic(MAX_QUEUE = 3) {
   const toasts: ToastItem[] = [];
   let idCounter = 0;
 
-  function add(options: { title: string; description?: string; color?: ToastColor; icon?: string }) {
+  function add(options: {
+    title: string;
+    description?: string;
+    color?: ToastColor;
+    icon?: string;
+  }) {
     // Purger les toasts excédentaires
     if (toasts.length >= MAX_QUEUE) {
-      const toRemove = toasts.splice(0, toasts.length - MAX_QUEUE + 1);
-      // In real code, we'd call toast.remove() for each
-      toRemove.length; // usage
+      toasts.splice(0, toasts.length - MAX_QUEUE + 1);
     }
     toasts.push({ id: String(++idCounter), ...options });
     return toasts[toasts.length - 1]!;

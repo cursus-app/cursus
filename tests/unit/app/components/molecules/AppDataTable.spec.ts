@@ -36,11 +36,15 @@ const AppDataTable = {
     },
     sortedRows() {
       const sort = this.activeSort;
-      if (!sort) return this.rows as Row[];
+      if (!sort) {
+        return this.rows as Row[];
+      }
       const col = (this.columns as { key: string; sortable?: boolean }[]).find(
         (c) => c.key === sort.column && c.sortable,
       );
-      if (!col) return this.rows as Row[];
+      if (!col) {
+        return this.rows as Row[];
+      }
       return [...(this.rows as Row[])].sort((a, b) => {
         const av = String(a[sort.column as keyof Row] ?? '');
         const bv = String(b[sort.column as keyof Row] ?? '');
@@ -58,17 +62,24 @@ const AppDataTable = {
   },
   methods: {
     toggleSort(col: { key: string; sortable?: boolean }) {
-      if (!col.sortable) return;
+      if (!col.sortable) {
+        return;
+      }
       const current = this.activeSort;
-      const next = current?.column === col.key
-        ? { column: col.key, direction: current.direction === 'asc' ? 'desc' : 'asc' }
-        : { column: col.key, direction: 'asc' };
+      const next =
+        current?.column === col.key
+          ? { column: col.key, direction: current.direction === 'asc' ? 'desc' : 'asc' }
+          : { column: col.key, direction: 'asc' };
       this.internalSort = next as { column: string; direction: 'asc' | 'desc' };
       this.$emit('update:sort', next);
     },
     ariaSortValue(col: { key: string; sortable?: boolean }): string | undefined {
-      if (!col.sortable) return undefined;
-      if (this.activeSort?.column !== col.key) return 'none';
+      if (!col.sortable) {
+        return undefined;
+      }
+      if (this.activeSort?.column !== col.key) {
+        return 'none';
+      }
       return this.activeSort.direction === 'asc' ? 'ascending' : 'descending';
     },
   },

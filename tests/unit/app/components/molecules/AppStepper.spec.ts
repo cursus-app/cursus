@@ -1,4 +1,4 @@
-import { describe, expect, it, ref } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 /**
@@ -38,7 +38,9 @@ const AppStepper = {
     },
   },
   computed: {
-    isFirst() { return this.internalStep === 0; },
+    isFirst() {
+      return this.internalStep === 0;
+    },
     isLast() {
       const steps = this.steps as { id: string; label: string }[];
       return this.internalStep === steps.length - 1;
