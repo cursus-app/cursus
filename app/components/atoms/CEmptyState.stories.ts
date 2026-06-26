@@ -7,7 +7,12 @@ const meta: Meta<typeof CEmptyState> = {
   component: CEmptyState,
   tags: ['autodocs'],
   parameters: {
-    chromatic: { modes: { light: true, dark: true } },
+    chromatic: {
+      modes: {
+        light: { theme: 'light' },
+        dark: { theme: 'dark' },
+      },
+    },
   },
   argTypes: {
     icon: {

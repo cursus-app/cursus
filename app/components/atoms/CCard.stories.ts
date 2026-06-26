@@ -6,7 +6,12 @@ const meta: Meta<typeof CCard> = {
   component: CCard,
   tags: ['autodocs'],
   parameters: {
-    chromatic: { modes: { light: true, dark: true } },
+    chromatic: {
+      modes: {
+        light: { theme: 'light' },
+        dark: { theme: 'dark' },
+      },
+    },
   },
   argTypes: {
     padding: {

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import CInput from './CInput.vue';
+import CTextarea from './CTextarea.vue';
 
-const meta: Meta<typeof CInput> = {
-  title: 'Atoms/Input',
-  component: CInput,
+const meta: Meta<typeof CTextarea> = {
+  title: 'Atoms/Textarea',
+  component: CTextarea,
   tags: ['autodocs'],
   parameters: {
     chromatic: {
@@ -19,18 +19,14 @@ const meta: Meta<typeof CInput> = {
     placeholder: { control: 'text', description: 'Texte placeholder' },
     error: { control: 'text', description: "Message d'erreur (vide = pas d'erreur)" },
     disabled: { control: 'boolean', description: 'Désactive le champ' },
-    type: {
-      control: 'select',
-      options: ['text', 'email', 'password', 'number', 'search'],
-      description: 'Type HTML du champ',
-    },
+    rows: { control: 'number', description: 'Nombre de lignes visibles' },
   },
   args: {
-    label: 'Email',
-    placeholder: 'mohamed@cursus.app',
+    label: 'Description',
+    placeholder: 'Décrivez votre projet...',
     modelValue: null,
     disabled: false,
-    type: 'text',
+    rows: 4,
     error: null,
   },
 };
@@ -41,44 +37,45 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 export const WithValue: Story = {
-  args: { modelValue: 'stagiaire@cursus.app' },
+  args: {
+    modelValue: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  },
 };
 
 export const WithError: Story = {
   args: {
-    label: 'Email',
-    modelValue: 'bad-email',
-    error: 'Format email invalide',
+    label: 'Description',
+    modelValue: 'trop court',
+    error: 'La description doit faire au moins 50 caractères',
   },
 };
 
 export const Disabled: Story = {
   args: {
-    label: 'Email (lecture seule)',
-    modelValue: 'read@only.com',
+    label: 'Description (lecture seule)',
+    modelValue: 'Contenu non modifiable.',
     disabled: true,
   },
 };
 
-export const Password: Story = {
+export const ManyRows: Story = {
   args: {
-    label: 'Mot de passe',
-    placeholder: '••••••••',
-    type: 'password',
-    modelValue: null,
+    label: 'Notes longues',
+    placeholder: 'Vos notes détaillées...',
+    rows: 8,
   },
 };
 
 export const AllStates: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
-    components: { CInput },
+    components: { CTextarea },
     template: `
       <div class="flex flex-col gap-4 max-w-sm">
-        <CInput label="Défaut" placeholder="Email..." :model-value="null" :error="null" />
-        <CInput label="Rempli" model-value="stagiaire@cursus.app" :error="null" />
-        <CInput label="Erreur" model-value="bad-email" error="Format email invalide" />
-        <CInput label="Désactivé" model-value="lecture@seule.fr" :disabled="true" :error="null" />
+        <CTextarea label="Défaut" placeholder="Écrivez ici..." :model-value="null" :error="null" />
+        <CTextarea label="Rempli" model-value="Un contenu rempli." :error="null" />
+        <CTextarea label="Erreur" model-value="Ko" error="La description est trop courte" />
+        <CTextarea label="Désactivé" model-value="Lecture seule." :disabled="true" :error="null" />
       </div>
     `,
   }),
