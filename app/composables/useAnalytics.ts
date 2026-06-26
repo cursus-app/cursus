@@ -16,6 +16,7 @@ type AnalyticsEvent =
   | 'cohorte_completed'
   | 'cohorte_archived'
   | 'cohorte_deleted'
+  | 'cursus_roadmap_imported'
   | 'theme_toggled';
 
 type AnalyticsProps = Record<string, string | number | boolean>;
