@@ -323,5 +323,10 @@ const onSubmit = form.handleSubmit(async (values) => {
         </div>
       </form>
     </UCard>
+
+    <!-- Section modules -->
+    <div v-if="cursus && cursus.status === 'DRAFT'" class="mt-8">
+      <OrganismsModuleList :cursus-id="cursusId" />
+    </div>
   </div>
 </template>
