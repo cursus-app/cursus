@@ -125,6 +125,17 @@ describe('useCohorte — listCohortes', () => {
     await expect(listCohortes()).rejects.toBeDefined();
     expect(error.value).toBe('cohortes.errors.notFound');
   });
+
+  it('falls back to t("errors.generic") when error has no data.message', async () => {
+    mockFetch.mockRejectedValue({ status: 500 });
+    mockT.mockReturnValue('errors.generic');
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { listCohortes, error } = useCohorte();
+
+    await expect(listCohortes()).rejects.toBeDefined();
+    expect(error.value).toBe('errors.generic');
+  });
 });
 
 describe('useCohorte — getCohorte', () => {
