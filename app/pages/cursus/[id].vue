@@ -22,6 +22,19 @@ const cursusId = computed(() => {
   return Array.isArray(rawId) ? (rawId[0] ?? '') : (rawId ?? '');
 });
 
+// ─── Import roadmap ───────────────────────────────────────────────────────────
+
+const importRoadmapModal = ref<{ open: () => void } | null>(null);
+
+function openImportRoadmap() {
+  importRoadmapModal.value?.open();
+}
+
+function handleRoadmapImported() {
+  // Recharger le cursus pour avoir le nouveau module count.
+  void loadCursus();
+}
+
 function tDynamic(key: string): string {
   return t(key as Parameters<typeof t>[0]);
 }
@@ -300,6 +313,17 @@ function levelLabel(level: string): string {
             {{ t('cursus.actions.archive') }}
           </UButton>
           <UButton
+            v-if="canEdit"
+            icon="i-tabler-git-merge"
+            color="neutral"
+            variant="outline"
+            size="sm"
+            :disabled="loading"
+            @click="openImportRoadmap"
+          >
+            {{ t('cursus.actions.importRoadmap') }}
+          </UButton>
+          <UButton
             v-if="canDelete"
             icon="i-tabler-trash"
             color="error"
@@ -415,6 +439,15 @@ function levelLabel(level: string): string {
         </ul>
       </UCard>
     </template>
+
+    <!-- Modale import roadmap.sh -->
+    <MoleculesCursusImportRoadmapModal
+      v-if="cursus"
+      ref="importRoadmapModal"
+      :cursus-id="cursus.id"
+      :has-existing-modules="cursus._count.modules > 0"
+      @imported="handleRoadmapImported"
+    />
 
     <!-- Modale confirmation suppression -->
     <UModal v-model:open="showDeleteModal">

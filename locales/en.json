@@ -266,7 +266,54 @@
       "save": "Save",
       "saveDraft": "Save draft",
       "createDraft": "Create draft",
-      "duplicate": "Duplicate"
+      "duplicate": "Duplicate",
+      "importRoadmap": "Import from roadmap.sh"
+    },
+    "importRoadmap": {
+      "title": "Import from roadmap.sh",
+      "subtitle": "Generate modules from a learning roadmap (CC BY-SA 4.0)",
+      "tabs": {
+        "catalog": "Built-in catalog",
+        "custom": "Custom JSON"
+      },
+      "categories": {
+        "all": "All",
+        "frontend": "Frontend",
+        "backend": "Backend",
+        "devops": "DevOps",
+        "security": "Security",
+        "ai": "AI & Data",
+        "language": "Language",
+        "tool": "Tool"
+      },
+      "filterByCategory": "Filter by category",
+      "conceptCount": "{n} concept | {n} concepts",
+      "customHelp": "Paste a JSON array of concepts or a JSON object with a concepts key (array) compatible with the roadmap.sh format.",
+      "showExample": "Show an example",
+      "jsonPlaceholder": "[ {'{'} \"title\": \"HTML\", \"url\": \"...\" {'}'}, ... ]",
+      "jsonLabel": "Roadmap JSON",
+      "conceptsParsed": "{n} concept detected | {n} concepts detected",
+      "customRoadmap": "Custom roadmap",
+      "existingModulesWarning": "This course already has modules.",
+      "modeReplace": "Replace existing modules",
+      "modeAppend": "Append after existing",
+      "preview": "Preview",
+      "previewModules": "{n} module will be created | {n} modules will be created",
+      "replaceWarning": "Existing modules will be deleted before import.",
+      "appendInfo": "Modules will be appended after the existing ones.",
+      "attribution": "Content inspired by",
+      "import": "Import",
+      "success": "{count} module imported | {count} modules imported",
+      "errors": {
+        "catalogUnavailable": "Source unavailable, please try again later.",
+        "invalidJson": "Invalid JSON — check the syntax.",
+        "invalidJsonFormat": "Unrecognized format. Expected an array [{'{'}\"title\":\"...\"{'}'}] or {'{'}\"concepts\":[...]{'}'}.",
+        "conceptTitleRequired": "A concept title is required",
+        "conceptTitleTooLong": "Title too long (200 characters max)",
+        "roadmapIdOrConceptsRequired": "Provide either a roadmapId or a list of concepts",
+        "unknownRoadmapId": "Unknown roadmap in the catalog",
+        "noConceptsFound": "No concepts found in the roadmap"
+      }
     },
     "errors": {
       "titleRequired": "Title is required",

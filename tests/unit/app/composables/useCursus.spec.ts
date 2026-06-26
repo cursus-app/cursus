@@ -492,6 +492,207 @@ describe('useCursus — updateCursus()', () => {
   });
 });
 
+describe('useCursus — cloneCursus()', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('POSTs to /api/cursus/:id/clone', async () => {
+    mockFetch.mockResolvedValueOnce(CURSUS_FULL);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { cloneCursus } = useCursus();
+
+    await cloneCursus('cursus-1');
+
+    expect(mockFetch).toHaveBeenCalledWith('/api/cursus/cursus-1/clone', { method: 'POST' });
+  });
+
+  it('returns the cloned cursus', async () => {
+    mockFetch.mockResolvedValueOnce(CURSUS_FULL);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { cloneCursus } = useCursus();
+
+    const result = await cloneCursus('cursus-1');
+    expect(result).toEqual(CURSUS_FULL);
+  });
+
+  it('sets error.value and rethrows when $fetch rejects', async () => {
+    mockFetch.mockRejectedValueOnce(
+      Object.assign(new Error('Forbidden'), { data: { message: 'cursus.errors.forbidden' } }),
+    );
+    const { useCursus } = await import('~/composables/useCursus');
+    const { cloneCursus, error } = useCursus();
+
+    await expect(cloneCursus('cursus-1')).rejects.toThrow();
+    expect(error.value).toBe('cursus.errors.forbidden');
+  });
+});
+
+describe('useCursus — getRoadmapCatalog()', () => {
+  const CATALOG = [
+    { id: 'html', title: 'HTML', url: 'https://roadmap.sh/html' },
+    { id: 'css', title: 'CSS', url: 'https://roadmap.sh/css' },
+  ];
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls GET /api/cursus/import-roadmap/catalog', async () => {
+    mockFetch.mockResolvedValueOnce(CATALOG);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { getRoadmapCatalog } = useCursus();
+
+    await getRoadmapCatalog();
+
+    expect(mockFetch).toHaveBeenCalledWith('/api/cursus/import-roadmap/catalog');
+  });
+
+  it('returns the catalog array', async () => {
+    mockFetch.mockResolvedValueOnce(CATALOG);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { getRoadmapCatalog } = useCursus();
+
+    const result = await getRoadmapCatalog();
+    expect(result).toEqual(CATALOG);
+  });
+
+  it('sets error.value and rethrows when $fetch rejects', async () => {
+    mockFetch.mockRejectedValueOnce(
+      Object.assign(new Error('Unavailable'), {
+        data: { message: 'cursus.importRoadmap.errors.catalogUnavailable' },
+      }),
+    );
+    const { useCursus } = await import('~/composables/useCursus');
+    const { getRoadmapCatalog, error } = useCursus();
+
+    await expect(getRoadmapCatalog()).rejects.toThrow();
+    expect(error.value).toBe('cursus.importRoadmap.errors.catalogUnavailable');
+  });
+
+  it('resets loading to false after success', async () => {
+    mockFetch.mockResolvedValueOnce(CATALOG);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { getRoadmapCatalog, loading } = useCursus();
+
+    await getRoadmapCatalog();
+    expect(loading.value).toBe(false);
+  });
+
+  it('resets loading to false after failure', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('fail'));
+    const { useCursus } = await import('~/composables/useCursus');
+    const { getRoadmapCatalog, loading } = useCursus();
+
+    await getRoadmapCatalog().catch(() => undefined);
+    expect(loading.value).toBe(false);
+  });
+});
+
+describe('useCursus — importRoadmap()', () => {
+  const IMPORT_RESULT = { created: 5, mode: 'replace' };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('POSTs to /api/cursus/:id/import-roadmap with body', async () => {
+    mockFetch.mockResolvedValueOnce(IMPORT_RESULT);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap } = useCursus();
+    const input = { roadmapId: 'html', mode: 'replace' as const };
+
+    await importRoadmap('cursus-1', input);
+
+    expect(mockFetch).toHaveBeenCalledWith('/api/cursus/cursus-1/import-roadmap', {
+      method: 'POST',
+      body: input,
+    });
+  });
+
+  it('tracks cursus_roadmap_imported with roadmapId when roadmapId is defined', async () => {
+    mockFetch.mockResolvedValueOnce(IMPORT_RESULT);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap } = useCursus();
+
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const });
+
+    expect(mockTrack).toHaveBeenCalledWith('cursus_roadmap_imported', {
+      roadmapId: 'html',
+      created: 5,
+      mode: 'replace',
+    });
+  });
+
+  it('tracks cursus_roadmap_imported without roadmapId when roadmapId is undefined', async () => {
+    mockFetch.mockResolvedValueOnce({ created: 3, mode: 'append' });
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap } = useCursus();
+
+    await importRoadmap('cursus-1', { concepts: [{ title: 'HTML' }], mode: 'append' as const });
+
+    const trackCall = mockTrack.mock.calls[0];
+    expect(trackCall?.[0]).toBe('cursus_roadmap_imported');
+    expect(trackCall?.[1]).not.toHaveProperty('roadmapId');
+    expect(trackCall?.[1]).toMatchObject({ created: 3, mode: 'append' });
+  });
+
+  it('returns the import result', async () => {
+    mockFetch.mockResolvedValueOnce(IMPORT_RESULT);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap } = useCursus();
+
+    const result = await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const });
+    expect(result).toEqual(IMPORT_RESULT);
+  });
+
+  it('does not track analytics when $fetch fails', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('fail'));
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap } = useCursus();
+
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(
+      () => undefined,
+    );
+    expect(mockTrack).not.toHaveBeenCalled();
+  });
+
+  it('sets error.value and rethrows when $fetch rejects', async () => {
+    mockFetch.mockRejectedValueOnce(
+      Object.assign(new Error('Bad request'), {
+        data: { message: 'cursus.importRoadmap.errors.invalidJson' },
+      }),
+    );
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap, error } = useCursus();
+
+    await expect(
+      importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }),
+    ).rejects.toThrow();
+    expect(error.value).toBe('cursus.importRoadmap.errors.invalidJson');
+  });
+
+  it('resets loading to false after success', async () => {
+    mockFetch.mockResolvedValueOnce(IMPORT_RESULT);
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap, loading } = useCursus();
+
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const });
+    expect(loading.value).toBe(false);
+  });
+
+  it('resets loading to false after failure', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('fail'));
+    const { useCursus } = await import('~/composables/useCursus');
+    const { importRoadmap, loading } = useCursus();
+
+    await importRoadmap('cursus-1', { roadmapId: 'html', mode: 'replace' as const }).catch(
+      () => undefined,
+    );
+    expect(loading.value).toBe(false);
+  });
+});
+
 describe('useCursus — loading state and error isolation', () => {
   beforeEach(() => {
     vi.clearAllMocks();

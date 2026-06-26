@@ -51,3 +51,72 @@ export const listCursusQuerySchema = z.object({
 export type CreateCursusInput = z.infer<typeof createCursusSchema>;
 export type UpdateCursusInput = z.infer<typeof updateCursusSchema>;
 export type ListCursusQuery = z.infer<typeof listCursusQuerySchema>;
+
+// ─── Import roadmap.sh (ST-03.7) ─────────────────────────────────────────────
+
+/**
+ * Schéma d'un concept roadmap.sh (nœud de la roadmap).
+ * Chaque concept deviendra un Module vide avec son titre et l'URL de la source.
+ */
+export const roadmapConceptSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'cursus.importRoadmap.errors.conceptTitleRequired')
+    .max(200, 'cursus.importRoadmap.errors.conceptTitleTooLong')
+    .transform((s) =>
+      // Sanitize : strip HTML tags, trim whitespace
+      s.replace(/<[^>]*>/g, '').trim(),
+    ),
+  /** URL vers le concept sur roadmap.sh — conservée en métadonnée du module. */
+  url: z.string().url().optional(),
+});
+
+/**
+ * Schéma du body accepté par POST /api/cursus/:id/import-roadmap.
+ *
+ * Deux modes :
+ *  - `roadmapId` : identifiant d'une roadmap du catalogue intégré (frontend, backend, …)
+ *  - `concepts`  : liste personnalisée de concepts (JSON collé depuis roadmap.sh)
+ *
+ * L'un des deux est obligatoire (discriminant via z.union + raffinement).
+ */
+export const importRoadmapSchema = z
+  .object({
+    /** ID d'une roadmap du catalogue intégré. */
+    roadmapId: z.string().min(1).max(50).optional(),
+    /** Titre descriptif de la roadmap source (ex. "Frontend Developer Roadmap"). */
+    title: z.string().max(200).optional(),
+    /** URL source (pour l'attribution CC BY-SA 4.0). */
+    sourceUrl: z.string().url().optional(),
+    /** Liste ordonnée de concepts à importer comme modules. */
+    concepts: z.array(roadmapConceptSchema).min(1).max(200).optional(),
+    /**
+     * Comportement si le cursus possède déjà des modules :
+     *  - 'replace' : supprime les modules existants avant d'importer
+     *  - 'append'  : ajoute à la suite (semaines incrémentées)
+     */
+    mode: z.enum(['replace', 'append']).default('replace'),
+  })
+  .refine((d) => d.roadmapId !== undefined || d.concepts !== undefined, {
+    message: 'cursus.importRoadmap.errors.roadmapIdOrConceptsRequired',
+    path: ['roadmapId'],
+  });
+
+export type RoadmapConcept = z.infer<typeof roadmapConceptSchema>;
+export type ImportRoadmapInput = z.infer<typeof importRoadmapSchema>;
+
+/** Catalogue intégré : identifiants des roadmaps disponibles sans import JSON. */
+export const ROADMAP_CATALOG_IDS = [
+  'frontend',
+  'backend',
+  'devops',
+  'cybersecurity',
+  'ai-data-scientist',
+  'fullstack',
+  'react',
+  'nodejs',
+  'python',
+  'docker',
+] as const;
+
+export type RoadmapCatalogId = (typeof ROADMAP_CATALOG_IDS)[number];

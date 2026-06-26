@@ -266,7 +266,54 @@
       "save": "Enregistrer",
       "saveDraft": "Enregistrer le brouillon",
       "createDraft": "Créer le brouillon",
-      "duplicate": "Dupliquer"
+      "duplicate": "Dupliquer",
+      "importRoadmap": "Importer roadmap.sh"
+    },
+    "importRoadmap": {
+      "title": "Importer depuis roadmap.sh",
+      "subtitle": "Générer des modules depuis une roadmap pédagogique (CC BY-SA 4.0)",
+      "tabs": {
+        "catalog": "Catalogue intégré",
+        "custom": "JSON personnalisé"
+      },
+      "categories": {
+        "all": "Toutes",
+        "frontend": "Frontend",
+        "backend": "Backend",
+        "devops": "DevOps",
+        "security": "Sécurité",
+        "ai": "IA & Data",
+        "language": "Langage",
+        "tool": "Outil"
+      },
+      "filterByCategory": "Filtrer par catégorie",
+      "conceptCount": "{n} concept | {n} concepts",
+      "customHelp": "Colle un tableau JSON de concepts ou un objet JSON avec une clé concepts (tableau) compatible avec le format roadmap.sh.",
+      "showExample": "Voir un exemple",
+      "jsonPlaceholder": "[ {'{'} \"title\": \"HTML\", \"url\": \"...\" {'}'}, ... ]",
+      "jsonLabel": "JSON de la roadmap",
+      "conceptsParsed": "{n} concept détecté | {n} concepts détectés",
+      "customRoadmap": "Roadmap personnalisée",
+      "existingModulesWarning": "Ce cursus contient déjà des modules.",
+      "modeReplace": "Remplacer les modules existants",
+      "modeAppend": "Ajouter à la suite",
+      "preview": "Aperçu",
+      "previewModules": "{n} module sera créé | {n} modules seront créés",
+      "replaceWarning": "Les modules existants seront supprimés avant l'import.",
+      "appendInfo": "Les modules seront ajoutés à la suite des modules existants.",
+      "attribution": "Contenu inspiré de",
+      "import": "Importer",
+      "success": "{count} module importé | {count} modules importés",
+      "errors": {
+        "catalogUnavailable": "Source indisponible, réessaie plus tard.",
+        "invalidJson": "JSON invalide — vérifie la syntaxe.",
+        "invalidJsonFormat": "Format non reconnu. Attends un tableau [{'{'}\"title\":\"...\"{'}'}] ou {'{'}\"concepts\":[...]{'}'}.",
+        "conceptTitleRequired": "Le titre d'un concept est requis",
+        "conceptTitleTooLong": "Titre trop long (200 caractères max)",
+        "roadmapIdOrConceptsRequired": "Fournis un roadmapId ou une liste de concepts",
+        "unknownRoadmapId": "Roadmap inconnue dans le catalogue",
+        "noConceptsFound": "Aucun concept trouvé dans la roadmap"
+      }
     },
     "errors": {
       "titleRequired": "Le titre est requis",

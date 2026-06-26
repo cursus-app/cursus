@@ -6,6 +6,7 @@ import type {
   CreateCursusInput,
   UpdateCursusInput,
   ListCursusQuery,
+  ImportRoadmapInput,
 } from '~~/shared/schemas/cursus';
 
 export interface CursusListItem {
@@ -49,6 +50,22 @@ export interface CursusListResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+export interface RoadmapCatalogEntry {
+  id: string;
+  title: string;
+  category: string;
+  sourceUrl: string;
+  conceptCount: number;
+}
+
+export interface ImportRoadmapResult {
+  created: number;
+  deleted: number;
+  roadmapTitle: string;
+  sourceUrl: string | undefined;
+  attribution: string;
 }
 
 export function useCursus() {
@@ -192,6 +209,46 @@ export function useCursus() {
     }
   }
 
+  async function getRoadmapCatalog(): Promise<RoadmapCatalogEntry[]> {
+    loading.value = true;
+    error.value = null;
+    try {
+      return await $fetch<RoadmapCatalogEntry[]>('/api/cursus/import-roadmap/catalog');
+    } catch (err: unknown) {
+      const fetchErr = err as { data?: { message?: string } };
+      error.value = fetchErr.data?.message ?? t('errors.generic');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function importRoadmap(
+    cursusId: string,
+    data: ImportRoadmapInput,
+  ): Promise<ImportRoadmapResult> {
+    loading.value = true;
+    error.value = null;
+    try {
+      const result = await $fetch<ImportRoadmapResult>(`/api/cursus/${cursusId}/import-roadmap`, {
+        method: 'POST',
+        body: data,
+      });
+      track('cursus_roadmap_imported', {
+        ...(data.roadmapId !== undefined ? { roadmapId: data.roadmapId } : {}),
+        created: result.created,
+        mode: data.mode,
+      });
+      return result;
+    } catch (err: unknown) {
+      const fetchErr = err as { data?: { message?: string } };
+      error.value = fetchErr.data?.message ?? t('errors.generic');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     loading,
     error,
@@ -203,5 +260,7 @@ export function useCursus() {
     publishCursus,
     archiveCursus,
     cloneCursus,
+    getRoadmapCatalog,
+    importRoadmap,
   };
 }
