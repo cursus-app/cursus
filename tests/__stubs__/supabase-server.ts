@@ -10,3 +10,29 @@ export async function serverSupabaseUser(_event: H3Event): Promise<null> {
 export async function serverSupabaseClient(_event: H3Event): Promise<null> {
   return null;
 }
+
+/**
+ * Stub du client admin Supabase (service role).
+ * Les tests qui ont besoin de ce client mockent `#supabase/server` via vi.mock().
+ */
+export function serverSupabaseServiceRole(_event: H3Event): {
+  auth: {
+    admin: {
+      inviteUserByEmail: (
+        email: string,
+        options?: { redirectTo?: string },
+      ) => Promise<{ data: Record<string, unknown>; error: null | { code: string } }>;
+    };
+  };
+} {
+  return {
+    auth: {
+      admin: {
+        inviteUserByEmail: async (_email: string, _options?: { redirectTo?: string }) => ({
+          data: {},
+          error: null,
+        }),
+      },
+    },
+  };
+}

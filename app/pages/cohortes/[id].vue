@@ -1,10 +1,11 @@
 <script setup lang="ts">
 /**
  * Page /cohortes/:id — vue détaillée d'une cohorte.
- * Actions disponibles selon le statut + onglet membres.
- * Cf. ST-04.1 — TT-04.1.3.
+ * Actions disponibles selon le statut + onglet membres + invitations.
+ * Cf. ST-04.1 — TT-04.1.3, ST-04.2 — invitation stagiaires.
  */
 import type { CohorteFull } from '~/composables/useCohorte';
+import type { InvitationItem } from '~/composables/useInvitation';
 
 definePageMeta({
   middleware: 'auth',
@@ -16,6 +17,7 @@ const toast = useToast();
 const route = useRoute();
 const { getCohorte, startCohorte, completeCohorte, archiveCohorte, deleteCohorte, loading } =
   useCohorte();
+const { listInvitations, resendInvitation, loading: invLoading } = useInvitation();
 const { canManageCohorte } = usePermission();
 
 const cohorteId = computed(() => {
@@ -28,8 +30,10 @@ useSeoMeta({ title: 'Cohorte — Cursus' });
 // ─── Données ──────────────────────────────────────────────────────────────────
 
 const cohorte = ref<CohorteFull | null>(null);
+const invitations = ref<InvitationItem[]>([]);
 const isLoadingPage = ref(true);
 const showDeleteModal = ref(false);
+const showInviteModal = ref(false);
 const isDeleting = ref(false);
 const actionError = ref<string | null>(null);
 
@@ -48,6 +52,45 @@ async function loadCohorte() {
   } finally {
     isLoadingPage.value = false;
   }
+}
+
+async function loadInvitations() {
+  if (!canManage.value) { return; }
+  try {
+    invitations.value = await listInvitations(cohorteId.value);
+  } catch {
+    // Invitations are secondary — ne pas bloquer si l'appel échoue
+  }
+}
+
+async function handleResend(invitationId: string) {
+  try {
+    await resendInvitation(invitationId);
+    toast.add({
+      title: t('invitations.resendSuccess'),
+      color: 'success',
+      icon: 'i-tabler-send',
+    });
+    // Recharger les invitations pour mettre à jour expiresAt
+    void loadInvitations();
+  } catch (err: unknown) {
+    const fetchErr = err as { data?: { message?: string } };
+    toast.add({
+      title: t((fetchErr.data?.message ?? 'errors.generic') as Parameters<typeof t>[0]),
+      color: 'error',
+      icon: 'i-tabler-circle-x',
+    });
+  }
+}
+
+function isInvitationExpired(inv: InvitationItem): boolean {
+  return new Date(inv.expiresAt) < new Date();
+}
+
+function isResendable(inv: InvitationItem): boolean {
+  // Bouton "Renvoyer" visible si invitation non acceptée et expirée depuis > 3 jours
+  // ou simplement si non acceptée (pour permettre le renvoi proactif)
+  return !inv.acceptedAt && !inv.revokedAt;
 }
 
 onMounted(() => {
@@ -100,6 +143,11 @@ function formatDate(dateStr: string): string {
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
 const canManage = computed(() => canManageCohorte(cohorteId.value));
+
+// Charger les invitations dès que les droits sont connus
+watch(canManage, (val) => {
+  if (val && cohorteId.value) { void loadInvitations(); }
+});
 
 async function handleStart() {
   actionError.value = null;
@@ -200,6 +248,17 @@ async function handleDelete() {
 
         <!-- Actions selon le statut -->
         <div v-if="canManage" class="flex flex-wrap gap-2">
+          <!-- Bouton Inviter (disponible sur toutes les cohortes non archivées) -->
+          <UButton
+            v-if="cohorte.status !== 'ARCHIVED'"
+            icon="i-tabler-user-plus"
+            color="neutral"
+            variant="outline"
+            @click="showInviteModal = true"
+          >
+            {{ t('invitations.inviteButton') }}
+          </UButton>
+
           <!-- DRAFT -->
           <template v-if="cohorte.status === 'DRAFT'">
             <UButton
@@ -358,6 +417,61 @@ async function handleDelete() {
         </ul>
       </UCard>
     </template>
+
+    <!-- Section invitations en attente -->
+    <template v-if="canManage && invitations.length > 0">
+      <UCard class="mt-6 border border-border-subtle bg-surface">
+        <template #header>
+          <h2 class="text-base font-semibold text-text-strong">
+            {{ t('invitations.pending') }}
+            <span class="ml-1 text-sm font-normal text-text-muted">
+              ({{ invitations.length }})
+            </span>
+          </h2>
+        </template>
+
+        <ul class="divide-y divide-border-subtle">
+          <li
+            v-for="inv in invitations"
+            :key="inv.id"
+            class="flex items-center gap-3 py-3"
+          >
+            <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted">
+              <UIcon name="i-tabler-mail" class="size-5 text-text-subtle" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-sm font-medium text-text-default">{{ inv.email }}</p>
+              <p class="text-xs text-text-muted">
+                {{ t('invitations.invitedAt') }} {{ formatDate(inv.createdAt) }}
+                <span v-if="isInvitationExpired(inv)" class="ml-2 text-warning-fg">
+                  ({{ t('invitations.expired') }})
+                </span>
+              </p>
+            </div>
+            <UButton
+              v-if="isResendable(inv)"
+              size="xs"
+              color="neutral"
+              variant="outline"
+              icon="i-tabler-send"
+              :loading="invLoading"
+              @click="handleResend(inv.id)"
+            >
+              {{ t('invitations.resend') }}
+            </UButton>
+          </li>
+        </ul>
+      </UCard>
+    </template>
+
+    <!-- InviteModal -->
+    <InviteModal
+      v-if="canManage && cohorte"
+      :cohorte-id="cohorteId"
+      :open="showInviteModal"
+      @update:open="showInviteModal = $event"
+      @invited="loadInvitations"
+    />
 
     <!-- Modal suppression -->
     <UModal v-model:open="showDeleteModal">
