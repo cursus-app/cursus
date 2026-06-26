@@ -54,7 +54,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
           : 'border-border-subtle hover:border-border-default',
       ]"
       @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-    />
+    >
     <p v-if="props.error" id="input-error" role="alert" class="text-xs text-danger-fg">
       {{ props.error }}
     </p>

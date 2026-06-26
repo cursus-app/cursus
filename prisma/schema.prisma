@@ -42,6 +42,7 @@ model User {
   bio               String?           @db.Text
   locale            String            @default("fr")
   timezone          String            @default("Europe/Paris")
+  theme             String            @default("system")
   xpTotal           Int               @default(0) @map("xp_total")
   isPublic          Boolean           @default(false) @map("is_public")
   publicSlug        String?           @unique @map("public_slug")

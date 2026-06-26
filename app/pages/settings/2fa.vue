@@ -358,7 +358,7 @@ function downloadBackupCodes() {
 
           <form novalidate @submit="onVerifyEnrollment">
             <!-- hidden field pour factorId -->
-            <input type="hidden" name="factorId" :value="enrollData.factorId" />
+            <input type="hidden" name="factorId" :value="enrollData.factorId" >
 
             <div class="space-y-4">
               <p class="text-sm text-text-muted">{{ t('2fa.step2Description') }}</p>
@@ -510,7 +510,7 @@ function downloadBackupCodes() {
 
         <form novalidate @submit="onDisable">
           <!-- hidden field factorId -->
-          <input v-if="activeFactor" type="hidden" name="factorId" :value="activeFactor.id" />
+          <input v-if="activeFactor" type="hidden" name="factorId" :value="activeFactor.id" >
 
           <div class="space-y-4">
             <div

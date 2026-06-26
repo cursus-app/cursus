@@ -56,6 +56,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
           cohorte: m['cohorte'],
         })),
       });
+
+      // Applique la préférence de thème stockée en DB (priorité DB > localStorage).
+      // Ne s'exécute que côté client pour ne pas écraser le SSR cookie-based theme.
+      if (import.meta.client && profile['theme']) {
+        const colorMode = useColorMode();
+        colorMode.preference = profile['theme'] as string;
+      }
     } catch {
       // L'utilisateur est authentifié dans Supabase mais absent de notre DB.
       // Cela peut arriver si le webhook de création de profil a échoué.

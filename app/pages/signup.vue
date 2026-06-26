@@ -112,7 +112,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     <form novalidate @submit="onSubmit">
       <div class="space-y-5">
         <!-- Champ caché : token d'invitation (injecté depuis l'URL, non affiché) -->
-        <input type="hidden" name="invitationToken" :value="values.invitationToken" />
+        <input type="hidden" name="invitationToken" :value="values.invitationToken" >
 
         <UFormField :label="t('auth.email')" name="email" required>
           <UInput

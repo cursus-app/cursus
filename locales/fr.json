@@ -3,6 +3,17 @@
     "name": "Cursus",
     "tagline": "Le parcours de stage tech, structuré et validé."
   },
+  "nav": {
+    "skipToContent": "Aller au contenu"
+  },
+  "theme": {
+    "switchToDark": "Basculer en mode sombre",
+    "switchToLight": "Basculer en mode clair",
+    "switchToSystem": "Utiliser la préférence système",
+    "system": "Suivre le système",
+    "light": "Mode clair",
+    "dark": "Mode sombre"
+  },
   "common": {
     "loading": "Chargement…",
     "retry": "Réessayer",

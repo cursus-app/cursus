@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
       id: true,
       email: true,
       globalRole: true,
+      theme: true,
       memberships: {
         where: { leftAt: null },
         select: {
@@ -46,6 +47,7 @@ export default defineEventHandler(async (event) => {
     id: dbUser.id,
     email: dbUser.email,
     globalRole: dbUser.globalRole,
+    theme: dbUser.theme,
     memberships: dbUser.memberships.map((m) => ({
       cohorteId: m.cohorteId,
       role: m.role,

@@ -346,7 +346,7 @@ const localeOptions = [
                       : t('profile.avatar.altTextDefault')
                   "
                   class="size-full object-cover"
-                />
+                >
                 <!-- Overlay upload en cours -->
                 <div
                   v-if="isUploadingAvatar"
@@ -401,7 +401,7 @@ const localeOptions = [
                   class="sr-only"
                   :aria-label="t('profile.avatar.label')"
                   @change="onAvatarChange"
-                />
+                >
                 <UButton
                   size="sm"
                   color="neutral"

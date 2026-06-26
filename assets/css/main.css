@@ -317,6 +317,10 @@
   html {
     font-feature-settings: 'cv11', 'ss01';
     -webkit-text-size-adjust: 100%;
+    /* Theme crossfade — supprimé si prefers-reduced-motion (voir bloc global ci-dessous) */
+    transition:
+      background-color 250ms ease-out,
+      color 250ms ease-out;
   }
   body {
     background: var(--bg-app);
