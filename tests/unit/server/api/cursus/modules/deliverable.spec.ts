@@ -76,8 +76,7 @@ const VALID_DELIVERABLE_SPEC = {
   ],
 };
 
-const importHandler = () =>
-  import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
+const importHandler = () => import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
 
 // ─── Setup commune ────────────────────────────────────────────────────────────
 
@@ -175,7 +174,10 @@ describe('PATCH module — deliverable spec — autorisation', () => {
     mockReadValidatedBody.mockResolvedValue({
       deliverableSpecJson: VALID_DELIVERABLE_SPEC,
     });
-    mockModuleUpdate.mockResolvedValue({ id: MODULE_ID, deliverableSpecJson: VALID_DELIVERABLE_SPEC });
+    mockModuleUpdate.mockResolvedValue({
+      id: MODULE_ID,
+      deliverableSpecJson: VALID_DELIVERABLE_SPEC,
+    });
 
     const { default: handler } = await importHandler();
     const result = await handler(makeEvent());

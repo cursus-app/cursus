@@ -142,9 +142,9 @@ describe('deployUpCheckParamsSchema', () => {
   });
 
   it('accepts valid url', () => {
-    expect(
-      deployUpCheckParamsSchema.safeParse({ url: 'https://my-app.vercel.app' }).success,
-    ).toBe(true);
+    expect(deployUpCheckParamsSchema.safeParse({ url: 'https://my-app.vercel.app' }).success).toBe(
+      true,
+    );
   });
 
   it('rejects invalid url', () => {

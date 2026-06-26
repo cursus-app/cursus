@@ -55,7 +55,7 @@ describe('generateWorkflowYaml — 0 check actif', () => {
     expect(warnings.some((w) => w.code === 'NO_CHECKS_ACTIVE')).toBe(true);
   });
 
-  it('ne génère pas de warning NO_TESTS_CHECK quand il n\'y a aucun check', () => {
+  it("ne génère pas de warning NO_TESTS_CHECK quand il n'y a aucun check", () => {
     const { warnings } = generateWorkflowYaml(makeSpec());
     // NO_TESTS_CHECK n'est émis que s'il y a des checks actifs mais pas de tests
     expect(warnings.some((w) => w.code === 'NO_TESTS_CHECK')).toBe(false);
@@ -195,15 +195,13 @@ describe('generateWorkflowYaml — lighthouse_score', () => {
 describe('generateWorkflowYaml — deploy_up', () => {
   it('inclut une URL de déploiement quand fournie', () => {
     const spec = makeSpec({
-      checks: [
-        { type: 'deploy_up', enabled: true, params: { url: 'https://my-app.vercel.app' } },
-      ],
+      checks: [{ type: 'deploy_up', enabled: true, params: { url: 'https://my-app.vercel.app' } }],
     });
     const { yaml } = generateWorkflowYaml(spec);
     expect(yaml).toContain('my-app.vercel.app');
   });
 
-  it('utilise la variable d\'input quand url non fournie', () => {
+  it("utilise la variable d'input quand url non fournie", () => {
     const spec = makeSpec({
       checks: [{ type: 'deploy_up', enabled: true, params: {} }],
     });
@@ -232,7 +230,7 @@ describe('generateWorkflowYaml — HIGH_CHECK_COUNT warning', () => {
     expect(warnings.some((w) => w.code === 'HIGH_CHECK_COUNT')).toBe(true);
   });
 
-  it('n\'émet PAS de warning avec 10 checks actifs ou moins', () => {
+  it("n'émet PAS de warning avec 10 checks actifs ou moins", () => {
     const spec = makeSpec({
       checks: [
         { type: 'readme_present', enabled: true, params: {} },
@@ -257,9 +255,7 @@ describe('generateWorkflowYaml — sécurité injection YAML', () => {
 
   it('échappe les guillemets dans les noms de branches', () => {
     const spec = makeSpec({
-      checks: [
-        { type: 'branches', enabled: true, params: { branches: ['main', 'branch"name'] } },
-      ],
+      checks: [{ type: 'branches', enabled: true, params: { branches: ['main', 'branch"name'] } }],
     });
     const { yaml } = generateWorkflowYaml(spec);
     expect(isBasicValidYaml(yaml)).toBe(true);

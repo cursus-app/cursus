@@ -163,7 +163,9 @@ export function generateWorkflowYaml(
 
   // ─── Steps ────────────────────────────────────────────────────────────────
 
-  const needsDeploy = spec.deployRequired || activeChecks.some((c) => c.type === 'deploy_up' || c.type === 'lighthouse_score');
+  const needsDeploy =
+    spec.deployRequired ||
+    activeChecks.some((c) => c.type === 'deploy_up' || c.type === 'lighthouse_score');
 
   const steps: string[] = [];
 
@@ -174,9 +176,7 @@ export function generateWorkflowYaml(
           fetch-depth: 0`);
 
   // Setup node si nécessaire (linter, tests)
-  const needsNode = activeChecks.some((c) =>
-    ['linter_pass', 'tests_pass'].includes(c.type),
-  );
+  const needsNode = activeChecks.some((c) => ['linter_pass', 'tests_pass'].includes(c.type));
   if (needsNode) {
     steps.push(`      - name: ${q('Setup Node.js')}
         uses: actions/setup-node@v4
@@ -227,7 +227,7 @@ export function generateWorkflowYaml(
 
   const deployInput = needsDeploy
     ? `      deploy_url:
-        description: ${q("URL de déploiement du projet")}
+        description: ${q('URL de déploiement du projet')}
         required: false
         type: string
 `
@@ -241,7 +241,7 @@ on:
   workflow_dispatch:
     inputs:
       repo_url:
-        description: ${q("URL du repository GitHub")}
+        description: ${q('URL du repository GitHub')}
         required: true
         type: string
 ${deployInput}

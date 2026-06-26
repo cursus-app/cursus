@@ -124,10 +124,7 @@ export const deliverableSpecSchema = z.object({
   description: z.string().max(10_000, 'modules.errors.deliverableDescTooLong').default(''),
   repoRequired: z.boolean().default(true),
   deployRequired: z.boolean().default(false),
-  checks: z
-    .array(harnessCheckSchema)
-    .max(15, 'modules.checks.errors.tooMany')
-    .default([]),
+  checks: z.array(harnessCheckSchema).max(15, 'modules.checks.errors.tooMany').default([]),
 });
 
 export type DeliverableSpec = z.infer<typeof deliverableSpecSchema>;

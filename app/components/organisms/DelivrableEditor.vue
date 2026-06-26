@@ -115,9 +115,7 @@ function updateBranchesParam(rawValue: string): void {
 function updateLighthouseScore(rawValue: string): void {
   const minScore = Math.min(100, Math.max(0, Number(rawValue)));
   allChecks.value = allChecks.value.map((c) =>
-    c.type === 'lighthouse_score'
-      ? { ...c, params: { ...c.params, minScore } }
-      : c,
+    c.type === 'lighthouse_score' ? { ...c, params: { ...c.params, minScore } } : c,
   ) as HarnessCheck[];
   emitChecks();
 }
@@ -125,9 +123,7 @@ function updateLighthouseScore(rawValue: string): void {
 // Mise à jour de l'URL de déploiement (check deploy_up)
 function updateDeployUrl(rawValue: string): void {
   allChecks.value = allChecks.value.map((c) =>
-    c.type === 'deploy_up'
-      ? { ...c, params: { ...(rawValue ? { url: rawValue } : {}) } }
-      : c,
+    c.type === 'deploy_up' ? { ...c, params: { ...(rawValue ? { url: rawValue } : {}) } } : c,
   ) as HarnessCheck[];
   emitChecks();
 }
@@ -244,9 +240,7 @@ const warningMessage = computed<string>(() => {
 
     <!-- Checks harnais -->
     <div>
-      <p class="mb-3 text-sm font-medium text-text-strong">
-        Critères de validation (harnais)
-      </p>
+      <p class="mb-3 text-sm font-medium text-text-strong">Critères de validation (harnais)</p>
 
       <!-- Warning a11y — aria-live pour les lecteurs d'écran -->
       <div
@@ -260,11 +254,7 @@ const warningMessage = computed<string>(() => {
       </div>
 
       <div class="divide-y divide-border-subtle rounded-lg border border-border-subtle bg-surface">
-        <div
-          v-for="type in CHECK_TYPES_ORDERED"
-          :key="type"
-          class="px-4 py-3"
-        >
+        <div v-for="type in CHECK_TYPES_ORDERED" :key="type" class="px-4 py-3">
           <!-- Toggle row -->
           <div class="flex items-center gap-3">
             <CSwitch
@@ -277,10 +267,7 @@ const warningMessage = computed<string>(() => {
           </div>
 
           <!-- Paramètres conditionnels (visibles quand le check est actif) -->
-          <div
-            v-if="getCheck(type)?.enabled"
-            class="mt-3 ml-10 space-y-2"
-          >
+          <div v-if="getCheck(type)?.enabled" class="mt-3 ml-10 space-y-2">
             <!-- Branches -->
             <template v-if="type === 'branches'">
               <CInput
@@ -289,9 +276,7 @@ const warningMessage = computed<string>(() => {
                 placeholder="main, feature/login, feature/footer"
                 @update:model-value="updateBranchesParam"
               />
-              <p class="text-xs text-text-subtle">
-                Ex. : <code>main, develop, feature/auth</code>
-              </p>
+              <p class="text-xs text-text-subtle">Ex. : <code>main, develop, feature/auth</code></p>
             </template>
 
             <!-- Lighthouse score -->
@@ -318,17 +303,13 @@ const warningMessage = computed<string>(() => {
 
             <!-- Checks sans paramètres -->
             <template v-else>
-              <p class="text-xs text-text-subtle">
-                Ce check ne nécessite aucun paramètre.
-              </p>
+              <p class="text-xs text-text-subtle">Ce check ne nécessite aucun paramètre.</p>
             </template>
           </div>
         </div>
       </div>
 
-      <p class="mt-1.5 text-xs text-text-subtle">
-        {{ activeChecks.length }}/15 checks actifs
-      </p>
+      <p class="mt-1.5 text-xs text-text-subtle">{{ activeChecks.length }}/15 checks actifs</p>
     </div>
 
     <!-- Bouton prévisualisation YAML -->
@@ -366,23 +347,16 @@ const warningMessage = computed<string>(() => {
           </div>
 
           <!-- Bloc YAML en lecture seule -->
-          <div
-            role="region"
-            aria-label="YAML généré — lecture seule"
-          >
-            <pre class="overflow-auto rounded-lg bg-muted px-4 py-3 text-xs text-text-default"><code>{{ yamlContent }}</code></pre>
+          <div role="region" aria-label="YAML généré — lecture seule">
+            <pre
+              class="overflow-auto rounded-lg bg-muted px-4 py-3 text-xs text-text-default"
+            ><code>{{ yamlContent }}</code></pre>
           </div>
         </div>
       </template>
 
       <template #footer>
-        <UButton
-          type="button"
-          variant="ghost"
-          @click="showYamlModal = false"
-        >
-          Fermer
-        </UButton>
+        <UButton type="button" variant="ghost" @click="showYamlModal = false"> Fermer </UButton>
       </template>
     </UModal>
   </div>
