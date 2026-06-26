@@ -220,6 +220,17 @@ describe('POST /api/cohortes/:id/complete', () => {
     vi.restoreAllMocks();
   });
 
+  it('throws 403 when user is not FORMATEUR_PRINCIPAL of this cohorte', async () => {
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'ACTIVE',
+      memberships: [], // not a member → 403
+    });
+
+    const { default: handler } = await importHandler();
+    await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 403 });
+  });
+
   it('throws 422 when cohorte is not ACTIVE', async () => {
     mockCohorteFindUnique.mockResolvedValue({
       id: COHORTE_ID,
@@ -260,6 +271,17 @@ describe('POST /api/cohortes/:id/archive', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it('throws 403 when user is not FORMATEUR_PRINCIPAL of this cohorte', async () => {
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'COMPLETED',
+      memberships: [], // not a member → 403
+    });
+
+    const { default: handler } = await importHandler();
+    await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 403 });
   });
 
   it('throws 422 when cohorte is already ARCHIVED', async () => {
