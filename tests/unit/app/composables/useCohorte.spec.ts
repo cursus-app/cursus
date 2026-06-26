@@ -154,6 +154,26 @@ describe('useCohorte — getCohorte', () => {
     expect(result.id).toBe('cohorte-1');
     expect(result.status).toBe('DRAFT');
   });
+
+  it('sets error on fetch failure (with message)', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.notFound' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { getCohorte, error } = useCohorte();
+
+    await expect(getCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.notFound');
+  });
+
+  it('falls back to generic error when no data.message', async () => {
+    mockFetch.mockRejectedValue({ status: 500 });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { getCohorte, error } = useCohorte();
+
+    await expect(getCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('errors.generic');
+  });
 });
 
 describe('useCohorte — createCohorte', () => {
@@ -216,6 +236,32 @@ describe('useCohorte — updateCohorte', () => {
     });
     expect(result.name).toBe('Updated Name');
   });
+
+  it('sets error on fetch failure', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.notFound' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { updateCohorte, error } = useCohorte();
+
+    await expect(updateCohorte('cohorte-1', { name: 'X' })).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.notFound');
+  });
+});
+
+describe('useCohorte — deleteCohorte', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('sets error on delete failure', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.forbidden' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { deleteCohorte, error } = useCohorte();
+
+    await expect(deleteCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.forbidden');
+  });
 });
 
 describe('useCohorte — state transitions', () => {
@@ -268,5 +314,35 @@ describe('useCohorte — state transitions', () => {
 
     expect(mockFetch).toHaveBeenCalledWith('/api/cohortes/cohorte-1', { method: 'DELETE' });
     expect(mockTrack).toHaveBeenCalledWith('cohorte_deleted');
+  });
+
+  it('startCohorte sets error on failure', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.noStagiaires' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { startCohorte, error } = useCohorte();
+
+    await expect(startCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.noStagiaires');
+  });
+
+  it('completeCohorte sets error on failure', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.cannotCompleteNonActive' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { completeCohorte, error } = useCohorte();
+
+    await expect(completeCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.cannotCompleteNonActive');
+  });
+
+  it('archiveCohorte sets error on failure', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.cannotArchiveDraft' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { archiveCohorte, error } = useCohorte();
+
+    await expect(archiveCohorte('cohorte-1')).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.cannotArchiveDraft');
   });
 });
