@@ -288,7 +288,7 @@
       },
       "filterByCategory": "Filtrer par catégorie",
       "conceptCount": "{n} concept | {n} concepts",
-      "customHelp": "Colle un tableau JSON de concepts ou un objet { concepts: [] } compatible avec le format roadmap.sh.",
+      "customHelp": "Colle un tableau JSON de concepts ou un objet JSON avec une clé concepts (tableau) compatible avec le format roadmap.sh.",
       "showExample": "Voir un exemple",
       "jsonPlaceholder": "[ { \"title\": \"HTML\", \"url\": \"...\" }, ... ]",
       "jsonLabel": "JSON de la roadmap",

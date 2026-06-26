@@ -288,7 +288,7 @@
       },
       "filterByCategory": "Filter by category",
       "conceptCount": "{n} concept | {n} concepts",
-      "customHelp": "Paste a JSON array of concepts or a { concepts: [] } object compatible with the roadmap.sh format.",
+      "customHelp": "Paste a JSON array of concepts or a JSON object with a concepts key (array) compatible with the roadmap.sh format.",
       "showExample": "Show an example",
       "jsonPlaceholder": "[ { \"title\": \"HTML\", \"url\": \"...\" }, ... ]",
       "jsonLabel": "Roadmap JSON",
