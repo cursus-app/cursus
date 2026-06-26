@@ -243,6 +243,15 @@ function levelLabel(level: string): string {
 function tDynamic(key: string): string {
   return t(key as Parameters<typeof t>[0]);
 }
+
+function safeHref(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.toString() : '#';
+  } catch {
+    return '#';
+  }
+}
 </script>
 
 <template>
@@ -419,7 +428,7 @@ function tDynamic(key: string): string {
                     aria-hidden="true"
                   />
                   <a
-                    :href="resource.url"
+                    :href="safeHref(resource.url)"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-accent-text underline-offset-2 hover:underline"
