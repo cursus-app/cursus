@@ -176,6 +176,22 @@ export function useCursus() {
     }
   }
 
+  async function cloneCursus(id: string): Promise<CursusFull> {
+    loading.value = true;
+    error.value = null;
+    try {
+      const cursus = await $fetch<CursusFull>(`/api/cursus/${id}/clone`, { method: 'POST' });
+      track('cursus_cloned');
+      return cursus;
+    } catch (err: unknown) {
+      const fetchErr = err as { data?: { message?: string } };
+      error.value = fetchErr.data?.message ?? t('errors.generic');
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
   return {
     loading,
     error,
@@ -186,5 +202,6 @@ export function useCursus() {
     deleteCursus,
     publishCursus,
     archiveCursus,
+    cloneCursus,
   };
 }
