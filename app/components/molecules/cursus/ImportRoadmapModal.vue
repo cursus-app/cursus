@@ -75,9 +75,7 @@ const filteredCatalog = computed(() => {
   return catalog.value.filter((r) => r.category === categoryFilter.value);
 });
 
-const selectedEntry = computed(() =>
-  catalog.value.find((r) => r.id === selectedRoadmapId.value),
-);
+const selectedEntry = computed(() => catalog.value.find((r) => r.id === selectedRoadmapId.value));
 
 const canProceed = computed(() => {
   if (inputMode.value === 'catalog') {
@@ -177,7 +175,8 @@ function parseCustomJson() {
 
   if (!result.success) {
     const firstIssue = result.error.issues[0];
-    jsonParseError.value = firstIssue?.message ?? t('cursus.importRoadmap.errors.invalidJsonFormat');
+    jsonParseError.value =
+      firstIssue?.message ?? t('cursus.importRoadmap.errors.invalidJsonFormat');
     return;
   }
 
@@ -187,7 +186,9 @@ function parseCustomJson() {
 // ─── Steps ────────────────────────────────────────────────────────────────────
 
 function goToPreview() {
-  if (!canProceed.value) { return; }
+  if (!canProceed.value) {
+    return;
+  }
 
   if (inputMode.value === 'catalog' && selectedEntry.value) {
     previewInfo.value = {
@@ -335,7 +336,11 @@ defineExpose({ open });
               <!-- Catalog list -->
               <template v-else>
                 <!-- Category filter -->
-                <div class="mb-4 flex flex-wrap gap-2" role="group" :aria-label="t('cursus.importRoadmap.filterByCategory')">
+                <div
+                  class="mb-4 flex flex-wrap gap-2"
+                  role="group"
+                  :aria-label="t('cursus.importRoadmap.filterByCategory')"
+                >
                   <button
                     v-for="cat in categories"
                     :key="cat"
@@ -400,7 +405,9 @@ defineExpose({ open });
                 <summary class="cursor-pointer text-xs text-text-muted hover:text-text-default">
                   {{ t('cursus.importRoadmap.showExample') }}
                 </summary>
-                <pre class="mt-2 overflow-x-auto rounded-lg bg-muted p-3 text-xs text-text-default"><code>{{ `[\n  { "title": "HTML & CSS" },\n  { "title": "JavaScript", "url": "https://roadmap.sh/javascript" },\n  { "title": "TypeScript" }\n]` }}</code></pre>
+                <pre
+                  class="mt-2 overflow-x-auto rounded-lg bg-muted p-3 text-xs text-text-default"
+                ><code>{{ `[\n  { "title": "HTML & CSS" },\n  { "title": "JavaScript", "url": "https://roadmap.sh/javascript" },\n  { "title": "TypeScript" }\n]` }}</code></pre>
               </details>
 
               <UTextarea
@@ -413,7 +420,10 @@ defineExpose({ open });
               />
 
               <!-- Parse error -->
-              <p v-if="jsonParseError" class="mt-2 flex items-center gap-1.5 text-sm text-danger-fg">
+              <p
+                v-if="jsonParseError"
+                class="mt-2 flex items-center gap-1.5 text-sm text-danger-fg"
+              >
                 <UIcon name="i-tabler-alert-circle" class="size-4 shrink-0" />
                 {{ jsonParseError }}
               </p>
@@ -430,9 +440,7 @@ defineExpose({ open });
           </div>
 
           <!-- Footer: mode replace/append + proceed -->
-          <div
-            class="flex shrink-0 flex-col gap-3 border-t border-border-subtle px-6 py-4"
-          >
+          <div class="flex shrink-0 flex-col gap-3 border-t border-border-subtle px-6 py-4">
             <!-- Replace / Append toggle -->
             <div
               v-if="hasExistingModules"
@@ -444,21 +452,11 @@ defineExpose({ open });
               </p>
               <div class="flex gap-3">
                 <label class="flex cursor-pointer items-center gap-2 text-sm text-text-default">
-                  <input
-                    v-model="importMode"
-                    type="radio"
-                    value="replace"
-                    class="accent-accent"
-                  >
+                  <input v-model="importMode" type="radio" value="replace" class="accent-accent" />
                   {{ t('cursus.importRoadmap.modeReplace') }}
                 </label>
                 <label class="flex cursor-pointer items-center gap-2 text-sm text-text-default">
-                  <input
-                    v-model="importMode"
-                    type="radio"
-                    value="append"
-                    class="accent-accent"
-                  >
+                  <input v-model="importMode" type="radio" value="append" class="accent-accent" />
                   {{ t('cursus.importRoadmap.modeAppend') }}
                 </label>
               </div>
@@ -468,11 +466,7 @@ defineExpose({ open });
               <UButton color="neutral" variant="ghost" @click="close">
                 {{ t('common.cancel') }}
               </UButton>
-              <UButton
-                icon="i-tabler-arrow-right"
-                :disabled="!canProceed"
-                @click="goToPreview"
-              >
+              <UButton icon="i-tabler-arrow-right" :disabled="!canProceed" @click="goToPreview">
                 {{ t('cursus.importRoadmap.preview') }}
               </UButton>
             </div>
@@ -531,7 +525,8 @@ defineExpose({ open });
                   target="_blank"
                   rel="noopener noreferrer"
                   class="underline hover:text-text-default"
-                >roadmap.sh</a>
+                  >roadmap.sh</a
+                >
                 (CC BY-SA 4.0).
               </span>
             </div>

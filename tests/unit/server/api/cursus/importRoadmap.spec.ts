@@ -79,8 +79,7 @@ const VALID_CONCEPTS = [
   { title: 'JavaScript' },
 ];
 
-const importHandler = () =>
-  import('~~/server/api/cursus/[id]/import-roadmap.post');
+const importHandler = () => import('~~/server/api/cursus/[id]/import-roadmap.post');
 
 // ─── Tests : Authentification ─────────────────────────────────────────────────
 
@@ -373,12 +372,12 @@ describe('POST /api/cursus/:id/import-roadmap — custom concepts import', () =>
       return fn({
         module: {
           deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
-          createMany: vi.fn().mockImplementation(
-            ({ data }: { data: Array<{ resourcesJson: unknown }> }) => {
+          createMany: vi
+            .fn()
+            .mockImplementation(({ data }: { data: Array<{ resourcesJson: unknown }> }) => {
               capturedData = data;
               return Promise.resolve();
-            },
-          ),
+            }),
         },
         cursus: { update: vi.fn() },
       });
@@ -661,9 +660,7 @@ describe('importRoadmapSchema — validation Zod', () => {
 describe('GET /api/cursus/import-roadmap/catalog', () => {
   it('returns catalog entries with conceptCount', async () => {
     vi.stubGlobal('defineEventHandler', (fn: () => unknown) => fn);
-    const { default: handler } = await import(
-      '~~/server/api/cursus/import-roadmap/catalog.get'
-    );
+    const { default: handler } = await import('~~/server/api/cursus/import-roadmap/catalog.get');
 
     const result = (await (handler as () => Promise<unknown>)()) as Array<{
       id: string;
@@ -680,9 +677,7 @@ describe('GET /api/cursus/import-roadmap/catalog', () => {
 
   it('includes all expected catalog roadmaps', async () => {
     vi.stubGlobal('defineEventHandler', (fn: () => unknown) => fn);
-    const { default: handler } = await import(
-      '~~/server/api/cursus/import-roadmap/catalog.get'
-    );
+    const { default: handler } = await import('~~/server/api/cursus/import-roadmap/catalog.get');
 
     const result = (await (handler as () => Promise<unknown>)()) as Array<{ id: string }>;
     const ids = result.map((r) => r.id);
@@ -696,9 +691,7 @@ describe('GET /api/cursus/import-roadmap/catalog', () => {
 
   it('does not expose concepts array in catalog list', async () => {
     vi.stubGlobal('defineEventHandler', (fn: () => unknown) => fn);
-    const { default: handler } = await import(
-      '~~/server/api/cursus/import-roadmap/catalog.get'
-    );
+    const { default: handler } = await import('~~/server/api/cursus/import-roadmap/catalog.get');
 
     const result = (await (handler as () => Promise<unknown>)()) as Array<Record<string, unknown>>;
     result.forEach((entry) => {

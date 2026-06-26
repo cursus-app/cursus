@@ -102,7 +102,10 @@ export const ROADMAP_CATALOG: RoadmapEntry[] = [
       { title: 'Incident Response', url: 'https://roadmap.sh/cyber-security' },
       { title: 'Threat Intelligence', url: 'https://roadmap.sh/cyber-security' },
       { title: 'Cloud Security', url: 'https://roadmap.sh/cyber-security' },
-      { title: 'Compliance & Governance (ISO 27001, GDPR)', url: 'https://roadmap.sh/cyber-security' },
+      {
+        title: 'Compliance & Governance (ISO 27001, GDPR)',
+        url: 'https://roadmap.sh/cyber-security',
+      },
       { title: 'Malware Analysis', url: 'https://roadmap.sh/cyber-security' },
     ],
   },
@@ -223,5 +226,4 @@ export const ROADMAP_CATALOG: RoadmapEntry[] = [
 ];
 
 /** Attribution obligatoire à inclure dans la description du cursus (CC BY-SA 4.0). */
-export const ROADMAP_ATTRIBUTION =
-  'Inspiré de roadmap.sh (CC BY-SA 4.0) — https://roadmap.sh';
+export const ROADMAP_ATTRIBUTION = 'Inspiré de roadmap.sh (CC BY-SA 4.0) — https://roadmap.sh';

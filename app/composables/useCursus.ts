@@ -230,10 +230,10 @@ export function useCursus() {
     loading.value = true;
     error.value = null;
     try {
-      const result = await $fetch<ImportRoadmapResult>(
-        `/api/cursus/${cursusId}/import-roadmap`,
-        { method: 'POST', body: data },
-      );
+      const result = await $fetch<ImportRoadmapResult>(`/api/cursus/${cursusId}/import-roadmap`, {
+        method: 'POST',
+        body: data,
+      });
       track('cursus_roadmap_imported', {
         ...(data.roadmapId !== undefined ? { roadmapId: data.roadmapId } : {}),
         created: result.created,
