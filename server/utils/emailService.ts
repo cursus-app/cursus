@@ -97,6 +97,25 @@ function getFrom(): string {
 
 // ─── Helpers HTML ─────────────────────────────────────────────────────────────
 
+/** Escape HTML special chars to prevent XSS when interpolating into HTML templates. */
+function escHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/** Validate that a URL uses https: protocol before embedding in HTML. */
+function safeHttpsUrl(raw: string): string {
+  const parsed = new URL(raw);
+  if (parsed.protocol !== 'https:') {
+    throw new EmailServiceError(`Invalid invite URL scheme: ${parsed.protocol}`);
+  }
+  return escHtml(parsed.toString());
+}
+
 function wrapHtml(content: string, preheader = ''): string {
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -143,7 +162,10 @@ function wrapHtml(content: string, preheader = ''): string {
 
 function plainText(content: string): string {
   // Retirer les balises HTML et nettoyer
-  return content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  return content
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // ─── Templates ────────────────────────────────────────────────────────────────
@@ -152,8 +174,9 @@ function plainText(content: string): string {
  * Email de bienvenue envoyé à la création de compte.
  */
 export async function sendWelcomeEmail(to: string, name: string): Promise<EmailSendResult> {
+  const safeName = escHtml(name);
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Bienvenue sur Cursus, ${name} !</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Bienvenue sur Cursus, ${safeName} !</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
       Ton compte est prêt. Tu peux dès maintenant accéder à tes cursus, soumettre tes livrables
       et suivre ta progression semaine après semaine.
@@ -176,7 +199,7 @@ export async function sendWelcomeEmail(to: string, name: string): Promise<EmailS
   return sendViaResend({
     from: getFrom(),
     to,
-    subject: `Bienvenue sur Cursus, ${name} !`,
+    subject: `Bienvenue sur Cursus, ${name} !`, // subject is plain text, no escaping needed
     html: wrapHtml(content, `Ton compte Cursus est prêt — accède à tes cursus`),
     text: plainText(content),
   });
@@ -196,14 +219,16 @@ export async function sendWeekReminderEmail(
     day: 'numeric',
     month: 'long',
   });
+  const safeName = escHtml(name);
+  const safeWeekTitle = escHtml(weekTitle);
 
   const content = `
     <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Rappel : livrable à soumettre</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${name},
+      Bonjour ${safeName},
     </p>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Le module <strong>${weekTitle}</strong> arrive à échéance le <strong>${dueDateStr}</strong>.
+      Le module <strong>${safeWeekTitle}</strong> arrive à échéance le <strong>${dueDateStr}</strong>.
       Pense à soumettre ton livrable avant la date limite pour que le harnais puisse l'évaluer.
     </p>
     <div style="background-color:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;padding:16px;margin:24px 0;">
@@ -240,14 +265,16 @@ export async function sendAlertEmail(
   moduleName: string,
   daysLate: number,
 ): Promise<EmailSendResult> {
+  const safeName = escHtml(name);
+  const safeModuleName = escHtml(moduleName);
   const content = `
     <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Alerte : stagiaire en difficulté</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${name},
+      Bonjour ${safeName},
     </p>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
       Un de tes stagiaires n'a pas encore soumis son livrable pour le module
-      <strong>${moduleName}</strong>, qui est en retard de <strong>${daysLate} jour${daysLate > 1 ? 's' : ''}</strong>.
+      <strong>${safeModuleName}</strong>, qui est en retard de <strong>${daysLate} jour${daysLate > 1 ? 's' : ''}</strong>.
     </p>
     <div style="background-color:#fee2e2;border-left:4px solid #ef4444;border-radius:4px;padding:16px;margin:24px 0;">
       <p style="margin:0;font-size:14px;color:#991b1b;">
@@ -269,7 +296,7 @@ export async function sendAlertEmail(
     from: getFrom(),
     to,
     subject: `Alerte : stagiaire en retard sur "${moduleName}"`,
-    html: wrapHtml(content, `Un stagiaire est en retard de ${daysLate}j sur ${moduleName}`),
+    html: wrapHtml(content, `Un stagiaire est en retard de ${daysLate}j sur ${safeModuleName}`),
     text: plainText(content),
   });
 }
@@ -291,17 +318,18 @@ export async function sendHarnessResultEmail(
   const statusBg = isPassing ? '#d1fae5' : '#fee2e2';
   const statusText = isPassing ? 'Livrable validé !' : 'Des corrections sont nécessaires';
 
+  const safeName = escHtml(name);
   const checksHtml = checks
     .map((c) => {
       const icon = c.passed ? '✅' : '❌';
-      return `<li style="margin:8px 0;font-size:14px;color:#374151;">${icon} ${c.name}${c.message ? ` — ${c.message}` : ''}</li>`;
+      return `<li style="margin:8px 0;font-size:14px;color:#374151;">${icon} ${escHtml(c.name)}${c.message ? ` — ${escHtml(c.message)}` : ''}</li>`;
     })
     .join('');
 
   const content = `
     <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Résultat du harnais</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${name},
+      Bonjour ${safeName},
     </p>
     <div style="background-color:${statusBg};border-left:4px solid ${statusColor};border-radius:4px;padding:16px;margin:0 0 24px 0;text-align:center;">
       <p style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:${statusColor};">
@@ -334,7 +362,10 @@ export async function sendHarnessResultEmail(
     from: getFrom(),
     to,
     subject,
-    html: wrapHtml(content, `Score ${String(score)}/100 — ${String(passed)}/${String(total)} vérifications`),
+    html: wrapHtml(
+      content,
+      `Score ${String(score)}/100 — ${String(passed)}/${String(total)} vérifications`,
+    ),
     text: plainText(content),
   });
 }
@@ -348,10 +379,13 @@ export async function sendInvitationEmail(
   cohorteName: string,
   inviteUrl: string,
 ): Promise<EmailSendResult> {
+  const safeInviterName = escHtml(inviterName);
+  const safeCohorteName = escHtml(cohorteName);
+  const safeInviteUrl = safeHttpsUrl(inviteUrl);
   const content = `
     <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Tu es invité sur Cursus</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      <strong>${inviterName}</strong> t'invite à rejoindre la cohorte <strong>${cohorteName}</strong> sur Cursus.
+      <strong>${safeInviterName}</strong> t'invite à rejoindre la cohorte <strong>${safeCohorteName}</strong> sur Cursus.
     </p>
     <p style="margin:0 0 24px 0;font-size:16px;color:#374151;line-height:1.6;">
       Cursus est une plateforme de suivi de stage qui te permet de soumettre tes livrables,
@@ -360,7 +394,7 @@ export async function sendInvitationEmail(
     <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
-          <a href="${inviteUrl}" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
+          <a href="${safeInviteUrl}" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
             Accepter l'invitation →
           </a>
         </td>

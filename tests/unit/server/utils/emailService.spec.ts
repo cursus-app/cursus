@@ -59,7 +59,7 @@ describe('sendViaResend', () => {
     vi.restoreAllMocks();
   });
 
-  it('envoie le payload correct à l\'API Resend', async () => {
+  it("envoie le payload correct à l'API Resend", async () => {
     mockFetch.mockResolvedValueOnce(resendOkResponse());
     const { sendViaResend } = await import('~~/server/utils/emailService');
 
@@ -106,9 +106,7 @@ describe('sendViaResend', () => {
 
   it('throw EmailServiceError si Resend retourne une erreur HTTP', async () => {
     mockFetch.mockResolvedValueOnce(resendErrorResponse('Quota exceeded', 429));
-    const { sendViaResend, EmailServiceError } = await import(
-      '~~/server/utils/emailService'
-    );
+    const { sendViaResend, EmailServiceError } = await import('~~/server/utils/emailService');
 
     await expect(
       sendViaResend({
@@ -126,9 +124,7 @@ describe('sendViaResend', () => {
       status: 200,
       json: async () => ({ error: { message: 'Validation error' } }),
     });
-    const { sendViaResend, EmailServiceError } = await import(
-      '~~/server/utils/emailService'
-    );
+    const { sendViaResend, EmailServiceError } = await import('~~/server/utils/emailService');
 
     await expect(
       sendViaResend({
@@ -221,7 +217,7 @@ describe('sendWeekReminderEmail', () => {
     expect(body.subject).toContain('Introduction à Git');
   });
 
-  it('mentionne la date d\'échéance dans le HTML', async () => {
+  it("mentionne la date d'échéance dans le HTML", async () => {
     mockFetch.mockResolvedValueOnce(resendOkResponse());
     const { sendWeekReminderEmail } = await import('~~/server/utils/emailService');
 
@@ -359,7 +355,7 @@ describe('sendInvitationEmail', () => {
     vi.restoreAllMocks();
   });
 
-  it('inclut le lien d\'invitation', async () => {
+  it("inclut le lien d'invitation", async () => {
     mockFetch.mockResolvedValueOnce(resendOkResponse());
     const { sendInvitationEmail } = await import('~~/server/utils/emailService');
 
