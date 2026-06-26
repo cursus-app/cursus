@@ -3,6 +3,45 @@
     "name": "Cursus",
     "tagline": "Le parcours de stage tech, structuré et validé."
   },
+  "molecules": {
+    "alert": {
+      "dismiss": "Fermer l'alerte"
+    },
+    "banner": {
+      "dismiss": "Fermer le bandeau"
+    },
+    "emptyState": {
+      "defaultTitle": "Aucun résultat",
+      "defaultDescription": "Il n'y a rien à afficher pour l'instant."
+    },
+    "searchInput": {
+      "placeholder": "Rechercher…",
+      "shortcut": "Pour rechercher",
+      "clear": "Effacer la recherche"
+    },
+    "dataTable": {
+      "sortAscending": "Trier par ordre croissant",
+      "sortDescending": "Trier par ordre décroissant",
+      "sortNone": "Supprimer le tri",
+      "previous": "Page précédente",
+      "next": "Page suivante",
+      "pageInfo": "Page {page} sur {total}",
+      "rowsPerPage": "Lignes par page",
+      "loading": "Chargement des données…",
+      "empty": "Aucune donnée à afficher"
+    },
+    "dateRangePicker": {
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "errorEndBeforeStart": "La date de fin doit être après la date de début"
+    },
+    "progressBar": {
+      "progress": "Progression : {value} %"
+    },
+    "stepper": {
+      "stepOf": "Étape {current} sur {total}"
+    }
+  },
   "nav": {
     "skipToContent": "Aller au contenu"
   },

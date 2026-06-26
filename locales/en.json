@@ -3,6 +3,45 @@
     "name": "Cursus",
     "tagline": "The tech internship journey, structured and validated."
   },
+  "molecules": {
+    "alert": {
+      "dismiss": "Dismiss alert"
+    },
+    "banner": {
+      "dismiss": "Dismiss banner"
+    },
+    "emptyState": {
+      "defaultTitle": "No results",
+      "defaultDescription": "There is nothing to display yet."
+    },
+    "searchInput": {
+      "placeholder": "Search…",
+      "shortcut": "to search",
+      "clear": "Clear search"
+    },
+    "dataTable": {
+      "sortAscending": "Sort ascending",
+      "sortDescending": "Sort descending",
+      "sortNone": "Remove sort",
+      "previous": "Previous page",
+      "next": "Next page",
+      "pageInfo": "Page {page} of {total}",
+      "rowsPerPage": "Rows per page",
+      "loading": "Loading data…",
+      "empty": "No data to display"
+    },
+    "dateRangePicker": {
+      "startDate": "Start date",
+      "endDate": "End date",
+      "errorEndBeforeStart": "End date must be after start date"
+    },
+    "progressBar": {
+      "progress": "Progress: {value}%"
+    },
+    "stepper": {
+      "stepOf": "Step {current} of {total}"
+    }
+  },
   "nav": {
     "skipToContent": "Skip to content"
   },
