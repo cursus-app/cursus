@@ -62,7 +62,7 @@ const OTHER_FORMATEUR = { id: 'other-formateur-uuid-001', globalRole: 'FORMATEUR
 const MODULE_FIXTURE = {
   id: MODULE_ID,
   cursusId: CURSUS_ID,
-  cursus: { ownerId: OWNER_ID },
+  cursus: { ownerId: OWNER_ID, status: 'DRAFT' },
 };
 
 const VALID_RESOURCE = {

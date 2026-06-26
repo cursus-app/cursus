@@ -15,6 +15,7 @@ vi.mock('#supabase/server', () => ({
 const mockUserFindUnique = vi.fn();
 const mockCursusFindUnique = vi.fn();
 const mockModuleFindMany = vi.fn();
+const mockModuleFindUnique = vi.fn();
 const mockModuleFindFirst = vi.fn();
 const mockModuleCreate = vi.fn();
 const mockModuleUpdate = vi.fn();
@@ -27,6 +28,7 @@ vi.mock('~~/server/utils/prisma', () => ({
     cursus: { findUnique: mockCursusFindUnique },
     module: {
       findMany: mockModuleFindMany,
+      findUnique: mockModuleFindUnique,
       findFirst: mockModuleFindFirst,
       create: mockModuleCreate,
       update: mockModuleUpdate,
@@ -283,8 +285,11 @@ describe('PATCH /api/cursus/:id/modules/:moduleId — update module', () => {
       .mockReturnValueOnce(MODULE_ID); // moduleId
     mockServerSupabaseUser.mockResolvedValue({ id: OWNER_ID });
     mockUserFindUnique.mockResolvedValue(OWNER_DB_USER);
-    mockCursusFindUnique.mockResolvedValue(DRAFT_CURSUS);
-    mockModuleFindFirst.mockResolvedValue({ id: MODULE_ID, week: 1 });
+    mockModuleFindUnique.mockResolvedValue({
+      id: MODULE_ID,
+      cursusId: CURSUS_ID,
+      cursus: { ownerId: OWNER_ID, status: 'DRAFT' },
+    });
     mockModuleUpdate.mockResolvedValue(SAMPLE_MODULE);
   });
 
@@ -308,7 +313,7 @@ describe('PATCH /api/cursus/:id/modules/:moduleId — update module', () => {
   });
 
   it('throws 404 when module not found in cursus', async () => {
-    mockModuleFindFirst.mockResolvedValue(null);
+    mockModuleFindUnique.mockResolvedValue(null);
 
     const { default: handler } = await import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 404 });
@@ -324,8 +329,11 @@ describe('PATCH /api/cursus/:id/modules/:moduleId — update module', () => {
   });
 
   it('throws 422 when cursus is not DRAFT', async () => {
-    mockCursusFindUnique.mockResolvedValue(ARCHIVED_CURSUS);
-    mockReadValidatedBody.mockResolvedValue({ title: 'New' });
+    mockModuleFindUnique.mockResolvedValue({
+      id: MODULE_ID,
+      cursusId: CURSUS_ID,
+      cursus: { ownerId: OWNER_ID, status: 'ARCHIVED' },
+    });
 
     const { default: handler } = await import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });

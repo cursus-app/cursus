@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
       select: {
         id: true,
         cursusId: true,
-        cursus: { select: { ownerId: true } },
+        cursus: { select: { ownerId: true, status: true } },
       },
     }),
   ]);
@@ -67,6 +67,10 @@ export default defineEventHandler(async (event) => {
 
   if (!isAdmin && !isOwner) {
     throw createError({ statusCode: 403, message: 'module.errors.forbidden' });
+  }
+
+  if (module_.cursus.status !== 'DRAFT') {
+    throw createError({ statusCode: 422, message: 'module.errors.cursusNotDraft' });
   }
 
   const body = await readValidatedBody(event, (raw) => updateModuleSchema.parse(raw));

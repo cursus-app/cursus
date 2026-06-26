@@ -15,7 +15,7 @@ vi.mock('#supabase/server', () => ({
 
 const mockUserFindUnique = vi.fn();
 const mockCursusFindUnique = vi.fn();
-const mockModuleFindFirst = vi.fn();
+const mockModuleFindUnique = vi.fn();
 const mockModuleUpdate = vi.fn();
 
 vi.mock('~~/server/utils/prisma', () => ({
@@ -23,7 +23,7 @@ vi.mock('~~/server/utils/prisma', () => ({
     user: { findUnique: mockUserFindUnique },
     cursus: { findUnique: mockCursusFindUnique },
     module: {
-      findFirst: mockModuleFindFirst,
+      findUnique: mockModuleFindUnique,
       update: mockModuleUpdate,
     },
   },
@@ -83,8 +83,11 @@ const importHandler = () => import('~~/server/api/cursus/[id]/modules/[moduleId]
 function setupAuthAndCursus(): void {
   mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR.id });
   mockUserFindUnique.mockResolvedValue(FORMATEUR);
-  mockCursusFindUnique.mockResolvedValue(CURSUS);
-  mockModuleFindFirst.mockResolvedValue(EXISTING_MODULE);
+  mockModuleFindUnique.mockResolvedValue({
+    id: MODULE_ID,
+    cursusId: CURSUS_ID,
+    cursus: { ownerId: FORMATEUR.id, status: 'DRAFT' },
+  });
 
   mockGetRouterParam.mockImplementation((_event: unknown, param: string) => {
     if (param === 'id') {
@@ -124,11 +127,14 @@ describe('PATCH module — deliverable spec — authentification', () => {
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 401 });
   });
 
-  it('throws 404 when cursus not found', async () => {
+  it('throws 404 when module does not belong to requested cursus', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR.id });
     mockUserFindUnique.mockResolvedValue(FORMATEUR);
-    mockCursusFindUnique.mockResolvedValue(null);
-    mockModuleFindFirst.mockResolvedValue(EXISTING_MODULE);
+    mockModuleFindUnique.mockResolvedValue({
+      id: MODULE_ID,
+      cursusId: 'other-cursus-id',
+      cursus: { ownerId: FORMATEUR.id, status: 'DRAFT' },
+    });
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 404 });
@@ -137,8 +143,7 @@ describe('PATCH module — deliverable spec — authentification', () => {
   it('throws 404 when module not found', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR.id });
     mockUserFindUnique.mockResolvedValue(FORMATEUR);
-    mockCursusFindUnique.mockResolvedValue(CURSUS);
-    mockModuleFindFirst.mockResolvedValue(null);
+    mockModuleFindUnique.mockResolvedValue(null);
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 404 });
@@ -185,8 +190,11 @@ describe('PATCH module — deliverable spec — autorisation', () => {
   });
 
   it('throws 422 when cursus is not DRAFT', async () => {
-    mockCursusFindUnique.mockResolvedValue({ ...CURSUS, status: 'PUBLISHED' });
-    mockReadValidatedBody.mockResolvedValue({});
+    mockModuleFindUnique.mockResolvedValue({
+      id: MODULE_ID,
+      cursusId: CURSUS_ID,
+      cursus: { ownerId: FORMATEUR.id, status: 'PUBLISHED' },
+    });
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });
