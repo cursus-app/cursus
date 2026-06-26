@@ -114,10 +114,7 @@ export const checkBrokenLinksFunction = inngest.createFunction(
       });
     }
 
-    logger.info(
-      { checkedCount, brokenCount },
-      'check-broken-links.completed',
-    );
+    logger.info({ checkedCount, brokenCount }, 'check-broken-links.completed');
 
     return { success: true, checkedCount, brokenCount };
   },

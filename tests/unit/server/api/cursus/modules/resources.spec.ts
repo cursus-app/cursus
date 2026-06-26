@@ -79,18 +79,23 @@ function makeEvent(cursusId = CURSUS_ID, moduleId = MODULE_ID) {
   return { node: { req: {}, res: {} }, cursusId, moduleId };
 }
 
-const mockGetRouterParam = vi.mocked(globalThis.getRouterParam as (event: unknown, key: string) => string | undefined);
+const mockGetRouterParam = vi.mocked(
+  globalThis.getRouterParam as (event: unknown, key: string) => string | undefined,
+);
 
 function setupRouterParams(cursusId = CURSUS_ID, moduleId = MODULE_ID) {
   mockGetRouterParam.mockImplementation((_event, key) => {
-    if (key === 'id') { return cursusId; }
-    if (key === 'moduleId') { return moduleId; }
+    if (key === 'id') {
+      return cursusId;
+    }
+    if (key === 'moduleId') {
+      return moduleId;
+    }
     return undefined;
   });
 }
 
-const importHandler = () =>
-  import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
+const importHandler = () => import('~~/server/api/cursus/[id]/modules/[moduleId].patch');
 
 // ─── Tests — Authentication ───────────────────────────────────────────────────
 
@@ -299,8 +304,12 @@ describe('PATCH /api/cursus/:id/modules/:moduleId — missing params', () => {
 
   it('throws 400 when cursus id is missing', async () => {
     mockGetRouterParam.mockImplementation((_event, key) => {
-      if (key === 'id') { return undefined; }
-      if (key === 'moduleId') { return MODULE_ID; }
+      if (key === 'id') {
+        return undefined;
+      }
+      if (key === 'moduleId') {
+        return MODULE_ID;
+      }
       return undefined;
     });
     mockServerSupabaseUser.mockResolvedValue({ id: OWNER_ID });
@@ -311,8 +320,12 @@ describe('PATCH /api/cursus/:id/modules/:moduleId — missing params', () => {
 
   it('throws 400 when module id is missing', async () => {
     mockGetRouterParam.mockImplementation((_event, key) => {
-      if (key === 'id') { return CURSUS_ID; }
-      if (key === 'moduleId') { return undefined; }
+      if (key === 'id') {
+        return CURSUS_ID;
+      }
+      if (key === 'moduleId') {
+        return undefined;
+      }
       return undefined;
     });
     mockServerSupabaseUser.mockResolvedValue({ id: OWNER_ID });

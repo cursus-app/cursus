@@ -311,9 +311,7 @@ describe('scrapeOgMetadata — full scrape with SSRF + timeout', () => {
       headers: { get: () => 'text/html' },
     };
 
-    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-      mockResponse as unknown as Response,
-    );
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse as unknown as Response);
 
     await expect(scrapeOgMetadata('https://example.com/missing')).rejects.toThrow(/404/);
   });
@@ -340,7 +338,9 @@ describe('scrapeOgMetadata — full scrape with SSRF + timeout', () => {
         }),
     );
 
-    await expect(scrapeOgMetadata('https://example.com')).rejects.toThrow(/timeout|lent|inaccessible/i);
+    await expect(scrapeOgMetadata('https://example.com')).rejects.toThrow(
+      /timeout|lent|inaccessible/i,
+    );
   });
 
   it('returns null image/description for non-HTML content-type', async () => {
@@ -353,9 +353,7 @@ describe('scrapeOgMetadata — full scrape with SSRF + timeout', () => {
       body: null,
     };
 
-    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-      mockResponse as unknown as Response,
-    );
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse as unknown as Response);
 
     const result = await scrapeOgMetadata('https://example.com/doc.pdf');
     expect(result.title).toBeNull();

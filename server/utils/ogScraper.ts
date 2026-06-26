@@ -71,19 +71,23 @@ export function assertNotPrivateUrl(rawUrl: string): void {
 
 /** Sanitize une valeur OG pour prévenir XSS. */
 function sanitizeOgValue(value: string | null): string | null {
-  if (value === null) { return null; }
+  if (value === null) {
+    return null;
+  }
   // 1. Decode HTML entities first (to catch encoded tags like &lt;script&gt;)
   // 2. Then strip all HTML tags from the decoded text
-  return value
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    // Strip any HTML tags (including ones revealed by entity decoding)
-    .replace(/<[^>]*>/g, '')
-    .trim()
-    .slice(0, 1000);
+  return (
+    value
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      // Strip any HTML tags (including ones revealed by entity decoding)
+      .replace(/<[^>]*>/g, '')
+      .trim()
+      .slice(0, 1000)
+  );
 }
 
 /** Extrait le contenu d'une balise meta par property ou name. */
@@ -226,7 +230,10 @@ export async function scrapeOgMetadata(rawUrl: string): Promise<OgResult> {
       throw new Error('Site lent ou inaccessible (timeout > 10s)', { cause: err });
     }
 
-    logger.warn({ url: rawUrl, message: err instanceof Error ? err.message : String(err) }, 'resource.og.scraping_error');
+    logger.warn(
+      { url: rawUrl, message: err instanceof Error ? err.message : String(err) },
+      'resource.og.scraping_error',
+    );
     throw new Error(err instanceof Error ? err.message : String(err), { cause: err });
   }
 }

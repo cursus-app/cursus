@@ -73,11 +73,7 @@ export default defineEventHandler(async (event) => {
     const message = err instanceof Error ? err.message : 'Erreur lors du scraping OG';
 
     // SSRF ou URL invalide → 422 Unprocessable
-    if (
-      message.includes('SSRF') ||
-      message.includes('privée') ||
-      message.includes('autorisés')
-    ) {
+    if (message.includes('SSRF') || message.includes('privée') || message.includes('autorisés')) {
       throw createError({ statusCode: 422, message });
     }
 

@@ -38,7 +38,12 @@ const newResourceSchema = z.object({
   duration: z.number().int().min(0).max(600).optional(),
 });
 
-const { handleSubmit: handleAddSubmit, defineField, errors: addErrors, resetForm } = useForm({
+const {
+  handleSubmit: handleAddSubmit,
+  defineField,
+  errors: addErrors,
+  resetForm,
+} = useForm({
   validationSchema: toTypedSchema(newResourceSchema),
   initialValues: { url: '', title: '', type: 'link' as ResourceType, duration: undefined },
 });
@@ -88,10 +93,14 @@ async function fetchOg(resource: Resource): Promise<void> {
   ogErrorIds.value.delete(resource.id);
 
   try {
-    const data = await $fetch<{ title: string | null; image: string | null; description: string | null }>(
-      `/api/cursus/${props.cursusId}/modules/${props.moduleId}/og`,
-      { method: 'POST', body: { url: resource.url } },
-    );
+    const data = await $fetch<{
+      title: string | null;
+      image: string | null;
+      description: string | null;
+    }>(`/api/cursus/${props.cursusId}/modules/${props.moduleId}/og`, {
+      method: 'POST',
+      body: { url: resource.url },
+    });
 
     const idx = localResources.value.findIndex((r) => r.id === resource.id);
     const existing = idx !== -1 ? localResources.value[idx] : undefined;
@@ -114,7 +123,9 @@ async function fetchOg(resource: Resource): Promise<void> {
 // ─── Persist ─────────────────────────────────────────────────────────────────
 
 async function persistResources(): Promise<void> {
-  if (isSaving.value) { return; }
+  if (isSaving.value) {
+    return;
+  }
   isSaving.value = true;
 
   try {
@@ -124,8 +135,7 @@ async function persistResources(): Promise<void> {
     });
     emit('update:modelValue', [...localResources.value]);
   } catch (err: unknown) {
-    const msg =
-      err instanceof Error ? err.message : 'Erreur lors de la sauvegarde des ressources';
+    const msg = err instanceof Error ? err.message : 'Erreur lors de la sauvegarde des ressources';
     useToast().add({ title: 'Erreur', description: msg, color: 'error' });
   } finally {
     isSaving.value = false;
@@ -180,11 +190,15 @@ async function removeResource(id: string): Promise<void> {
 // ─── Reorder ──────────────────────────────────────────────────────────────────
 
 function moveUp(idx: number): void {
-  if (idx === 0) { return; }
+  if (idx === 0) {
+    return;
+  }
   const arr = [...localResources.value];
   const prev = arr[idx - 1];
   const current = arr[idx];
-  if (!prev || !current) { return; }
+  if (!prev || !current) {
+    return;
+  }
   arr[idx - 1] = { ...current, position: idx - 1 };
   arr[idx] = { ...prev, position: idx };
   localResources.value = arr;
@@ -192,11 +206,15 @@ function moveUp(idx: number): void {
 }
 
 function moveDown(idx: number): void {
-  if (idx === localResources.value.length - 1) { return; }
+  if (idx === localResources.value.length - 1) {
+    return;
+  }
   const arr = [...localResources.value];
   const next = arr[idx + 1];
   const current = arr[idx];
-  if (!next || !current) { return; }
+  if (!next || !current) {
+    return;
+  }
   arr[idx + 1] = { ...current, position: idx + 1 };
   arr[idx] = { ...next, position: idx };
   localResources.value = arr;
@@ -221,10 +239,9 @@ function safeHref(url: string): string {
         <span class="i-tabler-books text-lg text-text-muted" aria-hidden="true" />
         <h3 class="text-sm font-semibold text-text-strong">
           Ressources
-          <span
-            v-if="localResources.length > 0"
-            class="ml-1 text-text-muted font-normal"
-          >({{ localResources.length }}/20)</span>
+          <span v-if="localResources.length > 0" class="ml-1 font-normal text-text-muted"
+            >({{ localResources.length }}/20)</span
+          >
         </h3>
       </div>
 
@@ -243,7 +260,7 @@ function safeHref(url: string): string {
     <!-- Add form -->
     <div
       v-if="isAdding"
-      class="rounded-lg border border-border-subtle bg-surface p-4 space-y-3"
+      class="space-y-3 rounded-lg border border-border-subtle bg-surface p-4"
       role="form"
       aria-label="Ajouter une ressource"
     >
@@ -287,12 +304,17 @@ function safeHref(url: string): string {
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <UButton size="xs" variant="ghost" @click="isAdding = false; resetForm()">
+        <UButton
+          size="xs"
+          variant="ghost"
+          @click="
+            isAdding = false;
+            resetForm();
+          "
+        >
           Annuler
         </UButton>
-        <UButton size="xs" @click="handleAdd">
-          Ajouter la ressource
-        </UButton>
+        <UButton size="xs" @click="handleAdd"> Ajouter la ressource </UButton>
       </div>
     </div>
 
@@ -301,9 +323,12 @@ function safeHref(url: string): string {
       v-if="localResources.length === 0 && !isAdding"
       class="rounded-lg border border-dashed border-border-subtle bg-muted/40 py-8 text-center"
     >
-      <span class="i-tabler-books block mx-auto mb-2 text-2xl text-text-subtle" aria-hidden="true" />
+      <span
+        class="i-tabler-books mx-auto mb-2 block text-2xl text-text-subtle"
+        aria-hidden="true"
+      />
       <p class="text-sm text-text-muted">Aucune ressource pour ce module.</p>
-      <p v-if="!readonly" class="text-xs text-text-subtle mt-1">
+      <p v-if="!readonly" class="mt-1 text-xs text-text-subtle">
         Cliquez sur « Ajouter » pour ajouter une ressource.
       </p>
     </div>
@@ -333,7 +358,7 @@ function safeHref(url: string): string {
           />
 
           <!-- OG preview or basic info -->
-          <div class="flex-1 min-w-0">
+          <div class="min-w-0 flex-1">
             <div class="flex items-start gap-2">
               <!-- OG image -->
               <img
@@ -342,9 +367,9 @@ function safeHref(url: string): string {
                 :alt="resource.ogTitle ?? resource.title"
                 class="h-12 w-20 shrink-0 rounded object-cover"
                 loading="lazy"
-              >
+              />
 
-              <div class="flex-1 min-w-0">
+              <div class="min-w-0 flex-1">
                 <p class="truncate text-sm font-medium text-text-strong">
                   {{ resource.ogTitle ?? resource.title }}
                 </p>
@@ -367,13 +392,15 @@ function safeHref(url: string): string {
 
             <!-- Badges -->
             <div class="mt-1.5 flex flex-wrap items-center gap-1.5">
-              <span class="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs bg-muted text-text-muted">
+              <span
+                class="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-text-muted"
+              >
                 {{ getTypeLabel(resource.type) }}
               </span>
 
               <span
                 v-if="resource.duration"
-                class="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs bg-muted text-text-muted"
+                class="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-text-muted"
               >
                 <span class="i-tabler-clock text-xs" aria-hidden="true" />
                 {{ resource.duration }} min
@@ -382,7 +409,7 @@ function safeHref(url: string): string {
               <!-- Broken badge -->
               <span
                 v-if="resource.status === 'broken'"
-                class="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs bg-warning-bg text-warning-fg"
+                class="inline-flex items-center gap-1 rounded bg-warning-bg px-1.5 py-0.5 text-xs text-warning-fg"
                 role="status"
               >
                 <span class="i-tabler-alert-triangle text-xs" aria-hidden="true" />
@@ -413,7 +440,7 @@ function safeHref(url: string): string {
           <!-- Actions -->
           <div
             v-if="!readonly"
-            class="flex shrink-0 items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity"
+            class="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100"
           >
             <!-- Move up -->
             <UButton
