@@ -20,7 +20,7 @@ mockNuxtImport('useToast', () => () => ({
 
 // ─── Import du composable réel ────────────────────────────────────────────────
 
-const { useAppToast } = await import('~/app/composables/useAppToast');
+const { useAppToast } = await import('~/composables/useAppToast');
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
