@@ -375,6 +375,25 @@
       "byStatus": "Status",
       "byDomain": "Domain",
       "byLevel": "Level"
+    },
+    "preview": {
+      "pageTitle": "Student preview — {title} — Cursus",
+      "banner": "Preview mode — you are not logged in as an intern",
+      "backToEditor": "Back to editor",
+      "previewButton": "Student preview",
+      "weekSelector": "Simulate week",
+      "week": "Week {n}",
+      "objectives": "Objectives",
+      "resources": "Resources",
+      "deliverable": "Deliverable",
+      "noResources": "No resources for this week",
+      "submitDisabled": "Action not available in preview mode",
+      "submitLabel": "Submit deliverable",
+      "noModules": "This course has no modules yet.",
+      "noModuleForWeek": "No more modules beyond week {n}.",
+      "xpReward": "{n} XP",
+      "quizLabel": "Weekly quiz",
+      "quizDisabled": "Quiz not available in preview mode"
     }
   },
   "cohortes": {

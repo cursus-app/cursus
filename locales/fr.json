@@ -375,6 +375,25 @@
       "byStatus": "Statut",
       "byDomain": "Domaine",
       "byLevel": "Niveau"
+    },
+    "preview": {
+      "pageTitle": "Aperçu stagiaire — {title} — Cursus",
+      "banner": "Mode aperçu — vous n'êtes pas connecté en tant que stagiaire",
+      "backToEditor": "Retour à l'éditeur",
+      "previewButton": "Aperçu stagiaire",
+      "weekSelector": "Simuler la semaine",
+      "week": "Semaine {n}",
+      "objectives": "Objectifs",
+      "resources": "Ressources",
+      "deliverable": "Livrable",
+      "noResources": "Aucune ressource pour cette semaine",
+      "submitDisabled": "Action non disponible en mode aperçu",
+      "submitLabel": "Soumettre le livrable",
+      "noModules": "Ce cursus n'a pas encore de modules.",
+      "noModuleForWeek": "Plus de modules au-delà de la semaine {n}.",
+      "xpReward": "{n} XP",
+      "quizLabel": "Quiz de la semaine",
+      "quizDisabled": "Quiz non disponible en mode aperçu"
     }
   },
   "cohortes": {
