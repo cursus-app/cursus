@@ -3,11 +3,13 @@
  *
  * Protections :
  *  - SSRF : rejette les IPs privées/loopback/link-local (RFC 1918 + RFC 3927 + AWS metadata).
+ *  - SSRF DNS rebinding : résolution DNS avant le fetch pour éviter le TOCTOU.
  *  - Timeout : 10s max sur le fetch.
  *  - Sanitization : sanitize les valeurs OG avant de les retourner.
  *
  * Cf. ST-03.3 TT-03.3.2.
  */
+import { promises as dns } from 'node:dns';
 import { logger } from '~~/server/utils/logger';
 
 // ─── SSRF protection ─────────────────────────────────────────────────────────
@@ -163,6 +165,36 @@ const OG_FETCH_TIMEOUT_MS = 10_000;
  */
 export async function scrapeOgMetadata(rawUrl: string): Promise<OgResult> {
   assertNotPrivateUrl(rawUrl);
+
+  // ── DNS rebinding / TOCTOU protection ──────────────────────────────────────
+  // The string-level check above validated the URL hostname, but an attacker
+  // controlling their DNS can serve a public IP to pass validation, then flip
+  // the record to 169.254.169.254 before the TCP connection is opened.
+  // We resolve the hostname ourselves and re-validate the resulting IP
+  // *before* calling fetch(), closing the race window.
+  const _parsed = new URL(rawUrl);
+  let _resolvedIp: string;
+  try {
+    const { address } = await dns.lookup(_parsed.hostname);
+    _resolvedIp = address;
+  } catch (err: unknown) {
+    logger.warn(
+      {
+        hostname: _parsed.hostname,
+        error: err instanceof Error ? err.message : String(err),
+      },
+      'ssrf.dns_resolution_failed',
+    );
+    throw new Error('Impossible de résoudre le nom de domaine', { cause: err });
+  }
+  if (isBlockedHost(_resolvedIp)) {
+    logger.warn(
+      { hostname: _parsed.hostname, resolvedIp: _resolvedIp },
+      'ssrf.dns_rebinding_blocked',
+    );
+    throw new Error('URL interne ou privée — rejetée pour des raisons de sécurité (SSRF)');
+  }
+  // ── end DNS rebinding protection ───────────────────────────────────────────
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), OG_FETCH_TIMEOUT_MS);
