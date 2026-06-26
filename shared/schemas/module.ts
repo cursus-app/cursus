@@ -1,14 +1,47 @@
 /**
  * Schémas Zod pour les modules de cursus — validation symétrique client/serveur.
  * Cf. ST-03.2 — Édition modules avec drag-and-drop.
+ * Cf. ST-03.3 — Gestion ressources d'un module.
  * Cf. ST-03.4 — Spécification livrable hebdo + critères harnais.
  */
 import { z } from 'zod';
 
+// ─── Resource ────────────────────────────────────────────────────────────────
+
+export const resourceTypeEnum = z.enum(['link', 'video', 'pdf', 'article', 'doc', 'course']);
+export type ResourceType = z.infer<typeof resourceTypeEnum>;
+
+export const resourceStatusEnum = z.enum(['active', 'broken', 'checking']);
+export type ResourceStatus = z.infer<typeof resourceStatusEnum>;
+
+/**
+ * Schéma d'une ressource stockée dans `Module.resourcesJson`.
+ * L'id est un uuid v4 généré côté client à la création.
+ */
 export const resourceSchema = z.object({
-  label: z.string().min(1, 'modules.errors.resourceLabelRequired'),
-  url: z.string().url('modules.errors.resourceUrlInvalid'),
+  id: z.string().uuid('module.errors.resource.idInvalid'),
+  url: z
+    .string()
+    .url('module.errors.resource.urlInvalid')
+    .max(2000, 'module.errors.resource.urlTooLong'),
+  title: z
+    .string()
+    .min(1, 'module.errors.resource.titleRequired')
+    .max(100, 'module.errors.resource.titleTooLong'),
+  type: resourceTypeEnum,
+  /** Durée estimée en minutes (0 = non renseignée). */
+  duration: z.number().int().min(0).max(600).optional(),
+  /** Ordre d'affichage (0-based). */
+  position: z.number().int().min(0),
+  /** Statut de disponibilité, mis à jour par le job nocturne. */
+  status: resourceStatusEnum.default('active'),
+  // OG metadata (récupérée de manière asynchrone via l'endpoint /og)
+  ogTitle: z.string().max(500).nullable().optional(),
+  ogImage: z.string().url().max(2000).nullable().optional(),
+  ogDescription: z.string().max(1000).nullable().optional(),
 });
+
+export type Resource = z.infer<typeof resourceSchema>;
 
 // ─── Checks harnais ───────────────────────────────────────────────────────────
 
@@ -147,9 +180,6 @@ export const moduleSchema = z.object({
 
 export type ModuleInput = z.infer<typeof moduleSchema>;
 
-export const updateModuleSchema = moduleSchema.partial();
-export type UpdateModuleInput = z.infer<typeof updateModuleSchema>;
-
 export const moduleBulkOrderSchema = z.object({
   modules: z
     .array(
@@ -163,3 +193,58 @@ export const moduleBulkOrderSchema = z.object({
 });
 
 export type ModuleBulkOrderInput = z.infer<typeof moduleBulkOrderSchema>;
+
+// ─── Module update ────────────────────────────────────────────────────────────
+
+/**
+ * PATCH /api/cursus/:id/modules/:moduleId
+ * Mise à jour partielle d'un module.
+ */
+export const updateModuleSchema = z.object({
+  title: z
+    .string()
+    .min(1, 'module.errors.titleRequired')
+    .max(200, 'module.errors.titleTooLong')
+    .optional(),
+  week: z.coerce
+    .number({ invalid_type_error: 'module.errors.weekInvalid' })
+    .int()
+    .min(1, 'module.errors.weekInvalid')
+    .max(52, 'module.errors.weekInvalid')
+    .optional(),
+  objectives: z.string().max(10_000, 'module.errors.objectivesTooLong').optional(),
+  resources: z.array(resourceSchema).max(20, 'module.errors.tooManyResources').optional(),
+  deliverableSpecJson: deliverableSpecSchema.optional(),
+  xpReward: z.coerce
+    .number({ invalid_type_error: 'module.errors.xpRewardInvalid' })
+    .int()
+    .min(0)
+    .max(10_000)
+    .optional(),
+});
+
+export type UpdateModuleInput = z.infer<typeof updateModuleSchema>;
+
+// ─── OG scraping ─────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/cursus/:id/modules/:moduleId/og
+ * Déclenche le scraping des métadonnées OG pour une URL.
+ */
+export const ogScrapeRequestSchema = z.object({
+  url: z
+    .string()
+    .url('module.errors.resource.urlInvalid')
+    .max(2000, 'module.errors.resource.urlTooLong'),
+});
+
+export type OgScrapeRequest = z.infer<typeof ogScrapeRequestSchema>;
+
+export const ogMetadataSchema = z.object({
+  url: z.string().url(),
+  title: z.string().nullable(),
+  image: z.string().url().nullable(),
+  description: z.string().nullable(),
+});
+
+export type OgMetadata = z.infer<typeof ogMetadataSchema>;

@@ -1,22 +1,32 @@
 /**
  * PATCH /api/cursus/:id/modules/:moduleId — mise à jour d'un module.
  *
- * - Réservé au propriétaire ou à un admin.
- * - Cursus doit être en statut DRAFT.
+ * Permet de mettre à jour les ressources, le titre, la semaine, les objectifs
+ * et la récompense XP d'un module.
+ *
+ * Réservé au propriétaire du cursus ou à un admin.
+ * Limité à 100 requêtes par formateur par heure.
+ * Max 20 ressources par module.
+ *
+ * Cf. ST-03.3 — Gestion ressources d'un module.
  */
 import { serverSupabaseUser } from '#supabase/server';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
 import { hashId } from '~~/server/utils/hash';
-import { updateModuleSchema } from '~~/shared/schemas/module';
 import { checkRateLimit } from '~~/server/utils/inMemoryRateLimit';
+import { updateModuleSchema } from '~~/shared/schemas/module';
 
 export default defineEventHandler(async (event) => {
   const cursusId = getRouterParam(event, 'id');
   const moduleId = getRouterParam(event, 'moduleId');
 
-  if (!cursusId || !moduleId) {
-    throw createError({ statusCode: 400, message: 'Missing cursus id or module id' });
+  if (!cursusId) {
+    throw createError({ statusCode: 400, message: 'Missing cursus id' });
+  }
+  if (!moduleId) {
+    throw createError({ statusCode: 400, message: 'Missing module id' });
   }
 
   const supabaseUser = await serverSupabaseUser(event);
@@ -25,71 +35,74 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: 'Unauthorized' });
   }
 
-  checkRateLimit(`module:patch:${supabaseUser['id']}`, 300, 60 * 60 * 1_000);
+  // Rate limit : 100 mise à jour / formateur / heure
+  checkRateLimit(`module:patch:${supabaseUser['id']}`, 100, 60 * 60 * 1_000);
 
-  const [dbUser, cursus, existingModule] = await Promise.all([
+  const [dbUser, module_] = await Promise.all([
     prisma.user.findUnique({
       where: { id: supabaseUser['id'] },
       select: { id: true, globalRole: true },
     }),
-    prisma.cursus.findUnique({
-      where: { id: cursusId },
-      select: { id: true, ownerId: true, status: true },
-    }),
-    prisma.module.findFirst({
-      where: { id: moduleId, cursusId },
-      select: { id: true, week: true },
+    prisma.module.findUnique({
+      where: { id: moduleId },
+      select: {
+        id: true,
+        cursusId: true,
+        cursus: { select: { ownerId: true, status: true } },
+      },
     }),
   ]);
 
-  if (!cursus) {
-    throw createError({ statusCode: 404, message: 'cursus.errors.notFound' });
+  if (!module_) {
+    throw createError({ statusCode: 404, message: 'module.errors.notFound' });
   }
 
-  if (!existingModule) {
-    throw createError({ statusCode: 404, message: 'modules.errors.notFound' });
+  // Vérifier que le module appartient bien au cursus demandé
+  if (module_.cursusId !== cursusId) {
+    throw createError({ statusCode: 404, message: 'module.errors.notFound' });
   }
 
   const isAdmin = dbUser?.globalRole === 'ADMIN';
-  const isOwner = dbUser?.id === cursus.ownerId;
+  const isOwner = dbUser?.id === module_.cursus.ownerId;
 
   if (!isAdmin && !isOwner) {
-    logger.warn(
-      { cursusId, moduleId: hashId(moduleId), userIdHash: hashId(supabaseUser['id']) },
-      'module.patch.forbidden',
-    );
-    throw createError({ statusCode: 403, message: 'cursus.errors.forbidden' });
+    throw createError({ statusCode: 403, message: 'module.errors.forbidden' });
   }
 
-  if (cursus.status !== 'DRAFT') {
-    throw createError({ statusCode: 422, message: 'cursus.errors.cannotEditArchived' });
+  if (module_.cursus.status !== 'DRAFT') {
+    throw createError({ statusCode: 422, message: 'module.errors.cursusNotDraft' });
   }
 
   const body = await readValidatedBody(event, (raw) => updateModuleSchema.parse(raw));
 
-  // Si la semaine change, vérifier l'unicité.
-  if (body.week !== undefined && body.week !== existingModule.week) {
-    const weekConflict = await prisma.module.findFirst({
-      where: { cursusId, week: body.week, id: { not: moduleId } },
-      select: { id: true },
-    });
-    if (weekConflict) {
-      throw createError({ statusCode: 409, message: 'modules.errors.weekTaken' });
-    }
-  }
+  // Construire le payload de mise à jour (champs fournis uniquement)
+  const data: {
+    title?: string;
+    week?: number;
+    objectives?: string;
+    resourcesJson?: Prisma.InputJsonValue;
+    deliverableSpecJson?: Prisma.InputJsonValue;
+    xpReward?: number;
+  } = {};
 
-  // Construire l'objet de mise à jour avec uniquement les champs fournis.
-  // Pas de champs optionnels (exactOptionalPropertyTypes) — on utilise le spread conditionnel.
-  const data = {
-    ...(body.title !== undefined && { title: body.title }),
-    ...(body.week !== undefined && { week: body.week }),
-    ...(body.objectives !== undefined && { objectives: body.objectives }),
-    ...(body.resourcesJson !== undefined && { resourcesJson: body.resourcesJson }),
-    ...(body.deliverableSpecJson !== undefined && {
-      deliverableSpecJson: body.deliverableSpecJson,
-    }),
-    ...(body.xpReward !== undefined && { xpReward: body.xpReward }),
-  };
+  if (body.title !== undefined) {
+    data.title = body.title;
+  }
+  if (body.week !== undefined) {
+    data.week = body.week;
+  }
+  if (body.objectives !== undefined) {
+    data.objectives = body.objectives;
+  }
+  if (body.resources !== undefined) {
+    data.resourcesJson = body.resources as unknown as Prisma.InputJsonValue;
+  }
+  if (body.deliverableSpecJson !== undefined) {
+    data.deliverableSpecJson = body.deliverableSpecJson as unknown as Prisma.InputJsonValue;
+  }
+  if (body.xpReward !== undefined) {
+    data.xpReward = body.xpReward;
+  }
 
   const updated = await prisma.module.update({
     where: { id: moduleId },
@@ -109,7 +122,12 @@ export default defineEventHandler(async (event) => {
   });
 
   logger.info(
-    { moduleId: hashId(moduleId), cursusId, userIdHash: hashId(supabaseUser['id']) },
+    {
+      moduleId: hashId(moduleId),
+      cursusId,
+      userIdHash: hashId(supabaseUser['id']),
+      ...(body.resources !== undefined && { resourceCount: body.resources.length }),
+    },
     'module.updated',
   );
 
