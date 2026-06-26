@@ -409,7 +409,7 @@ export async function sendInvitationEmail(
     from: getFrom(),
     to,
     subject: `${inviterName} t'invite à rejoindre ${cohorteName} sur Cursus`,
-    html: wrapHtml(content, `Invitation de ${inviterName} pour rejoindre ${cohorteName}`),
+    html: wrapHtml(content, `Invitation de ${safeInviterName} pour rejoindre ${safeCohorteName}`),
     text: plainText(content),
   });
 }
