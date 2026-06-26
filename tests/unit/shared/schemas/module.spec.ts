@@ -1,6 +1,7 @@
 /**
- * Tests unitaires pour shared/schemas/module.ts (ST-03.2 + ST-03.4).
- * Couvre : resourceSchema, deliverableSpecSchema (checks inclus), moduleSchema.
+ * Tests unitaires pour shared/schemas/module.ts (ST-03.2 + ST-03.3 + ST-03.4).
+ * Couvre : resourceSchema, harness checks, deliverableSpecSchema, moduleSchema,
+ *          updateModuleSchema, ogScrapeRequestSchema.
  */
 import { describe, it, expect } from 'vitest';
 import {
@@ -12,28 +13,118 @@ import {
   deployUpCheckParamsSchema,
   moduleSchema,
   updateModuleSchema,
+  ogScrapeRequestSchema,
 } from '~~/shared/schemas/module';
 
-// ─── resourceSchema ───────────────────────────────────────────────────────────
+// ─── resourceSchema ────────────────────────────────────────────────────────────
 
-describe('resourceSchema', () => {
-  it('accepts valid resource', () => {
-    expect(resourceSchema.safeParse({ label: 'Doc', url: 'https://example.com' }).success).toBe(
-      true,
-    );
+describe('resourceSchema — validation', () => {
+  const VALID_RESOURCE = {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    url: 'https://developer.mozilla.org/fr/docs/Web/JavaScript',
+    title: 'MDN JavaScript',
+    type: 'article' as const,
+    position: 0,
+    status: 'active' as const,
+  };
+
+  it('parses a valid resource', () => {
+    const result = resourceSchema.safeParse(VALID_RESOURCE);
+    expect(result.success).toBe(true);
   });
 
-  it('rejects empty label', () => {
-    const r = resourceSchema.safeParse({ label: '', url: 'https://example.com' });
-    expect(r.success).toBe(false);
+  it('rejects an invalid UUID id', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, id: 'not-a-uuid' });
+    expect(result.success).toBe(false);
   });
 
-  it('rejects invalid URL', () => {
-    const r = resourceSchema.safeParse({ label: 'Doc', url: 'not-a-url' });
-    expect(r.success).toBe(false);
-    if (!r.success) {
-      expect(r.error.issues[0]?.message).toBe('modules.errors.resourceUrlInvalid');
+  it('rejects an invalid URL', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, url: 'not-a-url' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a title exceeding 100 characters', () => {
+    const result = resourceSchema.safeParse({
+      ...VALID_RESOURCE,
+      title: 'A'.repeat(101),
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an empty title', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, title: '' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects an unknown resource type', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, type: 'unknown-type' });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts all valid resource types', () => {
+    const types = ['link', 'video', 'pdf', 'article', 'doc', 'course'] as const;
+    for (const type of types) {
+      const result = resourceSchema.safeParse({ ...VALID_RESOURCE, type });
+      expect(result.success).toBe(true);
     }
+  });
+
+  it('defaults status to "active" when not provided', () => {
+    const { status: _status, ...withoutStatus } = VALID_RESOURCE;
+    const result = resourceSchema.safeParse(withoutStatus);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.status).toBe('active');
+    }
+  });
+
+  it('accepts optional duration', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, duration: 30 });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects duration exceeding 600 minutes', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, duration: 601 });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts optional OG fields as null', () => {
+    const result = resourceSchema.safeParse({
+      ...VALID_RESOURCE,
+      ogTitle: null,
+      ogImage: null,
+      ogDescription: null,
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a URL of exactly 2000 chars', () => {
+    // https://example.com/ is 20 chars; 1980 'a's → total 2000
+    const url = 'https://example.com/' + 'a'.repeat(1980);
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, url });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a URL exceeding 2000 chars (2001 chars)', () => {
+    // https://example.com/ is 20 chars; 1981 'a's → total 2001
+    const url = 'https://example.com/' + 'a'.repeat(1981);
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, url });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects status values other than active/broken/checking', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, status: 'pending' });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts status "broken"', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, status: 'broken' });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts status "checking"', () => {
+    const result = resourceSchema.safeParse({ ...VALID_RESOURCE, status: 'checking' });
+    expect(result.success).toBe(true);
   });
 });
 
@@ -334,9 +425,77 @@ describe('moduleSchema', () => {
 
 // ─── updateModuleSchema ───────────────────────────────────────────────────────
 
-describe('updateModuleSchema', () => {
-  it('accepts empty object (all fields optional)', () => {
-    expect(updateModuleSchema.safeParse({}).success).toBe(true);
+describe('updateModuleSchema — validation', () => {
+  const VALID_RESOURCE = {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    url: 'https://developer.mozilla.org',
+    title: 'MDN',
+    type: 'link' as const,
+    position: 0,
+    status: 'active' as const,
+  };
+
+  it('accepts an empty object (all fields optional)', () => {
+    const result = updateModuleSchema.safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a valid resources array', () => {
+    const result = updateModuleSchema.safeParse({ resources: [VALID_RESOURCE] });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects more than 20 resources', () => {
+    const resources = Array.from({ length: 21 }, (_, i) => ({
+      ...VALID_RESOURCE,
+      id: `550e8400-e29b-41d4-a716-4466554400${String(i).padStart(2, '0')}`,
+      position: i,
+    }));
+    const result = updateModuleSchema.safeParse({ resources });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts exactly 20 resources', () => {
+    const resources = Array.from({ length: 20 }, (_, i) => ({
+      ...VALID_RESOURCE,
+      id: `550e8400-e29b-41d4-a716-4466554400${String(i).padStart(2, '0')}`,
+      position: i,
+    }));
+    const result = updateModuleSchema.safeParse({ resources });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts an empty resources array', () => {
+    const result = updateModuleSchema.safeParse({ resources: [] });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts title up to 200 chars', () => {
+    const result = updateModuleSchema.safeParse({ title: 'A'.repeat(200) });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects title exceeding 200 chars', () => {
+    const result = updateModuleSchema.safeParse({ title: 'A'.repeat(201) });
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts week in range 1-52', () => {
+    expect(updateModuleSchema.safeParse({ week: 1 }).success).toBe(true);
+    expect(updateModuleSchema.safeParse({ week: 52 }).success).toBe(true);
+  });
+
+  it('rejects week outside range 1-52', () => {
+    expect(updateModuleSchema.safeParse({ week: 0 }).success).toBe(false);
+    expect(updateModuleSchema.safeParse({ week: 53 }).success).toBe(false);
+  });
+
+  it('coerces string week to number', () => {
+    const result = updateModuleSchema.safeParse({ week: '5' });
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.week).toBe(5);
+    }
   });
 
   it('accepts partial update with only deliverableSpecJson', () => {
@@ -349,12 +508,43 @@ describe('updateModuleSchema', () => {
     expect(r.success).toBe(true);
   });
 
-  it('rejects invalid check type in update', () => {
+  it('rejects invalid check type in deliverableSpecJson', () => {
     const r = updateModuleSchema.safeParse({
       deliverableSpecJson: {
         checks: [{ type: 'invalid_type', enabled: true, params: {} }],
       },
     });
     expect(r.success).toBe(false);
+  });
+});
+
+// ─── ogScrapeRequestSchema ────────────────────────────────────────────────────
+
+describe('ogScrapeRequestSchema — validation', () => {
+  it('accepts a valid HTTPS URL', () => {
+    const result = ogScrapeRequestSchema.safeParse({ url: 'https://example.com' });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a valid HTTP URL', () => {
+    const result = ogScrapeRequestSchema.safeParse({ url: 'http://example.com' });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a non-URL string', () => {
+    const result = ogScrapeRequestSchema.safeParse({ url: 'not-a-url' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a URL exceeding 2000 chars (2001 chars)', () => {
+    // https://example.com/ is 20 chars; 1981 'a's → total 2001
+    const url = 'https://example.com/' + 'a'.repeat(1981);
+    const result = ogScrapeRequestSchema.safeParse({ url });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects when url field is missing', () => {
+    const result = ogScrapeRequestSchema.safeParse({});
+    expect(result.success).toBe(false);
   });
 });
