@@ -67,6 +67,7 @@ model User {
   overridesAuthored Submission[]         @relation("SubmissionOverriddenBy")
   gdprExportJobs    GdprExportJob[]
   backupCodes       TwoFaBackupCode[]
+  progressions      Progression[]
 
   @@map("users")
   // NB : email / githubHandle / publicSlug sont @unique → Postgres crée déjà un
@@ -172,10 +173,11 @@ model Module {
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
-  cursus      Cursus       @relation(fields: [cursusId], references: [id], onDelete: Cascade)
-  quiz        Quiz?        @relation(fields: [quizId], references: [id], onDelete: SetNull)
-  badge       Badge?       @relation(fields: [badgeId], references: [id], onDelete: SetNull)
-  submissions Submission[]
+  cursus        Cursus         @relation(fields: [cursusId], references: [id], onDelete: Cascade)
+  quiz          Quiz?          @relation(fields: [quizId], references: [id], onDelete: SetNull)
+  badge         Badge?         @relation(fields: [badgeId], references: [id], onDelete: SetNull)
+  submissions   Submission[]
+  cohortModules CohortModule[]
 
   @@map("modules")
   @@unique([cursusId, week])
@@ -202,6 +204,7 @@ model Cohorte {
   cursusVersion CursusVersion @relation(fields: [cursusVersionId], references: [id], onDelete: Restrict)
   memberships   Membership[]
   invitations   Invitation[]
+  cohortModules CohortModule[]
 
   @@map("cohortes")
   @@index([cursusVersionId])
@@ -229,6 +232,57 @@ model Membership {
   @@index([userId])
   @@index([cohorteId])
   @@index([role])
+}
+
+// ============================================================================
+// PROGRESS TRACKING — COHORT MODULES & PROGRESSIONS
+// ============================================================================
+
+/// Junction entre une Cohorte et un Module, avec la date limite propre à cette cohorte.
+/// Sert de source de vérité pour les progressions des stagiaires.
+model CohortModule {
+  id          String    @id @default(cuid())
+  cohorteId   String    @map("cohorte_id") @db.Uuid
+  moduleId    String    @map("module_id") @db.Uuid
+  dueDate     DateTime  @map("due_date")
+  position    Int       @default(0)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  cohorte      Cohorte       @relation(fields: [cohorteId], references: [id], onDelete: Cascade)
+  module       Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progressions Progression[]
+
+  @@map("cohort_modules")
+  @@unique([cohorteId, moduleId])
+  @@index([cohorteId])
+  @@index([moduleId])
+}
+
+/// Progression d'un stagiaire sur un CohortModule.
+/// Machine à états : A_VENIR → EN_COURS → SOUMIS → VALIDE (ou variantes).
+model Progression {
+  id              String             @id @default(cuid())
+  userId          String             @map("user_id") @db.Uuid
+  cohortModuleId  String             @map("cohort_module_id")
+  status          ProgressionStatus  @default(A_VENIR)
+  submittedAt     DateTime?          @map("submitted_at")
+  validatedAt     DateTime?          @map("validated_at")
+  dueDate         DateTime           @map("due_date")
+  overrideBy      String?            @map("override_by") @db.Uuid
+  overrideReason  String?            @db.Text @map("override_reason")
+  createdAt       DateTime           @default(now()) @map("created_at")
+  updatedAt       DateTime           @updatedAt @map("updated_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohortModule CohortModule @relation(fields: [cohortModuleId], references: [id], onDelete: Cascade)
+
+  @@map("progressions")
+  @@unique([userId, cohortModuleId])
+  @@index([userId, status])
+  @@index([cohortModuleId])
+  @@index([status])
+  @@index([dueDate])
 }
 
 // ============================================================================
@@ -577,4 +631,15 @@ enum NotificationType {
   CAPSTONE_EVALUATED
   CERTIFICATE_ISSUED
   WEEKLY_DIGEST
+}
+
+enum ProgressionStatus {
+  A_VENIR
+  EN_COURS
+  SOUMIS
+  VALIDE
+  BLOQUE
+  EN_ALERTE
+  EN_RETARD
+  VALIDE_OVERRIDE
 }
