@@ -11,7 +11,7 @@
  * Cf. ST-03.3 — Gestion ressources d'un module.
  */
 import { serverSupabaseUser } from '#supabase/server';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
 import { hashId } from '~~/server/utils/hash';

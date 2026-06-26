@@ -58,8 +58,6 @@ vi.stubGlobal('getRouterParam', mockGetRouterParam);
 const CURSUS_ID = 'cursus-uuid-001';
 const MODULE_ID = 'module-uuid-001';
 const FORMATEUR = { id: 'formateur-uuid-001', globalRole: 'FORMATEUR_PRINCIPAL' };
-const CURSUS = { id: CURSUS_ID, ownerId: FORMATEUR.id, status: 'DRAFT' };
-const EXISTING_MODULE = { id: MODULE_ID, week: 1 };
 
 function makeEvent() {
   return { node: { req: {}, res: {} } };
