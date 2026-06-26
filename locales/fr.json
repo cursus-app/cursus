@@ -164,6 +164,19 @@
       "en": "English"
     }
   },
+  "index": {
+    "description": "Cursus accompagne stagiaires et formateurs du onboarding à la délivrance du certificat, avec validation automatique des livrables par un harnais GitHub Actions.",
+    "learnMore": "En savoir plus",
+    "systemStatus": "Statut système",
+    "refresh": "Actualiser",
+    "version": "Version",
+    "status": {
+      "checking": "Vérification…",
+      "error": "Erreur",
+      "ok": "Opérationnel",
+      "degraded": "Dégradé"
+    }
+  },
   "errors": {
     "generic": "Quelque chose s'est mal passé.",
     "notFound": "Page introuvable.",

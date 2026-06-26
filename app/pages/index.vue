@@ -3,6 +3,8 @@
 // Affiche un indicateur de santé qui ping /api/health côté server.
 import type { HealthResponse } from '~~/shared/types/health';
 
+const { t } = useI18n();
+
 useSeoMeta({
   title: 'Cursus',
   description: 'Gestion de parcours de stages tech — du onboarding au certificat.',
@@ -24,15 +26,15 @@ const {
 
 const statusLabel = computed(() => {
   if (status.value === 'pending') {
-    return 'Vérification…';
+    return t('index.status.checking');
   }
   if (error.value) {
-    return 'Erreur';
+    return t('index.status.error');
   }
   if (health.value?.ok) {
-    return 'Opérationnel';
+    return t('index.status.ok');
   }
-  return 'Dégradé';
+  return t('index.status.degraded');
 });
 
 const statusColor = computed(() => {
@@ -51,23 +53,24 @@ const statusColor = computed(() => {
     <p class="text-xs font-medium tracking-widest text-text-subtle uppercase">Cursus</p>
 
     <h1 class="mt-3 text-4xl font-semibold tracking-tight text-text-strong sm:text-5xl">
-      Le parcours de stage tech, structuré et validé.
+      {{ t('app.tagline') }}
     </h1>
 
     <p class="mt-6 text-lg leading-relaxed text-text-muted">
-      Cursus accompagne stagiaires et formateurs du onboarding à la délivrance du certificat, avec
-      validation automatique des livrables par un harnais GitHub Actions.
+      {{ t('index.description') }}
     </p>
 
     <div class="mt-10 flex items-center gap-4">
-      <UButton to="/login" size="lg" color="primary">Se connecter</UButton>
-      <UButton to="/about" variant="ghost" size="lg">En savoir plus</UButton>
+      <UButton to="/login" size="lg" color="primary">{{ t('auth.login') }}</UButton>
+      <UButton to="/about" variant="ghost" size="lg">{{ t('index.learnMore') }}</UButton>
     </div>
 
     <div class="mt-16 rounded-lg border border-border-subtle p-4">
       <div class="flex items-center justify-between gap-4">
         <div>
-          <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">Statut système</p>
+          <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
+            {{ t('index.systemStatus') }}
+          </p>
           <p class="mt-1 text-sm text-text-default">
             <span
               class="inline-flex items-center gap-2 rounded-full px-2.5 py-0.5 text-xs font-medium"
@@ -85,7 +88,7 @@ const statusColor = computed(() => {
           </p>
         </div>
         <UButton variant="ghost" size="sm" icon="i-tabler-refresh" @click="refresh()">
-          Actualiser
+          {{ t('index.refresh') }}
         </UButton>
       </div>
     </div>
