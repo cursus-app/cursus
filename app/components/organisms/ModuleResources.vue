@@ -317,7 +317,16 @@ function safeHref(url: string): string {
         >
           Annuler
         </UButton>
-        <UButton size="xs" @click="() => { void handleAdd(); }"> Ajouter la ressource </UButton>
+        <UButton
+          size="xs"
+          @click="
+            () => {
+              void handleAdd();
+            }
+          "
+        >
+          Ajouter la ressource
+        </UButton>
       </div>
     </div>
 
