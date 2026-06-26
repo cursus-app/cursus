@@ -218,7 +218,11 @@ const warningMessage = computed<string>(() => {
           @click="showDescPreview = !showDescPreview"
         >
           <UIcon name="i-tabler-eye" class="size-3.5" />
-          {{ showDescPreview ? t('cursus.modules.delivrable.edit') : t('cursus.modules.delivrable.preview') }}
+          {{
+            showDescPreview
+              ? t('cursus.modules.delivrable.edit')
+              : t('cursus.modules.delivrable.preview')
+          }}
         </button>
       </div>
 
@@ -268,7 +272,9 @@ const warningMessage = computed<string>(() => {
           <div class="flex items-center gap-3">
             <CSwitch
               :model-value="getCheck(type)?.enabled ?? false"
-              :aria-label="t('cursus.modules.delivrable.toggleCheckAriaLabel', { label: getCheckLabel(type) })"
+              :aria-label="
+                t('cursus.modules.delivrable.toggleCheckAriaLabel', { label: getCheckLabel(type) })
+              "
               @update:model-value="() => toggleCheck(type)"
             />
             <UIcon :name="CHECK_ICONS[type]" class="size-4 text-text-muted" />

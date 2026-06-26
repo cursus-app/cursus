@@ -411,7 +411,7 @@ function safeHref(url: string): string {
                 :alt="resource.ogTitle ?? resource.title"
                 class="h-12 w-20 shrink-0 rounded object-cover"
                 loading="lazy"
-              >
+              />
 
               <div class="min-w-0 flex-1">
                 <p class="truncate text-sm font-medium text-text-strong">
@@ -512,9 +512,7 @@ function safeHref(url: string): string {
               variant="ghost"
               icon="i-tabler-trash"
               color="error"
-              :aria-label="
-                t('cursus.modules.resources.removeAriaLabel', { title: resource.title })
-              "
+              :aria-label="t('cursus.modules.resources.removeAriaLabel', { title: resource.title })"
               @click="removeResource(resource.id)"
             />
           </div>
