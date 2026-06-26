@@ -398,109 +398,6 @@
   },
   "cohortes": {
     "title": "Cohorts",
-    "new": "Create a cohort",
-    "edit": "Edit",
-    "delete": "Delete",
-    "start": "Start cohort",
-    "complete": "Mark as completed",
-    "archive": "Archive",
-    "createTitle": "Create a cohort",
-    "createSubtitle": "Configure the dates, course and rhythm of your new cohort.",
-    "createButton": "Create cohort",
-    "noResults": "No cohorts found",
-    "noMembers": "No members yet",
-    "unknownMember": "Unknown member",
-    "name": "Cohort name",
-    "namePlaceholder": "E.g.: Fall 2026 Cohort",
-    "cursus": "Course",
-    "cursusPlaceholder": "Select a published course",
-    "startDate": "Start date",
-    "endDate": "End date",
-    "rhythm": "Rhythm",
-    "members": "Members",
-    "archivedAt": "Archived on",
-    "status": {
-      "DRAFT": "Draft",
-      "ACTIVE": "Active",
-      "COMPLETED": "Completed",
-      "ARCHIVED": "Archived"
-    },
-    "rhythmLabel": {
-      "WEEKLY": "Weekly",
-      "BIWEEKLY": "Bi-weekly",
-      "MONTHLY": "Monthly",
-      "CUSTOM": "Custom"
-    },
-    "roles": {
-      "stagiaire": "Intern",
-      "formateurPrincipal": "Lead trainer",
-      "coFormateur": "Co-trainer"
-    },
-    "createSuccess": "Cohort created successfully",
-    "startSuccess": "Cohort started",
-    "completeSuccess": "Cohort marked as completed",
-    "archiveSuccess": "Cohort archived",
-    "deleteSuccess": "Cohort deleted",
-    "saveSuccess": "Changes saved",
-    "confirmDelete": {
-      "title": "Delete this cohort?",
-      "description": "This action is irreversible. The cohort and its data will be deleted.",
-      "confirm": "Delete permanently"
-    },
-    "filter": {
-      "all": "All",
-      "byStatus": "Filter by status"
-    },
-    "errors": {
-      "nameTooShort": "Name must be at least 2 characters",
-      "nameTooLong": "Name cannot exceed 100 characters",
-      "cursusIdInvalid": "Invalid course identifier",
-      "startDateInvalid": "Invalid start date (format YYYY-MM-DD)",
-      "endDateInvalid": "Invalid end date (format YYYY-MM-DD)",
-      "endDateBeforeStart": "End date must be after start date",
-      "noPublishedCursus": "No published courses available. Please publish a course first.",
-      "cursusNotFound": "Course not found",
-      "cursusNotPublished": "The selected course is not published",
-      "noVersionFound": "No published version found for this course",
-      "notFound": "Cohort not found",
-      "forbidden": "You don't have access to this cohort",
-      "cannotEditNonDraft": "Only draft cohorts can be edited",
-      "cannotDeleteActive": "Cannot delete an active cohort. Archive it instead.",
-      "cannotStartNonDraft": "Only draft cohorts can be started",
-      "cannotCompleteNonActive": "Only active cohorts can be marked as completed",
-      "alreadyArchived": "This cohort is already archived",
-      "cannotArchiveDraft": "A draft cohort cannot be archived directly",
-      "noStagiaires": "At least 1 intern required to start",
-      "noFormateur": "At least 1 lead trainer required"
-    }
-  },
-  "legal": {
-    "cookieBanner": {
-      "message": "Cursus only uses cookies essential to the site's operation (session, preferences). No advertising tracking.",
-      "learnMore": "Learn more",
-      "dismiss": "OK",
-      "ariaLabel": "Cookie information",
-      "dismissAriaLabel": "Close cookie information banner"
-    },
-    "cgu": {
-      "title": "Terms and Conditions of Use",
-      "version": "Version 1.0.0"
-    },
-    "privacy": {
-      "title": "Privacy Policy",
-      "version": "Version 1.0.0"
-    },
-    "cookies": {
-      "title": "Cookie Policy"
-    },
-    "nav": {
-      "cgu": "Terms",
-      "privacy": "Privacy",
-      "cookies": "Cookies"
-    }
-  },
-  "cohortes": {
-    "title": "Cohorts",
     "new": "Create cohort",
     "edit": "Edit",
     "delete": "Delete",
@@ -575,6 +472,82 @@
       "cannotArchiveDraft": "A draft cohort cannot be archived directly",
       "noStagiaires": "At least 1 trainee required to start",
       "noFormateur": "At least 1 lead instructor required"
+    }
+  },
+  "legal": {
+    "cookieBanner": {
+      "message": "Cursus only uses cookies essential to the site's operation (session, preferences). No advertising tracking.",
+      "learnMore": "Learn more",
+      "dismiss": "OK",
+      "ariaLabel": "Cookie information",
+      "dismissAriaLabel": "Close cookie information banner"
+    },
+    "cgu": {
+      "title": "Terms and Conditions of Use",
+      "version": "Version 1.0.0"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "version": "Version 1.0.0"
+    },
+    "cookies": {
+      "title": "Cookie Policy"
+    },
+    "nav": {
+      "cgu": "Terms",
+      "privacy": "Privacy",
+      "cookies": "Cookies"
+    }
+  },
+  "invitations": {
+    "modalTitle": "Invite trainees",
+    "modalSubtitle": "Send invitations by email or import a CSV file.",
+    "tabs": {
+      "emails": "Emails",
+      "csv": "CSV File"
+    },
+    "emailsLabel": "Email addresses",
+    "emailsPlaceholder": "Paste emails separated by commas or line breaks…",
+    "emailsFound": "{count} valid email(s) found",
+    "invalidEmails": "{count} invalid email(s) ignored",
+    "andMore": "… and {count} more",
+    "sendButton": "Invite ({count})",
+    "successTitle": "{count} invitation(s) sent",
+    "deduplicatedNote": "{count} email(s) skipped (already member or invited)",
+    "summary": "{invited} invitation(s) sent out of {total} email(s)",
+    "csv": {
+      "dropzone": "Drop a CSV file here",
+      "dropzoneLabel": "CSV file drop zone",
+      "fileInputLabel": "Select a CSV file",
+      "browse": "Browse",
+      "format": "Expected columns: email, prenom, nom",
+      "missingEmail": "Missing or empty email column",
+      "invalidEmail": "Invalid email: {email}",
+      "notACsv": "The dropped file is not a CSV",
+      "errors": "{count} error(s) in the CSV",
+      "line": "Line {line}:"
+    },
+    "confirm": {
+      "title": "Send {count} invitations?",
+      "description": "You are about to send a large number of invitations. Do you confirm this action?",
+      "proceed": "Confirm send"
+    },
+    "inviteButton": "Invite trainees",
+    "resend": "Resend",
+    "resendSuccess": "Invitation resent",
+    "pending": "Pending",
+    "expired": "Expired",
+    "accepted": "Accepted",
+    "invitedAt": "Invited on",
+    "expiresAt": "Expires on",
+    "errors": {
+      "emailInvalid": "Invalid email address",
+      "emailRequired": "At least one email is required",
+      "tooManyEmails": "Maximum 50 emails per send",
+      "forbidden": "Action not allowed",
+      "notFound": "Invitation not found",
+      "alreadyAccepted": "This invitation has already been accepted",
+      "revoked": "This invitation has been revoked"
     }
   }
 }
