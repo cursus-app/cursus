@@ -25,9 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 const slots = useSlots();
 
 /** On ne rend le composant que si au moins un slot est alimenté. */
-const hasContent = computed(
-  () => !!(slots['header'] || slots['default'] || slots['footer']),
-);
+const hasContent = computed(() => !!(slots['header'] || slots['default'] || slots['footer']));
 
 const paddingClasses: Record<NonNullable<Props['padding']>, string> = {
   none: '',
@@ -53,10 +51,7 @@ const paddingClasses: Record<NonNullable<Props['padding']>, string> = {
       <slot name="header" />
     </div>
 
-    <div
-      v-if="slots['default']"
-      :class="paddingClasses[props.padding]"
-    >
+    <div v-if="slots['default']" :class="paddingClasses[props.padding]">
       <slot />
     </div>
 

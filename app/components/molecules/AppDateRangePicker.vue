@@ -132,12 +132,7 @@ const endMin = computed(() => props.modelValue.start ?? props.min ?? undefined);
     </div>
 
     <!-- Message d'erreur -->
-    <p
-      v-if="endError"
-      :id="errorId"
-      role="alert"
-      class="text-xs text-danger-fg"
-    >
+    <p v-if="endError" :id="errorId" role="alert" class="text-xs text-danger-fg">
       {{ endError }}
     </p>
   </div>

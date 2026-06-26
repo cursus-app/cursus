@@ -85,16 +85,9 @@ const ariaLive = computed(() =>
 <template>
   <div :class="['w-full', props.class]">
     <!-- Indicateurs d'étapes -->
-    <nav
-      :aria-label="ariaLive"
-      class="mb-8"
-    >
+    <nav :aria-label="ariaLive" class="mb-8">
       <ol class="flex items-center gap-0">
-        <li
-          v-for="(step, index) in props.steps"
-          :key="step.id"
-          class="flex flex-1 items-center"
-        >
+        <li v-for="(step, index) in props.steps" :key="step.id" class="flex flex-1 items-center">
           <!-- Bouton étape -->
           <button
             type="button"
@@ -116,17 +109,9 @@ const ariaLive = computed(() =>
               ]"
             >
               <!-- Étape complétée : checkmark -->
-              <span
-                v-if="index < currentStep"
-                class="i-tabler-check size-4"
-                aria-hidden="true"
-              />
+              <span v-if="index < currentStep" class="i-tabler-check size-4" aria-hidden="true" />
               <!-- Icône custom ou numéro -->
-              <span
-                v-else-if="step.icon"
-                :class="[step.icon, 'size-4']"
-                aria-hidden="true"
-              />
+              <span v-else-if="step.icon" :class="[step.icon, 'size-4']" aria-hidden="true" />
               <span v-else aria-hidden="true">{{ index + 1 }}</span>
             </span>
 
@@ -140,10 +125,7 @@ const ariaLive = computed(() =>
               >
                 {{ step.label }}
               </span>
-              <span
-                v-if="step.description"
-                class="block text-xs text-text-subtle"
-              >
+              <span v-if="step.description" class="block text-xs text-text-subtle">
                 {{ step.description }}
               </span>
             </span>
@@ -152,10 +134,7 @@ const ariaLive = computed(() =>
           <!-- Connecteur entre étapes -->
           <div
             v-if="index < props.steps.length - 1"
-            :class="[
-              'mx-2 h-0.5 flex-1',
-              index < currentStep ? 'bg-accent' : 'bg-border-subtle',
-            ]"
+            :class="['mx-2 h-0.5 flex-1', index < currentStep ? 'bg-accent' : 'bg-border-subtle']"
             aria-hidden="true"
           />
         </li>

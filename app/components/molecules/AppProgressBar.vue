@@ -53,10 +53,12 @@ const percent = computed(() => {
   return Math.round((props.value / props.max) * 100);
 });
 
-const ariaLabel = computed(() =>
-  props.label ?? (percent.value !== null
-    ? t('molecules.progressBar.progress', { value: percent.value })
-    : t('common.loading')),
+const ariaLabel = computed(
+  () =>
+    props.label ??
+    (percent.value !== null
+      ? t('molecules.progressBar.progress', { value: percent.value })
+      : t('common.loading')),
 );
 
 /** Hauteur de la barre selon la taille. */
@@ -86,10 +88,7 @@ const strokeDashoffset = computed(() => {
 
 <template>
   <!-- Mode LINEAR -->
-  <div
-    v-if="props.type === 'linear'"
-    :class="['w-full', props.class]"
-  >
+  <div v-if="props.type === 'linear'" :class="['w-full', props.class]">
     <div
       role="progressbar"
       :aria-valuenow="props.indeterminate ? undefined : props.value"
@@ -116,10 +115,7 @@ const strokeDashoffset = computed(() => {
   </div>
 
   <!-- Mode CIRCULAR -->
-  <div
-    v-else
-    :class="['inline-flex flex-col items-center gap-1', props.class]"
-  >
+  <div v-else :class="['inline-flex flex-col items-center gap-1', props.class]">
     <svg
       :width="svgSize"
       :height="svgSize"

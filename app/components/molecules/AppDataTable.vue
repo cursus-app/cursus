@@ -154,7 +154,12 @@ function goToPage(page: number) {
 }
 
 // Reset page quand les données changent
-watch(() => props.rows, () => { currentPage.value = 1; });
+watch(
+  () => props.rows,
+  () => {
+    currentPage.value = 1;
+  },
+);
 
 // ── Rendu cellule ─────────────────────────────────────────────────────────────
 
@@ -171,11 +176,7 @@ function cellValue(col: TableColumn<T>, row: T): string {
   <div :class="['w-full', props.class]">
     <!-- Table sémantique -->
     <div class="overflow-x-auto rounded-lg border border-border-subtle">
-      <table
-        class="w-full border-collapse text-sm"
-        :aria-busy="props.loading"
-        aria-live="polite"
-      >
+      <table class="w-full border-collapse text-sm" :aria-busy="props.loading" aria-live="polite">
         <!-- En-têtes -->
         <thead class="bg-muted">
           <tr>
@@ -186,7 +187,7 @@ function cellValue(col: TableColumn<T>, row: T): string {
               :tabindex="col.sortable ? 0 : undefined"
               :aria-sort="ariaSortValue(col)"
               :class="[
-                'border-b border-border-subtle px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-text-muted',
+                'border-b border-border-subtle px-4 py-3 text-left text-xs font-medium tracking-wide text-text-muted uppercase',
                 col.sortable ? 'cursor-pointer select-none hover:bg-hover' : '',
                 col.class,
               ]"
@@ -216,11 +217,7 @@ function cellValue(col: TableColumn<T>, row: T): string {
                     class="i-tabler-sort-descending size-3.5 text-accent"
                     aria-hidden="true"
                   />
-                  <span
-                    v-else
-                    class="i-tabler-selector size-3.5 opacity-40"
-                    aria-hidden="true"
-                  />
+                  <span v-else class="i-tabler-selector size-3.5 opacity-40" aria-hidden="true" />
                 </span>
               </span>
             </th>
@@ -232,11 +229,7 @@ function cellValue(col: TableColumn<T>, row: T): string {
           <!-- Loading skeleton -->
           <template v-if="props.loading">
             <tr v-for="i in props.pageSize" :key="`skeleton-${i}`">
-              <td
-                v-for="col in props.columns"
-                :key="col.key"
-                class="px-4 py-3"
-              >
+              <td v-for="col in props.columns" :key="col.key" class="px-4 py-3">
                 <div class="skeleton h-4 rounded" />
               </td>
             </tr>
@@ -277,10 +270,7 @@ function cellValue(col: TableColumn<T>, row: T): string {
     </div>
 
     <!-- Pagination -->
-    <div
-      v-if="totalPages > 1"
-      class="mt-4 flex items-center justify-between gap-4"
-    >
+    <div v-if="totalPages > 1" class="mt-4 flex items-center justify-between gap-4">
       <p class="text-xs text-text-muted">
         {{ t('molecules.dataTable.pageInfo', { page: currentPage, total: totalPages }) }}
       </p>

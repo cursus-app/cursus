@@ -53,7 +53,7 @@ describe('AppEmptyState', () => {
 
   it('renders description when provided', () => {
     const wrapper = mount(AppEmptyState, {
-      props: { title: 'Vide', description: 'Aucune donnée pour l\'instant.' },
+      props: { title: 'Vide', description: "Aucune donnée pour l'instant." },
     });
     expect(wrapper.find('[data-testid="description"]').text()).toContain('Aucune donnée');
   });

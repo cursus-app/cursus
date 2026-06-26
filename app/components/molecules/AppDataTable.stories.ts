@@ -20,9 +20,21 @@ const columns: TableColumn[] = [
 const rows: User[] = [
   { id: 1, name: 'Alice Dupont', email: 'alice@cursus.app', role: 'Stagiaire', status: 'Actif' },
   { id: 2, name: 'Bob Martin', email: 'bob@cursus.app', role: 'Formateur', status: 'Actif' },
-  { id: 3, name: 'Charlie Durand', email: 'charlie@cursus.app', role: 'Stagiaire', status: 'Inactif' },
+  {
+    id: 3,
+    name: 'Charlie Durand',
+    email: 'charlie@cursus.app',
+    role: 'Stagiaire',
+    status: 'Inactif',
+  },
   { id: 4, name: 'Diana Petit', email: 'diana@cursus.app', role: 'Stagiaire', status: 'Actif' },
-  { id: 5, name: 'Édouard Blanc', email: 'edouard@cursus.app', role: 'Co-formateur', status: 'Actif' },
+  {
+    id: 5,
+    name: 'Édouard Blanc',
+    email: 'edouard@cursus.app',
+    role: 'Co-formateur',
+    status: 'Actif',
+  },
 ];
 
 const meta: Meta<typeof AppDataTable> = {

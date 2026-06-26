@@ -38,15 +38,9 @@ const svgTitleId = `empty-state-title-${Math.random().toString(36).slice(2, 9)}`
 </script>
 
 <template>
-  <div
-    :class="['flex flex-col items-center justify-center gap-4 py-16 text-center', props.class]"
-  >
+  <div :class="['flex flex-col items-center justify-center gap-4 py-16 text-center', props.class]">
     <!-- Illustration SVG (inline, accessible) -->
-    <div
-      v-if="!props.icon"
-      aria-hidden="true"
-      class="mb-2"
-    >
+    <div v-if="!props.icon" aria-hidden="true" class="mb-2">
       <svg
         :aria-labelledby="props.illustrationAlt ? svgTitleId : undefined"
         :aria-hidden="!props.illustrationAlt"
@@ -86,7 +80,13 @@ const svgTitleId = `empty-state-title-${Math.random().toString(36).slice(2, 9)}`
           stroke-width="2"
           stroke-linecap="round"
         />
-        <circle cx="60" cy="65" r="8" class="fill-subtle stroke-border-default" stroke-width="1.5" />
+        <circle
+          cx="60"
+          cy="65"
+          r="8"
+          class="fill-subtle stroke-border-default"
+          stroke-width="1.5"
+        />
         <path
           d="M56 65 L58.5 67.5 L64 62"
           class="stroke-text-muted"
@@ -99,11 +99,7 @@ const svgTitleId = `empty-state-title-${Math.random().toString(36).slice(2, 9)}`
     </div>
 
     <!-- Icône Tabler (mode simplifié) -->
-    <div
-      v-else
-      :class="[props.icon, 'size-12 text-text-muted']"
-      aria-hidden="true"
-    />
+    <div v-else :class="[props.icon, 'size-12 text-text-muted']" aria-hidden="true" />
 
     <!-- Textes -->
     <div class="max-w-sm">

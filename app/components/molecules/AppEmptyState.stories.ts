@@ -16,7 +16,7 @@ const meta: Meta<typeof AppEmptyState> = {
   argTypes: {
     title: { control: 'text', description: 'Titre court' },
     description: { control: 'text', description: 'Description empathique' },
-    illustrationAlt: { control: 'text', description: 'Texte alternatif de l\'illustration' },
+    illustrationAlt: { control: 'text', description: "Texte alternatif de l'illustration" },
     icon: { control: 'text', description: 'Icône Tabler (mode simplifié)' },
     actionLabel: { control: 'text', description: 'Libellé du CTA' },
     actionIcon: { control: 'text', description: 'Icône du CTA' },
@@ -24,7 +24,7 @@ const meta: Meta<typeof AppEmptyState> = {
   args: {
     title: 'Aucun cursus trouvé',
     description: 'Commencez par créer votre premier cursus pour encadrer des stagiaires.',
-    illustrationAlt: 'Une boîte vide symbolisant l\'absence de contenu',
+    illustrationAlt: "Une boîte vide symbolisant l'absence de contenu",
   },
 };
 
@@ -45,7 +45,7 @@ export const WithCTA: Story = {
 export const WithIcon: Story = {
   args: {
     title: 'Aucune donnée disponible',
-    description: 'Essayez d\'ajuster vos filtres de recherche.',
+    description: "Essayez d'ajuster vos filtres de recherche.",
     icon: 'i-tabler-filter-off',
   },
 };
@@ -53,7 +53,7 @@ export const WithIcon: Story = {
 export const SearchEmpty: Story = {
   args: {
     title: 'Aucun résultat pour votre recherche',
-    description: 'Essayez d\'autres mots-clés ou effacez les filtres.',
+    description: "Essayez d'autres mots-clés ou effacez les filtres.",
     icon: 'i-tabler-search-off',
     actionLabel: 'Effacer les filtres',
     actionIcon: 'i-tabler-x',

@@ -94,18 +94,11 @@ const variantIcons: Record<BannerVariant, string> = {
       v-if="visible"
       role="banner"
       :aria-label="props.message"
-      :class="[
-        'w-full border-b px-4 py-2.5',
-        variantClasses[props.variant],
-        props.class,
-      ]"
+      :class="['w-full border-b px-4 py-2.5', variantClasses[props.variant], props.class]"
     >
       <div class="mx-auto flex max-w-7xl items-center justify-between gap-3">
         <div class="flex items-center gap-2 text-sm">
-          <span
-            :class="[variantIcons[props.variant], 'size-4 shrink-0']"
-            aria-hidden="true"
-          />
+          <span :class="[variantIcons[props.variant], 'size-4 shrink-0']" aria-hidden="true" />
           <span>{{ props.message }}</span>
           <slot />
         </div>

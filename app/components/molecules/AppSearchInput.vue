@@ -60,11 +60,7 @@ function onKeydown(event: KeyboardEvent) {
 /** Raccourci global Cmd/Ctrl+K. */
 if (import.meta.client) {
   useEventListener('keydown', (event: KeyboardEvent) => {
-    if (
-      props.enableShortcut &&
-      event.key === 'k' &&
-      (event.metaKey || event.ctrlKey)
-    ) {
+    if (props.enableShortcut && event.key === 'k' && (event.metaKey || event.ctrlKey)) {
       event.preventDefault();
       inputRef.value?.focus();
     }
