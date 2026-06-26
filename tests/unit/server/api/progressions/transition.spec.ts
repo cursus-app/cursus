@@ -13,11 +13,13 @@ vi.mock('#supabase/server', () => ({
 
 const mockUserFindUnique = vi.fn();
 const mockProgressionFindUnique = vi.fn();
+const mockMembershipFindFirst = vi.fn();
 
 vi.mock('~~/server/utils/prisma', () => ({
   prisma: {
     user: { findUnique: mockUserFindUnique },
     progression: { findUnique: mockProgressionFindUnique },
+    membership: { findFirst: mockMembershipFindFirst },
     $transaction: vi.fn(),
   },
 }));
@@ -232,6 +234,8 @@ describe('PATCH /api/progressions/:id/transition — authorization', () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR.id });
     mockUserFindUnique.mockResolvedValue(FORMATEUR);
     mockProgressionFindUnique.mockResolvedValue(PROGRESSION);
+    // Formateur is a member of the cohort
+    mockMembershipFindFirst.mockResolvedValue({ id: 'membership-1', role: 'FORMATEUR_PRINCIPAL' });
     const mockT = await getMockTransition();
     mockT.mockResolvedValue(UPDATED_PROGRESSION);
 
@@ -268,6 +272,8 @@ describe('PATCH /api/progressions/:id/transition — authorization', () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR.id });
     mockUserFindUnique.mockResolvedValue(FORMATEUR);
     mockProgressionFindUnique.mockResolvedValue(PROGRESSION);
+    // Formateur is a member of the cohort
+    mockMembershipFindFirst.mockResolvedValue({ id: 'membership-1', role: 'FORMATEUR_PRINCIPAL' });
     mockReadValidatedBody.mockImplementation(async (_e: unknown, fn: (raw: unknown) => unknown) => {
       return fn({ to: 'VALIDE_OVERRIDE', reason: 'Urgence pédagogique' });
     });
