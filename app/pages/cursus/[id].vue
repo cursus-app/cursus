@@ -13,7 +13,7 @@ definePageMeta({
 const { t } = useI18n();
 const toast = useToast();
 const route = useRoute();
-const { getCursus, publishCursus, archiveCursus, deleteCursus, loading } = useCursus();
+const { getCursus, publishCursus, archiveCursus, deleteCursus, cloneCursus, loading } = useCursus();
 const { canManageCursus } = usePermission();
 const userStore = useUserStore();
 
@@ -34,6 +34,7 @@ const cursus = ref<CursusFull | null>(null);
 const isLoadingPage = ref(true);
 const showDeleteModal = ref(false);
 const isDeleting = ref(false);
+const isDuplicating = ref(false);
 
 async function loadCursus() {
   isLoadingPage.value = true;
@@ -81,6 +82,7 @@ const canArchive = computed(
 const canDelete = computed(
   () => isOwnerOrAdmin.value && canManageCursus() && cursus.value?.status === 'DRAFT',
 );
+const canDuplicate = computed(() => isOwnerOrAdmin.value && canManageCursus());
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
@@ -156,6 +158,32 @@ async function handleDelete() {
     });
   } finally {
     isDeleting.value = false;
+  }
+}
+
+async function handleDuplicate() {
+  if (!cursus.value) {
+    return;
+  }
+  isDuplicating.value = true;
+  try {
+    const clone = await cloneCursus(cursus.value.id);
+    toast.add({
+      title: t('cursus.duplicateSuccess', { title: clone.title }),
+      color: 'success',
+      icon: 'i-tabler-copy-check',
+    });
+    await navigateTo(`/cursus/${clone.id}`);
+  } catch (err: unknown) {
+    const fetchErr = err as { data?: { message?: string } };
+    const msgKey = fetchErr.data?.message ?? 'errors.generic';
+    toast.add({
+      title: t(msgKey as Parameters<typeof t>[0]),
+      color: 'error',
+      icon: 'i-tabler-circle-x',
+    });
+  } finally {
+    isDuplicating.value = false;
   }
 }
 
@@ -271,6 +299,18 @@ function levelLabel(level: string): string {
             @click="showDeleteModal = true"
           >
             {{ t('cursus.actions.delete') }}
+          </UButton>
+          <UButton
+            v-if="canDuplicate"
+            icon="i-tabler-copy"
+            color="neutral"
+            variant="outline"
+            size="sm"
+            :loading="isDuplicating"
+            :disabled="isDuplicating || loading"
+            @click="handleDuplicate"
+          >
+            {{ t('cursus.actions.duplicate') }}
           </UButton>
         </div>
       </div>

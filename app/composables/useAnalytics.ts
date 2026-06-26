@@ -10,6 +10,7 @@ type AnalyticsEvent =
   | 'cursus_published'
   | 'cursus_archived'
   | 'cursus_deleted'
+  | 'cursus_cloned'
   | 'theme_toggled';
 
 type AnalyticsProps = Record<string, string | number | boolean>;

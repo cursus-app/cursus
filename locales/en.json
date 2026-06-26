@@ -252,7 +252,8 @@
       "edit": "Edit",
       "save": "Save",
       "saveDraft": "Save draft",
-      "createDraft": "Create draft"
+      "createDraft": "Create draft",
+      "duplicate": "Duplicate"
     },
     "errors": {
       "titleRequired": "Title is required",
@@ -280,6 +281,7 @@
     "deleteSuccess": "Course deleted",
     "createSuccess": "Draft created",
     "saveSuccess": "Changes saved",
+    "duplicateSuccess": "Course duplicated: \"{title}\"",
     "modules": {
       "count": "{n} module | {n} modules"
     },
