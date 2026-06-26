@@ -67,3 +67,5 @@ _tmp_*
 *.key
 secrets/
 .claude/worktrees/
+
+4109102.md
