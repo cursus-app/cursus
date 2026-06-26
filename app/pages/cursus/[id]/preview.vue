@@ -151,9 +151,7 @@ const currentModule = computed<PreviewModule | null>(() => {
   if (!cursus.value || cursus.value.modules.length === 0) {
     return null;
   }
-  return (
-    cursus.value.modules.find((m) => m.week === selectedWeek.value) ?? null
-  );
+  return cursus.value.modules.find((m) => m.week === selectedWeek.value) ?? null;
 });
 
 const hasPreviousWeek = computed(() => {
@@ -205,8 +203,7 @@ function getResources(mod: PreviewModule): Resource[] {
     return [];
   }
   return (mod.resourcesJson as unknown[]).filter(
-    (r): r is Resource =>
-      typeof r === 'object' && r !== null && 'title' in r && 'url' in r,
+    (r): r is Resource => typeof r === 'object' && r !== null && 'title' in r && 'url' in r,
   );
 }
 
@@ -293,8 +290,7 @@ function safeHref(url: string): string {
             {{ cursus.title }}
           </h1>
           <p class="mt-1 text-sm text-text-muted">
-            {{ tDynamic(`cursus.domain.${cursus.domain}`) }} ·
-            {{ levelLabel(cursus.level) }} ·
+            {{ tDynamic(`cursus.domain.${cursus.domain}`) }} · {{ levelLabel(cursus.level) }} ·
             {{ cursus.durationWeeks }} sem.
           </p>
         </div>
@@ -312,7 +308,10 @@ function safeHref(url: string): string {
               {{ cursus.description }}
             </p>
           </div>
-          <div v-if="cursus.prerequisites" :class="cursus.description ? 'mt-4 border-t border-border-subtle pt-4' : ''">
+          <div
+            v-if="cursus.prerequisites"
+            :class="cursus.description ? 'mt-4 border-t border-border-subtle pt-4' : ''"
+          >
             <p class="text-xs font-medium tracking-wide text-text-subtle uppercase">
               {{ t('cursus.fields.prerequisites') }}
             </p>
@@ -384,7 +383,9 @@ function safeHref(url: string): string {
                     {{ currentModule.title }}
                   </h2>
                 </div>
-                <span class="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent-text">
+                <span
+                  class="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent-text"
+                >
                   {{ t('cursus.preview.xpReward', { n: currentModule.xpReward }) }}
                 </span>
               </div>
@@ -394,7 +395,11 @@ function safeHref(url: string): string {
             <UCard class="border border-border-subtle bg-surface">
               <template #header>
                 <h3 class="flex items-center gap-2 text-sm font-medium text-text-strong">
-                  <UIcon name="i-tabler-target" class="size-4 text-accent-text" aria-hidden="true" />
+                  <UIcon
+                    name="i-tabler-target"
+                    class="size-4 text-accent-text"
+                    aria-hidden="true"
+                  />
                   {{ t('cursus.preview.objectives') }}
                 </h3>
               </template>
@@ -412,11 +417,7 @@ function safeHref(url: string): string {
                 </h3>
               </template>
 
-              <ul
-                v-if="currentResources.length > 0"
-                class="space-y-2"
-                data-testid="resources-list"
-              >
+              <ul v-if="currentResources.length > 0" class="space-y-2" data-testid="resources-list">
                 <li
                   v-for="resource in currentResources"
                   :key="resource.url"
@@ -443,13 +444,14 @@ function safeHref(url: string): string {
             </UCard>
 
             <!-- Livrable -->
-            <UCard
-              v-if="currentDeliverable"
-              class="border border-border-subtle bg-surface"
-            >
+            <UCard v-if="currentDeliverable" class="border border-border-subtle bg-surface">
               <template #header>
                 <h3 class="flex items-center gap-2 text-sm font-medium text-text-strong">
-                  <UIcon name="i-tabler-upload" class="size-4 text-accent-text" aria-hidden="true" />
+                  <UIcon
+                    name="i-tabler-upload"
+                    class="size-4 text-accent-text"
+                    aria-hidden="true"
+                  />
                   {{ t('cursus.preview.deliverable') }}
                 </h3>
               </template>
@@ -459,10 +461,7 @@ function safeHref(url: string): string {
                   <p class="text-sm font-medium text-text-default">
                     {{ currentDeliverable.title }}
                   </p>
-                  <p
-                    v-if="currentDeliverable.description"
-                    class="mt-1 text-sm text-text-muted"
-                  >
+                  <p v-if="currentDeliverable.description" class="mt-1 text-sm text-text-muted">
                     {{ currentDeliverable.description }}
                   </p>
                 </div>
@@ -490,7 +489,11 @@ function safeHref(url: string): string {
             class="flex flex-col items-center justify-center rounded-xl border border-dashed border-border-subtle bg-surface py-16 text-center"
             data-testid="no-module-for-week"
           >
-            <UIcon name="i-tabler-calendar-off" class="mb-3 size-10 text-text-subtle" aria-hidden="true" />
+            <UIcon
+              name="i-tabler-calendar-off"
+              class="mb-3 size-10 text-text-subtle"
+              aria-hidden="true"
+            />
             <p class="text-sm text-text-muted">
               {{ t('cursus.preview.noModuleForWeek', { n: selectedWeek }) }}
             </p>

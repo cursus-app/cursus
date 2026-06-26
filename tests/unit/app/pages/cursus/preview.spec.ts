@@ -37,8 +37,7 @@ function getResources(mod: PreviewModule): Resource[] {
     return [];
   }
   return (mod.resourcesJson as unknown[]).filter(
-    (r): r is Resource =>
-      typeof r === 'object' && r !== null && 'title' in r && 'url' in r,
+    (r): r is Resource => typeof r === 'object' && r !== null && 'title' in r && 'url' in r,
   );
 }
 
@@ -52,10 +51,7 @@ function getDeliverable(mod: PreviewModule): DeliverableSpec | null {
 }
 
 /** Retourne le module correspondant à une semaine donnée, ou null. */
-function getModuleForWeek(
-  modules: PreviewModule[],
-  week: number,
-): PreviewModule | null {
+function getModuleForWeek(modules: PreviewModule[], week: number): PreviewModule | null {
   return modules.find((m) => m.week === week) ?? null;
 }
 
@@ -271,7 +267,7 @@ describe('PreviewBanner — composant standalone', () => {
 
   it('displays the banner message', () => {
     const wrapper = mount(PreviewBanner, {
-      props: { message: 'Mode aperçu — vous n\'êtes pas stagiaire', backLabel: 'Retour' },
+      props: { message: "Mode aperçu — vous n'êtes pas stagiaire", backLabel: 'Retour' },
     });
     expect(wrapper.find('[data-testid="banner-message"]').text()).toBe(
       "Mode aperçu — vous n'êtes pas stagiaire",
@@ -280,7 +276,7 @@ describe('PreviewBanner — composant standalone', () => {
 
   it('renders the back link', () => {
     const wrapper = mount(PreviewBanner, {
-      props: { message: 'Aperçu', backLabel: 'Retour à l\'éditeur' },
+      props: { message: 'Aperçu', backLabel: "Retour à l'éditeur" },
     });
     expect(wrapper.find('[data-testid="back-link"]').text()).toBe("Retour à l'éditeur");
   });
@@ -375,7 +371,7 @@ const PreviewEmptyState = {
 describe('PreviewEmptyState — composant standalone', () => {
   it('renders the no-modules message', () => {
     const wrapper = mount(PreviewEmptyState, {
-      props: { message: 'Ce cursus n\'a pas encore de modules.' },
+      props: { message: "Ce cursus n'a pas encore de modules." },
     });
     expect(wrapper.find('[data-testid="empty-message"]').text()).toBe(
       "Ce cursus n'a pas encore de modules.",
