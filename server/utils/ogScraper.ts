@@ -178,6 +178,9 @@ export async function scrapeOgMetadata(rawUrl: string): Promise<OgResult> {
 
     clearTimeout(timeoutId);
 
+    // Guard against redirect chains that land on a private/internal host
+    assertNotPrivateUrl(response.url);
+
     if (!response.ok) {
       throw new Error(`Le serveur a répondu ${response.status} ${response.statusText}`);
     }

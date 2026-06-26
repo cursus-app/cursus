@@ -202,6 +202,15 @@ function moveDown(idx: number): void {
   localResources.value = arr;
   void persistResources();
 }
+
+function safeHref(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.toString() : '#';
+  } catch {
+    return '#';
+  }
+}
 </script>
 
 <template>
@@ -340,7 +349,7 @@ function moveDown(idx: number): void {
                   {{ resource.ogTitle ?? resource.title }}
                 </p>
                 <a
-                  :href="resource.url"
+                  :href="safeHref(resource.url)"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="truncate text-xs text-accent-text hover:underline focus-visible:underline"

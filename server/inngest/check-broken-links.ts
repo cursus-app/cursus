@@ -41,6 +41,8 @@ async function isUrlAccessible(url: string): Promise<boolean> {
       },
     });
     clearTimeout(timeoutId);
+    // Guard against redirect chains landing on internal hosts
+    assertNotPrivateUrl(response.url);
     return response.ok;
   } catch {
     clearTimeout(timeoutId);
