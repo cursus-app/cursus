@@ -56,8 +56,8 @@ export const checkBrokenLinksFunction = inngest.createFunction(
     name: 'Ressources — Vérification des liens cassés',
     retries: 3,
     concurrency: { limit: 5 },
+    triggers: [{ cron: '0 2 * * *' }], // tous les jours à 2h UTC
   },
-  { cron: '0 2 * * *' }, // tous les jours à 2h UTC
   async ({ step }) => {
     // --- Étape 1 : Récupérer tous les modules avec des ressources ---
     const modules = await step.run('fetch-modules-with-resources', async () => {

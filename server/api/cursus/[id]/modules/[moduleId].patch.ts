@@ -11,6 +11,7 @@
  * Cf. ST-03.3 — Gestion ressources d'un module.
  */
 import { serverSupabaseUser } from '#supabase/server';
+import { Prisma } from '@prisma/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
 import { hashId } from '~~/server/utils/hash';
@@ -75,8 +76,8 @@ export default defineEventHandler(async (event) => {
     title?: string;
     week?: number;
     objectives?: string;
-    resourcesJson?: unknown;
-    deliverableSpecJson?: unknown;
+    resourcesJson?: Prisma.InputJsonValue;
+    deliverableSpecJson?: Prisma.InputJsonValue;
     xpReward?: number;
   } = {};
 
@@ -90,10 +91,10 @@ export default defineEventHandler(async (event) => {
     data.objectives = body.objectives;
   }
   if (body.resources !== undefined) {
-    data.resourcesJson = body.resources;
+    data.resourcesJson = body.resources as unknown as Prisma.InputJsonValue;
   }
   if (body.deliverableSpecJson !== undefined) {
-    data.deliverableSpecJson = body.deliverableSpecJson;
+    data.deliverableSpecJson = body.deliverableSpecJson as unknown as Prisma.InputJsonValue;
   }
   if (body.xpReward !== undefined) {
     data.xpReward = body.xpReward;

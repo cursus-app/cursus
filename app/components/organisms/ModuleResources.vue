@@ -269,7 +269,8 @@ function safeHref(url: string): string {
           <label for="resource-url" class="text-xs font-medium text-text-muted">URL *</label>
           <UInput
             id="resource-url"
-            v-model="urlField"
+            :model-value="urlField ?? ''"
+            @update:model-value="urlField = $event"
             v-bind="urlAttrs"
             placeholder="https://..."
             type="url"
@@ -283,7 +284,8 @@ function safeHref(url: string): string {
           <label for="resource-title" class="text-xs font-medium text-text-muted">Titre *</label>
           <UInput
             id="resource-title"
-            v-model="titleField"
+            :model-value="titleField ?? ''"
+            @update:model-value="titleField = $event"
             v-bind="titleAttrs"
             placeholder="Titre de la ressource"
             size="sm"
@@ -297,7 +299,8 @@ function safeHref(url: string): string {
         <label for="resource-type" class="text-xs font-medium text-text-muted">Type</label>
         <USelect
           id="resource-type"
-          v-model="typeField"
+          :model-value="typeField ?? 'link'"
+          @update:model-value="typeField = $event as ResourceType"
           size="sm"
           :options="typeOptions.map((o) => ({ label: o.label, value: o.value }))"
         />
@@ -314,7 +317,7 @@ function safeHref(url: string): string {
         >
           Annuler
         </UButton>
-        <UButton size="xs" @click="handleAdd"> Ajouter la ressource </UButton>
+        <UButton size="xs" @click="() => { void handleAdd(); }"> Ajouter la ressource </UButton>
       </div>
     </div>
 
@@ -444,7 +447,7 @@ function safeHref(url: string): string {
           >
             <!-- Move up -->
             <UButton
-              size="2xs"
+              size="xs"
               variant="ghost"
               icon="i-tabler-chevron-up"
               :disabled="idx === 0"
@@ -453,7 +456,7 @@ function safeHref(url: string): string {
             />
             <!-- Move down -->
             <UButton
-              size="2xs"
+              size="xs"
               variant="ghost"
               icon="i-tabler-chevron-down"
               :disabled="idx === localResources.length - 1"
@@ -462,7 +465,7 @@ function safeHref(url: string): string {
             />
             <!-- Delete -->
             <UButton
-              size="2xs"
+              size="xs"
               variant="ghost"
               icon="i-tabler-trash"
               color="error"
