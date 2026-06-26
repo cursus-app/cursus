@@ -457,7 +457,7 @@
       "addTitle": "Add a co-instructor",
       "addDescription": "Enter the email address of the co-instructor to add to this cohort.",
       "emailLabel": "Email address",
-      "emailPlaceholder": "example@domain.com",
+      "emailPlaceholder": "example{'@'}domain.com",
       "emailInvalid": "Invalid email address",
       "addSuccess": "Co-instructor {name} added",
       "removeSuccess": "{name} has been removed",

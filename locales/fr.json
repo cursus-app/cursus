@@ -457,7 +457,7 @@
       "addTitle": "Ajouter un co-formateur",
       "addDescription": "Entrez l'adresse email du co-formateur à ajouter à cette cohorte.",
       "emailLabel": "Adresse email",
-      "emailPlaceholder": "exemple@domaine.fr",
+      "emailPlaceholder": "exemple{'@'}domaine.fr",
       "emailInvalid": "Adresse email invalide",
       "addSuccess": "Co-formateur {name} ajouté",
       "removeSuccess": "{name} a été retiré",

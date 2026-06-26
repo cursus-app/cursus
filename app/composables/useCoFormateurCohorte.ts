@@ -85,13 +85,10 @@ export function useCoFormateurCohorte() {
     loading.value = true;
     error.value = null;
     try {
-      return await $fetch<CoFormateurMember>(
-        `/api/cohortes/${cohorteId}/co-formateurs/${userId}`,
-        {
-          method: 'PATCH',
-          body: data,
-        },
-      );
+      return await $fetch<CoFormateurMember>(`/api/cohortes/${cohorteId}/co-formateurs/${userId}`, {
+        method: 'PATCH',
+        body: data,
+      });
     } catch (err: unknown) {
       const fetchErr = err as { data?: { message?: string } };
       error.value = fetchErr.data?.message ?? t('errors.generic');

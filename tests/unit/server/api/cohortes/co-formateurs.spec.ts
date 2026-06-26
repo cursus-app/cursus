@@ -186,9 +186,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
 
   it('creates membership with global scope (moduleIds: null)', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: ADMIN_USER.id });
-    mockUserFindUnique
-      .mockResolvedValueOnce(ADMIN_USER)
-      .mockResolvedValueOnce(TARGET_USER);
+    mockUserFindUnique.mockResolvedValueOnce(ADMIN_USER).mockResolvedValueOnce(TARGET_USER);
     mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID });
     mockMembershipFindUnique.mockResolvedValue(NULL_MEMBERSHIP);
     mockReadValidatedBody.mockResolvedValue({ email: TARGET_USER.email, moduleIds: null });
@@ -213,9 +211,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
   it('creates membership with limited scope (moduleIds: [...])', async () => {
     const moduleIds = ['mod-uuid-1', 'mod-uuid-2'];
     mockServerSupabaseUser.mockResolvedValue({ id: ADMIN_USER.id });
-    mockUserFindUnique
-      .mockResolvedValueOnce(ADMIN_USER)
-      .mockResolvedValueOnce(TARGET_USER);
+    mockUserFindUnique.mockResolvedValueOnce(ADMIN_USER).mockResolvedValueOnce(TARGET_USER);
     mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID });
     mockMembershipFindUnique.mockResolvedValue(NULL_MEMBERSHIP);
     mockReadValidatedBody.mockResolvedValue({ email: TARGET_USER.email, moduleIds });
@@ -238,9 +234,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
 
   it('throws 409 when target is already FORMATEUR_PRINCIPAL', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: ADMIN_USER.id });
-    mockUserFindUnique
-      .mockResolvedValueOnce(ADMIN_USER)
-      .mockResolvedValueOnce(TARGET_USER);
+    mockUserFindUnique.mockResolvedValueOnce(ADMIN_USER).mockResolvedValueOnce(TARGET_USER);
     mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID });
     mockMembershipFindUnique.mockResolvedValue({ role: 'FORMATEUR_PRINCIPAL' });
     mockReadValidatedBody.mockResolvedValue({ email: TARGET_USER.email, moduleIds: null });
@@ -261,9 +255,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
 
   it('upserts role when user is already a member (e.g. STAGIAIRE → CO_FORMATEUR)', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: ADMIN_USER.id });
-    mockUserFindUnique
-      .mockResolvedValueOnce(ADMIN_USER)
-      .mockResolvedValueOnce(TARGET_USER);
+    mockUserFindUnique.mockResolvedValueOnce(ADMIN_USER).mockResolvedValueOnce(TARGET_USER);
     mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID });
     mockMembershipFindUnique.mockResolvedValue({ role: 'STAGIAIRE' });
     mockReadValidatedBody.mockResolvedValue({ email: TARGET_USER.email, moduleIds: null });
@@ -287,9 +279,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
 
   it('throws 404 when target user email is not found', async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: ADMIN_USER.id });
-    mockUserFindUnique
-      .mockResolvedValueOnce(ADMIN_USER)
-      .mockResolvedValueOnce(null); // target not found
+    mockUserFindUnique.mockResolvedValueOnce(ADMIN_USER).mockResolvedValueOnce(null); // target not found
     mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID });
     mockReadValidatedBody.mockResolvedValue({ email: 'unknown@example.fr', moduleIds: null });
 
@@ -301,8 +291,7 @@ describe('POST /api/cohortes/:id/co-formateurs', () => {
 // ─── DELETE /api/cohortes/:id/co-formateurs/:userId ──────────────────────────
 
 describe('DELETE /api/cohortes/:id/co-formateurs/:userId', () => {
-  const importHandler = () =>
-    import('~~/server/api/cohortes/[id]/co-formateurs/[userId].delete');
+  const importHandler = () => import('~~/server/api/cohortes/[id]/co-formateurs/[userId].delete');
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -381,8 +370,7 @@ describe('DELETE /api/cohortes/:id/co-formateurs/:userId', () => {
 // ─── PATCH /api/cohortes/:id/co-formateurs/:userId ───────────────────────────
 
 describe('PATCH /api/cohortes/:id/co-formateurs/:userId', () => {
-  const importHandler = () =>
-    import('~~/server/api/cohortes/[id]/co-formateurs/[userId].patch');
+  const importHandler = () => import('~~/server/api/cohortes/[id]/co-formateurs/[userId].patch');
 
   beforeEach(() => {
     vi.clearAllMocks();

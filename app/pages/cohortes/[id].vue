@@ -18,8 +18,12 @@ const route = useRoute();
 const { getCohorte, startCohorte, completeCohorte, archiveCohorte, deleteCohorte, loading } =
   useCohorte();
 const { listInvitations, resendInvitation, loading: invLoading } = useInvitation();
-const { addCoFormateur, removeCoFormateur, updateCoFormateurModules, loading: teamLoading } =
-  useCoFormateurCohorte();
+const {
+  addCoFormateur,
+  removeCoFormateur,
+  updateCoFormateurModules,
+  loading: teamLoading,
+} = useCoFormateurCohorte();
 const { canManageCohorte } = usePermission();
 
 const cohorteId = computed(() => {
@@ -549,11 +553,7 @@ function memberDisplayName(member: CohorteMember): string {
         </div>
 
         <ul v-else class="divide-y divide-border-subtle">
-          <li
-            v-for="member in coFormateurs"
-            :key="member.id"
-            class="flex items-center gap-3 py-3"
-          >
+          <li v-for="member in coFormateurs" :key="member.id" class="flex items-center gap-3 py-3">
             <!-- Avatar -->
             <div
               class="flex size-9 shrink-0 items-center justify-center rounded-full bg-muted"
@@ -775,7 +775,12 @@ function memberDisplayName(member: CohorteMember): string {
             >
               {{ t('common.cancel') }}
             </UButton>
-            <UButton icon="i-tabler-user-plus" color="primary" :loading="teamLoading" @click="handleAddCoFormateur">
+            <UButton
+              icon="i-tabler-user-plus"
+              color="primary"
+              :loading="teamLoading"
+              @click="handleAddCoFormateur"
+            >
               {{ t('cohortes.team.add') }}
             </UButton>
           </div>
@@ -853,7 +858,12 @@ function memberDisplayName(member: CohorteMember): string {
             >
               {{ t('common.cancel') }}
             </UButton>
-            <UButton icon="i-tabler-check" color="primary" :loading="teamLoading" @click="handleSaveModules">
+            <UButton
+              icon="i-tabler-check"
+              color="primary"
+              :loading="teamLoading"
+              @click="handleSaveModules"
+            >
               {{ t('common.save') }}
             </UButton>
           </div>
