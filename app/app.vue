@@ -5,13 +5,23 @@
 useHead({
   htmlAttrs: { lang: 'fr' },
 });
+
+// Transition de page : fade 150ms.
+// Désactivée si prefers-reduced-motion: reduce (accessibilité WCAG 2.3.3).
+const reducedMotion = useReducedMotion();
+
+const pageTransition = computed(() =>
+  reducedMotion.value
+    ? false
+    : ({ name: 'page', mode: 'out-in' } as const),
+);
 </script>
 
 <template>
   <NuxtLoadingIndicator color="var(--accent)" />
   <UApp>
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage :transition="pageTransition" />
     </NuxtLayout>
   </UApp>
 </template>

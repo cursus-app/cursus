@@ -22,6 +22,9 @@ export default defineNuxtConfig({
     'nuxt-security',
     '@pinia/nuxt',
     '@vueuse/nuxt',
+    // @vueuse/motion — directive v-motion + auto-imports useMotion, useSpring…
+    // Installé ST-18.6. La directive est client-only (SSR-safe via le module).
+    '@vueuse/motion/nuxt',
     '@sentry/nuxt/module',
   ],
 
