@@ -229,6 +229,16 @@ function levelLabel(level: string): string {
         <!-- Actions -->
         <div class="flex flex-wrap gap-2">
           <UButton
+            v-if="isOwnerOrAdmin"
+            :to="`/cursus/${cursus.id}/preview`"
+            icon="i-tabler-eye"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+          >
+            {{ t('cursus.preview.previewButton') }}
+          </UButton>
+          <UButton
             v-if="canEdit"
             :to="`/cursus/${cursus.id}/edit`"
             icon="i-tabler-pencil"
