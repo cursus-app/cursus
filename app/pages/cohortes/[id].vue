@@ -337,7 +337,7 @@ async function handleDelete() {
                 :src="member.user.avatarUrl"
                 :alt="member.user.fullName ?? ''"
                 class="size-9 rounded-full object-cover"
-              >
+              />
               <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
             </div>
             <div class="min-w-0 flex-1">

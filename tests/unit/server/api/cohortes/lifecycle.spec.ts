@@ -96,6 +96,8 @@ describe('POST /api/cohortes/:id/start', () => {
 
   it('throws 403 when user is STAGIAIRE', async () => {
     mockUserFindUnique.mockResolvedValue({ id: 'stagiaire-uuid', globalRole: 'STAGIAIRE' });
+    // Stagiaire is not a FORMATEUR_PRINCIPAL member of this cohorte → 403
+    mockCohorteFindUnique.mockResolvedValue(makeDraftCohorte({ memberships: [] }));
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 403 });
@@ -109,7 +111,13 @@ describe('POST /api/cohortes/:id/start', () => {
   });
 
   it('throws 422 when cohorte is not DRAFT', async () => {
-    mockCohorteFindUnique.mockResolvedValue(makeDraftCohorte({ status: 'ACTIVE' }));
+    // User must be a member to pass auth; status must not be DRAFT
+    mockCohorteFindUnique.mockResolvedValue(
+      makeDraftCohorte({
+        status: 'ACTIVE',
+        memberships: [{ role: 'FORMATEUR_PRINCIPAL', userId: FORMATEUR_USER.id }],
+      }),
+    );
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });
@@ -127,6 +135,8 @@ describe('POST /api/cohortes/:id/start', () => {
   });
 
   it('throws 422 when no FORMATEUR_PRINCIPAL in memberships', async () => {
+    // Admin bypasses ownership check — so admin can trigger the "no FP" pre-condition error
+    mockUserFindUnique.mockResolvedValue(ADMIN_USER);
     mockCohorteFindUnique.mockResolvedValue(
       makeDraftCohorte({
         memberships: [{ role: 'STAGIAIRE', userId: 'stagiaire-1' }],
@@ -138,6 +148,8 @@ describe('POST /api/cohortes/:id/start', () => {
   });
 
   it('throws 422 with missing roles data when neither stagiaire nor formateur', async () => {
+    // Admin bypasses ownership check — so admin can trigger the "no roles" pre-condition error
+    mockUserFindUnique.mockResolvedValue(ADMIN_USER);
     mockCohorteFindUnique.mockResolvedValue(makeDraftCohorte({ memberships: [] }));
 
     const { default: handler } = await importHandler();
@@ -209,14 +221,22 @@ describe('POST /api/cohortes/:id/complete', () => {
   });
 
   it('throws 422 when cohorte is not ACTIVE', async () => {
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'DRAFT' });
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'DRAFT',
+      memberships: [{ userId: FORMATEUR_USER.id }],
+    });
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });
   });
 
   it('transitions ACTIVE → COMPLETED', async () => {
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'ACTIVE' });
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'ACTIVE',
+      memberships: [{ userId: FORMATEUR_USER.id }],
+    });
     mockCohorteUpdate.mockResolvedValue({ id: COHORTE_ID, status: 'COMPLETED' });
 
     const { default: handler } = await importHandler();
@@ -243,21 +263,33 @@ describe('POST /api/cohortes/:id/archive', () => {
   });
 
   it('throws 422 when cohorte is already ARCHIVED', async () => {
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'ARCHIVED' });
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'ARCHIVED',
+      memberships: [{ userId: FORMATEUR_USER.id }],
+    });
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });
   });
 
   it('throws 422 when cohorte is DRAFT', async () => {
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'DRAFT' });
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'DRAFT',
+      memberships: [{ userId: FORMATEUR_USER.id }],
+    });
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 422 });
   });
 
   it('archives a COMPLETED cohorte', async () => {
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'COMPLETED' });
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'COMPLETED',
+      memberships: [{ userId: FORMATEUR_USER.id }],
+    });
     mockCohorteUpdate.mockResolvedValue({
       id: COHORTE_ID,
       status: 'ARCHIVED',
@@ -276,7 +308,12 @@ describe('POST /api/cohortes/:id/archive', () => {
 
   it('admin can archive an ACTIVE cohorte', async () => {
     mockUserFindUnique.mockResolvedValue(ADMIN_USER);
-    mockCohorteFindUnique.mockResolvedValue({ id: COHORTE_ID, status: 'ACTIVE' });
+    // Admin bypasses membership check; empty memberships is fine
+    mockCohorteFindUnique.mockResolvedValue({
+      id: COHORTE_ID,
+      status: 'ACTIVE',
+      memberships: [],
+    });
     mockCohorteUpdate.mockResolvedValue({
       id: COHORTE_ID,
       status: 'ARCHIVED',
