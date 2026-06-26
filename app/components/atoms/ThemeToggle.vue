@@ -18,14 +18,22 @@ const nextTheme = computed<ThemeValue>(() => {
 });
 
 const icon = computed(() => {
-  if (theme.value === 'system') {return 'i-tabler-device-laptop';}
-  if (isDark.value) {return 'i-tabler-moon';}
+  if (theme.value === 'system') {
+    return 'i-tabler-device-laptop';
+  }
+  if (isDark.value) {
+    return 'i-tabler-moon';
+  }
   return 'i-tabler-sun';
 });
 
 const ariaLabel = computed(() => {
-  if (nextTheme.value === 'system') {return t('theme.switchToSystem');}
-  if (nextTheme.value === 'light') {return t('theme.switchToLight');}
+  if (nextTheme.value === 'system') {
+    return t('theme.switchToSystem');
+  }
+  if (nextTheme.value === 'light') {
+    return t('theme.switchToLight');
+  }
   return t('theme.switchToDark');
 });
 </script>
@@ -41,12 +49,7 @@ const ariaLabel = computed(() => {
       @click="cycleTheme"
     />
     <!-- Annonce discrète du nouveau thème pour les lecteurs d'écran -->
-    <div
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      class="sr-only"
-    >
+    <div role="status" aria-live="polite" aria-atomic="true" class="sr-only">
       {{ t(`theme.${theme}`) }}
     </div>
   </div>
