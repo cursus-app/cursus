@@ -290,7 +290,7 @@
       "conceptCount": "{n} concept | {n} concepts",
       "customHelp": "Colle un tableau JSON de concepts ou un objet JSON avec une clé concepts (tableau) compatible avec le format roadmap.sh.",
       "showExample": "Voir un exemple",
-      "jsonPlaceholder": "[ { \"title\": \"HTML\", \"url\": \"...\" }, ... ]",
+      "jsonPlaceholder": "[ {'{'} \"title\": \"HTML\", \"url\": \"...\" {'}'}, ... ]",
       "jsonLabel": "JSON de la roadmap",
       "conceptsParsed": "{n} concept détecté | {n} concepts détectés",
       "customRoadmap": "Roadmap personnalisée",
@@ -307,7 +307,7 @@
       "errors": {
         "catalogUnavailable": "Source indisponible, réessaie plus tard.",
         "invalidJson": "JSON invalide — vérifie la syntaxe.",
-        "invalidJsonFormat": "Format non reconnu. Attends un tableau [{\"title\":\"...\"}] ou {\"concepts\":[...]}.",
+        "invalidJsonFormat": "Format non reconnu. Attends un tableau [{'{'}\"title\":\"...\"{'}'}] ou {'{'}\"concepts\":[...]{'}'}.",
         "conceptTitleRequired": "Le titre d'un concept est requis",
         "conceptTitleTooLong": "Titre trop long (200 caractères max)",
         "roadmapIdOrConceptsRequired": "Fournis un roadmapId ou une liste de concepts",

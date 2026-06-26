@@ -290,7 +290,7 @@
       "conceptCount": "{n} concept | {n} concepts",
       "customHelp": "Paste a JSON array of concepts or a JSON object with a concepts key (array) compatible with the roadmap.sh format.",
       "showExample": "Show an example",
-      "jsonPlaceholder": "[ { \"title\": \"HTML\", \"url\": \"...\" }, ... ]",
+      "jsonPlaceholder": "[ {'{'} \"title\": \"HTML\", \"url\": \"...\" {'}'}, ... ]",
       "jsonLabel": "Roadmap JSON",
       "conceptsParsed": "{n} concept detected | {n} concepts detected",
       "customRoadmap": "Custom roadmap",
@@ -307,7 +307,7 @@
       "errors": {
         "catalogUnavailable": "Source unavailable, please try again later.",
         "invalidJson": "Invalid JSON — check the syntax.",
-        "invalidJsonFormat": "Unrecognized format. Expected an array [{\"title\":\"...\"}] or {\"concepts\":[...]}.",
+        "invalidJsonFormat": "Unrecognized format. Expected an array [{'{'}\"title\":\"...\"{'}'}] or {'{'}\"concepts\":[...]{'}'}.",
         "conceptTitleRequired": "A concept title is required",
         "conceptTitleTooLong": "Title too long (200 characters max)",
         "roadmapIdOrConceptsRequired": "Provide either a roadmapId or a list of concepts",
