@@ -335,9 +335,21 @@ function levelLabel(level: string): string {
       <!-- Versions publiées -->
       <UCard v-if="cursus.versions.length > 0" class="border border-border-subtle bg-surface">
         <template #header>
-          <h2 class="text-sm font-medium text-text-strong">
-            {{ t('cursus.versionsPublished') }}
-          </h2>
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-medium text-text-strong">
+              {{ t('cursus.versionsPublished') }}
+            </h2>
+            <UButton
+              v-if="isOwnerOrAdmin"
+              :to="`/cursus/${cursus.id}/versions`"
+              icon="i-tabler-history"
+              color="neutral"
+              variant="ghost"
+              size="xs"
+            >
+              {{ t('cursus.versions.title') }}
+            </UButton>
+          </div>
         </template>
         <ul class="space-y-2">
           <li
