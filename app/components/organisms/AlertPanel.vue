@@ -45,7 +45,7 @@ const emit = defineEmits<{
   resolve: [id: string];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const toast = useToast();
 
 const isOpen = computed({
@@ -100,7 +100,7 @@ const kindIcon = computed<string>(() => {
 
 /** Formater la date locale. */
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('fr-FR', {
+  return new Date(iso).toLocaleDateString(locale.value, {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
