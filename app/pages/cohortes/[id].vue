@@ -2,10 +2,12 @@
 /**
  * Page /cohortes/:id — vue détaillée d'une cohorte.
  * Actions disponibles selon le statut + onglet membres + invitations + section Équipe co-formateurs.
+ * Pour les formateurs : dashboard heatmap (ST-13.2).
  * Cf. ST-04.1 — TT-04.1.3, ST-04.2 — invitation stagiaires, ST-04.3 — TT-04.3.2
  */
 import type { CohorteFull, CohorteMember } from '~/composables/useCohorte';
 import type { InvitationItem } from '~/composables/useInvitation';
+import type { DashboardResponse } from '~~/server/api/cohortes/[id]/dashboard.get';
 
 definePageMeta({
   middleware: 'auth',
@@ -43,6 +45,28 @@ const showInviteModal = ref(false);
 const showShiftModal = ref(false);
 const isDeleting = ref(false);
 const actionError = ref<string | null>(null);
+
+// ─── Dashboard heatmap (formateurs seulement) ─────────────────────────────────
+
+const dashboardData = ref<DashboardResponse | null>(null);
+const isDashboardLoading = ref(false);
+const activeTab = ref<'overview' | 'heatmap'>('overview');
+
+const canManage = computed(() => canManageCohorte(cohorteId.value));
+
+async function loadDashboard() {
+  if (!canManage.value || !cohorteId.value) {return;}
+  isDashboardLoading.value = true;
+  try {
+    dashboardData.value = await $fetch<DashboardResponse>(
+      `/api/cohortes/${cohorteId.value}/dashboard`,
+    );
+  } catch {
+    // Non bloquant — la page s'affiche sans le dashboard
+  } finally {
+    isDashboardLoading.value = false;
+  }
+}
 
 async function loadCohorte() {
   isLoadingPage.value = true;
@@ -151,12 +175,11 @@ function formatDate(dateStr: string): string {
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
-const canManage = computed(() => canManageCohorte(cohorteId.value));
-
-// Charger les invitations dès que les droits sont connus
+// Charger les invitations et le dashboard dès que les droits sont connus
 watch(canManage, (val) => {
   if (val && cohorteId.value) {
     void loadInvitations();
+    void loadDashboard();
   }
 });
 
@@ -534,6 +557,73 @@ function memberDisplayName(member: CohorteMember): string {
         </div>
       </UCard>
 
+      <!-- Dashboard heatmap (formateurs uniquement) -->
+      <template v-if="canManage">
+        <!-- Onglets : Vue générale / Heatmap -->
+        <div class="mb-6">
+          <div
+            class="mb-4 flex gap-1 rounded-lg border border-border-subtle bg-muted p-1"
+            role="tablist"
+            :aria-label="t('cohorte.dashboard.tabsAriaLabel')"
+          >
+            <button
+              role="tab"
+              :aria-selected="activeTab === 'overview'"
+              :class="[
+                'flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                activeTab === 'overview'
+                  ? 'bg-surface text-text-strong shadow-sm'
+                  : 'text-text-muted hover:text-text-default',
+              ]"
+              @click="activeTab = 'overview'"
+            >
+              {{ t('cohorte.dashboard.tabs.overview') }}
+            </button>
+            <button
+              role="tab"
+              :aria-selected="activeTab === 'heatmap'"
+              :class="[
+                'flex-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                activeTab === 'heatmap'
+                  ? 'bg-surface text-text-strong shadow-sm'
+                  : 'text-text-muted hover:text-text-default',
+              ]"
+              @click="activeTab = 'heatmap'"
+            >
+              {{ t('cohorte.dashboard.tabs.heatmap') }}
+              <span
+                v-if="dashboardData?.kpis.openAlerts"
+                class="ml-1.5 rounded-full bg-warning-solid px-1.5 py-0.5 text-[10px] font-medium text-white"
+              >
+                {{ dashboardData.kpis.openAlerts }}
+              </span>
+            </button>
+          </div>
+
+          <!-- Onglet Heatmap -->
+          <div v-if="activeTab === 'heatmap'" role="tabpanel">
+            <!-- KPIs -->
+            <CohorteKpiBar
+              class="mb-6"
+              :median-progress="dashboardData?.kpis.medianProgress ?? 0"
+              :open-alerts="dashboardData?.kpis.openAlerts ?? 0"
+              :capstones-this-week="dashboardData?.kpis.capstonesThisWeek ?? 0"
+              :submission-rate="dashboardData?.kpis.submissionRate ?? 0"
+              :loading="isDashboardLoading"
+            />
+
+            <!-- Heatmap -->
+            <CohorteHeatmap
+              :trainees="dashboardData?.metadata.trainees ?? []"
+              :modules="dashboardData?.metadata.modules ?? []"
+              :heatmap="dashboardData?.heatmap ?? []"
+              :cohorte-id="cohorteId"
+              :loading="isDashboardLoading"
+            />
+          </div>
+        </div>
+      </template>
+
       <!-- Section Équipe (co-formateurs) -->
       <UCard class="mb-6 border border-border-subtle bg-surface">
         <template #header>
@@ -573,7 +663,7 @@ function memberDisplayName(member: CohorteMember): string {
                 :src="member.user.avatarUrl"
                 :alt="memberDisplayName(member)"
                 class="size-9 rounded-full object-cover"
-              />
+              >
               <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
             </div>
 
@@ -646,7 +736,7 @@ function memberDisplayName(member: CohorteMember): string {
                 :src="member.user.avatarUrl"
                 :alt="member.user.fullName ?? ''"
                 class="size-9 rounded-full object-cover"
-              />
+              >
               <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
             </div>
             <div class="min-w-0 flex-1">
@@ -826,7 +916,7 @@ function memberDisplayName(member: CohorteMember): string {
               :checked="editModuleIds.length === 0"
               class="accent-accent"
               @change="setGlobalAccess"
-            />
+            >
             <label for="scope-global" class="cursor-pointer text-sm text-text-default">
               {{ t('cohortes.team.globalAccessLabel') }}
             </label>
@@ -853,7 +943,7 @@ function memberDisplayName(member: CohorteMember): string {
                   :checked="editModuleIds.includes(mod.id)"
                   class="accent-accent"
                   @change="toggleModule(mod.id)"
-                />
+                >
                 <label
                   :for="`module-${mod.id}`"
                   class="flex-1 cursor-pointer text-sm text-text-default"
