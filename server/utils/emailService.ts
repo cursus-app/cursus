@@ -561,3 +561,59 @@ export async function sendInvitationEmail(
     text: plainText(content),
   });
 }
+
+/**
+ * Alerte formateur — un stagiaire a signalé un blocage via le bouton "Je suis bloqué".
+ */
+export async function sendBlockedAlertEmail(
+  to: string,
+  formateurName: string,
+  stagiaireName: string,
+  moduleTitle: string,
+  stagiairMessage: string,
+): Promise<EmailSendResult> {
+  const safeFormateurName = escHtml(formateurName);
+  const safeStagiaireName = escHtml(stagiaireName);
+  const safeModuleTitle = escHtml(moduleTitle);
+  const safeMessage = escHtml(stagiairMessage);
+
+  const content = `
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Stagiaire bloqué — action requise</h1>
+    <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
+      Bonjour ${safeFormateurName},
+    </p>
+    <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
+      <strong>${safeStagiaireName}</strong> a signalé un blocage sur le module
+      <strong>${safeModuleTitle}</strong> et a besoin de ton aide.
+    </p>
+    <div style="background-color:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;padding:16px;margin:24px 0;">
+      <p style="margin:0 0 8px 0;font-size:14px;font-weight:600;color:#92400e;">Message du stagiaire :</p>
+      <p style="margin:0;font-size:14px;color:#92400e;font-style:italic;">"${safeMessage}"</p>
+    </div>
+    <div style="background-color:#fee2e2;border-left:4px solid #ef4444;border-radius:4px;padding:16px;margin:0 0 24px 0;">
+      <p style="margin:0;font-size:14px;color:#991b1b;">
+        <strong>Action recommandée :</strong> contacte ${safeStagiaireName} pour l'aider à se débloquer.
+      </p>
+    </div>
+    <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
+      <tr>
+        <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
+          <a href="https://cursus.app/dashboard" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
+            Voir les alertes →
+          </a>
+        </td>
+      </tr>
+    </table>
+  `;
+
+  return sendViaResend({
+    from: getFrom(),
+    to,
+    subject: `${stagiaireName} est bloqué sur "${moduleTitle}"`,
+    html: wrapHtml(
+      content,
+      `${safeStagiaireName} a besoin d'aide sur ${safeModuleTitle}`,
+    ),
+    text: plainText(content),
+  });
+}

@@ -817,5 +817,38 @@
       "internalError": "Une erreur interne est survenue. Réessayez plus tard.",
       "invalidLocale": "Locale non supportée. Utilisez 'fr' ou 'en'."
     }
+  },
+  "blocked": {
+    "button": {
+      "label": "Je suis bloqué",
+      "alreadySent": "Alerte envoyée",
+      "alreadySentLabel": "Tu as déjà envoyé une alerte — attends une réponse de ton formateur"
+    },
+    "modal": {
+      "title": "Décris ton blocage",
+      "subtitle": "Module : {module}",
+      "label": "Décris ton blocage en 3 phrases",
+      "placeholder": "Ex : Je bloque depuis hier sur la configuration de mon environnement Docker…",
+      "submit": "Envoyer",
+      "submitting": "Envoi en cours…",
+      "submitAriaLabel": "Envoyer le signalement de blocage au formateur",
+      "minLengthError": "{min} caractères minimum",
+      "charRemaining": "Encore {count, plural, one {# caractère} other {# caractères}} à saisir",
+      "charCount": "{count}/{max}",
+      "charOverMax": "{count, plural, one {# caractère en trop} other {# caractères en trop}}"
+    },
+    "toast": {
+      "success": "Ton formateur a été alerté, il va te répondre rapidement.",
+      "alreadyOpen": "Tu as déjà une alerte ouverte — attends une réponse de ton formateur.",
+      "rateLimited": "Trop d'alertes envoyées. Réessaie dans quelques heures.",
+      "error": "Une erreur est survenue. Réessaie plus tard."
+    },
+    "errors": {
+      "messageTooShort": "Le message doit contenir au moins 20 caractères",
+      "messageTooLong": "Le message ne doit pas dépasser 500 caractères",
+      "invalidBody": "Corps de la requête invalide",
+      "progressionNotFound": "Progression introuvable",
+      "forbidden": "Tu ne peux signaler un blocage que sur ta propre progression"
+    }
   }
 }
