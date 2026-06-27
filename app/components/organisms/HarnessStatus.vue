@@ -62,8 +62,12 @@ async function fetchRun(): Promise<void> {
 // ─── Vérification timeout ─────────────────────────────────────────────────────
 
 function checkTimeout(): void {
-  if (!run.value) {return;}
-  if (run.value.status !== 'RUNNING' && run.value.status !== 'QUEUED') {return;}
+  if (!run.value) {
+    return;
+  }
+  if (run.value.status !== 'RUNNING' && run.value.status !== 'QUEUED') {
+    return;
+  }
 
   const startedAt = run.value.startedAt ? new Date(run.value.startedAt).getTime() : null;
   const createdAt = new Date(run.value.createdAt).getTime();
@@ -79,7 +83,9 @@ function checkTimeout(): void {
 let pollTimer: ReturnType<typeof setInterval> | null = null;
 
 function startPolling(): void {
-  if (pollTimer) {return;}
+  if (pollTimer) {
+    return;
+  }
   pollTimer = setInterval(async () => {
     if (isFinished.value) {
       stopPolling();
@@ -154,7 +160,9 @@ const isFinished = computed(() => {
 });
 
 const statusIcon = computed(() => {
-  if (!run.value) {return 'i-tabler-clock';}
+  if (!run.value) {
+    return 'i-tabler-clock';
+  }
   switch (run.value.status) {
     case 'QUEUED':
       return 'i-tabler-clock';
@@ -174,7 +182,9 @@ const statusIcon = computed(() => {
 });
 
 const statusColor = computed((): 'neutral' | 'success' | 'error' | 'warning' | 'info' => {
-  if (!run.value) {return 'neutral';}
+  if (!run.value) {
+    return 'neutral';
+  }
   switch (run.value.status) {
     case 'QUEUED':
     case 'RUNNING':
@@ -191,7 +201,9 @@ const statusColor = computed((): 'neutral' | 'success' | 'error' | 'warning' | '
 });
 
 const statusLabel = computed(() => {
-  if (!run.value) {return t('submission.status.loading');}
+  if (!run.value) {
+    return t('submission.status.loading');
+  }
   return t(`submission.status.${run.value.status.toLowerCase()}`);
 });
 
@@ -204,9 +216,13 @@ interface CheckResult {
 }
 
 const checks = computed<CheckResult[]>(() => {
-  if (!run.value?.checksJson) {return [];}
+  if (!run.value?.checksJson) {
+    return [];
+  }
   const json = run.value.checksJson;
-  if (!Array.isArray(json)) {return [];}
+  if (!Array.isArray(json)) {
+    return [];
+  }
   return json as CheckResult[];
 });
 
@@ -296,7 +312,11 @@ onUnmounted(() => {
                 'mt-0.5 size-4 shrink-0',
                 check.passed ? 'text-success-fg' : 'text-danger-fg',
               ]"
-              :aria-label="check.passed ? t('submission.status.checkPassed') : t('submission.status.checkFailed')"
+              :aria-label="
+                check.passed
+                  ? t('submission.status.checkPassed')
+                  : t('submission.status.checkFailed')
+              "
             />
 
             <!-- Contenu check -->
@@ -321,10 +341,7 @@ onUnmounted(() => {
         <p class="text-sm text-text-muted">{{ t('submission.status.analysisInProgress') }}</p>
 
         <!-- Barre de progression animée -->
-        <div
-          class="h-1.5 w-full overflow-hidden rounded-full bg-muted"
-          aria-hidden="true"
-        >
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted" aria-hidden="true">
           <div
             class="h-full w-2/3 animate-pulse rounded-full bg-accent"
             style="animation-duration: 1.5s"
@@ -335,10 +352,16 @@ onUnmounted(() => {
       <!-- Horodatage -->
       <div class="flex gap-4 text-xs text-text-subtle">
         <span v-if="run.startedAt">
-          {{ t('submission.status.startedAt', { time: new Date(run.startedAt).toLocaleTimeString() }) }}
+          {{
+            t('submission.status.startedAt', { time: new Date(run.startedAt).toLocaleTimeString() })
+          }}
         </span>
         <span v-if="run.finishedAt">
-          {{ t('submission.status.finishedAt', { time: new Date(run.finishedAt).toLocaleTimeString() }) }}
+          {{
+            t('submission.status.finishedAt', {
+              time: new Date(run.finishedAt).toLocaleTimeString(),
+            })
+          }}
         </span>
       </div>
     </template>

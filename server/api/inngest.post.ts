@@ -9,5 +9,10 @@ import {
 
 export default serve({
   client: inngest,
-  functions: [alertHarnessLatency, alertAuthFailure, archiveCompletedCohortes, harnessTriggerFunction],
+  functions: [
+    alertHarnessLatency,
+    alertAuthFailure,
+    archiveCompletedCohortes,
+    harnessTriggerFunction,
+  ],
 });

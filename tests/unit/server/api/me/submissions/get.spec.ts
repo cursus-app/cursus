@@ -26,14 +26,12 @@ vi.mock('~~/server/utils/hash', () => ({
   hashId: (id: string) => `hashed-${id}`,
 }));
 
-const mockCreateError = vi.fn(
-  (opts: { statusCode: number; message?: string }) => {
-    const err = new Error(opts.message ?? String(opts.statusCode));
-    // @ts-expect-error — propriétés H3Error
-    err.statusCode = opts.statusCode;
-    return err;
-  },
-);
+const mockCreateError = vi.fn((opts: { statusCode: number; message?: string }) => {
+  const err = new Error(opts.message ?? String(opts.statusCode));
+  // @ts-expect-error — propriétés H3Error
+  err.statusCode = opts.statusCode;
+  return err;
+});
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 
@@ -71,8 +69,7 @@ const defaultSubmission = {
   ],
 };
 
-const importHandler = () =>
-  import('~~/server/api/me/submissions/[submissionId].get');
+const importHandler = () => import('~~/server/api/me/submissions/[submissionId].get');
 
 // ─── Tests ──────────────────────────────────────────────────────────────────
 
@@ -104,7 +101,7 @@ describe('GET /api/me/submissions/:submissionId', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it("retourne 403 si la soumission appartient à un autre utilisateur", async () => {
+  it('retourne 403 si la soumission appartient à un autre utilisateur', async () => {
     mockPrismaSubmission.findUnique.mockResolvedValue({
       ...defaultSubmission,
       userId: 'autre-user-id',

@@ -133,11 +133,7 @@ export default defineEventHandler(async (event): Promise<SubmitDelivrableRespons
   }
 
   // ── Rate limit par module / heure ────────────────────────────────────────────
-  checkRateLimit(
-    `submission:${userId}:${moduleId}`,
-    SUBMISSION_RATE_LIMIT,
-    60 * 60 * 1_000,
-  );
+  checkRateLimit(`submission:${userId}:${moduleId}`, SUBMISSION_RATE_LIMIT, 60 * 60 * 1_000);
 
   // ── Vérification : pas d'analyse en cours ────────────────────────────────────
   const runningSubmission = await prisma.submission.findFirst({

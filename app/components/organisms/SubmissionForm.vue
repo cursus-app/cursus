@@ -16,10 +16,7 @@
  */
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
-import {
-  SubmitDelivrableSchema,
-  GITHUB_REPO_URL_REGEX,
-} from '~~/shared/schemas/submission';
+import { SubmitDelivrableSchema, GITHUB_REPO_URL_REGEX } from '~~/shared/schemas/submission';
 import type { SubmitDelivrableResponse } from '~~/shared/schemas/submission';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
@@ -84,8 +81,12 @@ const isDisabled = computed(
 
 /** Validation client : le repo contient le handle GitHub de l'utilisateur. */
 const repoUrlHandleError = computed(() => {
-  if (!repoUrl.value || !props.githubHandle) {return null;}
-  if (!GITHUB_REPO_URL_REGEX.test(repoUrl.value)) {return null;} // l'erreur Zod suffira
+  if (!repoUrl.value || !props.githubHandle) {
+    return null;
+  }
+  if (!GITHUB_REPO_URL_REGEX.test(repoUrl.value)) {
+    return null;
+  } // l'erreur Zod suffira
 
   const normalizedHandle = props.githubHandle.toLowerCase();
   const normalizedUrl = repoUrl.value.toLowerCase();
@@ -95,9 +96,7 @@ const repoUrlHandleError = computed(() => {
   return null;
 });
 
-const effectiveRepoUrlError = computed(
-  () => repoUrlHandleError.value ?? errors.value['repoUrl'],
-);
+const effectiveRepoUrlError = computed(() => repoUrlHandleError.value ?? errors.value['repoUrl']);
 
 // ─── Soumission ───────────────────────────────────────────────────────────────
 
@@ -203,13 +202,17 @@ const onSubmit = handleSubmit(async (values) => {
         name="repoUrl"
         :label="t('submission.fields.repoUrl')"
         :error="effectiveRepoUrlError"
-        :hint="githubHandle ? t('submission.fields.repoUrlHint', { handle: githubHandle }) : undefined"
+        :hint="
+          githubHandle ? t('submission.fields.repoUrlHint', { handle: githubHandle }) : undefined
+        "
         required
       >
         <UInput
           v-bind="repoUrlAttrs"
           :model-value="repoUrl ?? ''"
-          :placeholder="t('submission.fields.repoUrlPlaceholder', { handle: githubHandle ?? 'votre-handle' })"
+          :placeholder="
+            t('submission.fields.repoUrlPlaceholder', { handle: githubHandle ?? 'votre-handle' })
+          "
           icon="i-tabler-brand-github"
           type="url"
           :disabled="isDisabled"

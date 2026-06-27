@@ -17,7 +17,10 @@ const mockPrismaTransaction = vi.fn();
 vi.mock('~~/server/utils/prisma', () => ({
   prisma: {
     user: mockPrismaUser,
-    progression: { findUnique: mockPrismaProgression.findUnique, update: mockPrismaProgressionUpdate },
+    progression: {
+      findUnique: mockPrismaProgression.findUnique,
+      update: mockPrismaProgressionUpdate,
+    },
     submission: mockPrismaSubmission,
     harnessRun: mockPrismaHarnessRun,
     alert: mockPrismaAlert,
@@ -47,16 +50,14 @@ vi.mock('~~/server/utils/inMemoryRateLimit', () => ({
   checkRateLimit: vi.fn(),
 }));
 
-const mockCreateError = vi.fn(
-  (opts: { statusCode: number; message?: string; data?: unknown }) => {
-    const err = new Error(opts.message ?? String(opts.statusCode));
-    // @ts-expect-error — propriétés H3Error ajoutées pour les tests
-    err.statusCode = opts.statusCode;
-    // @ts-expect-error — propriétés H3Error ajoutées pour les tests
-    err.message = opts.message;
-    return err;
-  },
-);
+const mockCreateError = vi.fn((opts: { statusCode: number; message?: string; data?: unknown }) => {
+  const err = new Error(opts.message ?? String(opts.statusCode));
+  // @ts-expect-error — propriétés H3Error ajoutées pour les tests
+  err.statusCode = opts.statusCode;
+  // @ts-expect-error — propriétés H3Error ajoutées pour les tests
+  err.message = opts.message;
+  return err;
+});
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 
@@ -97,8 +98,7 @@ const validBody = {
   deployUrl: '',
 };
 
-const importHandler = () =>
-  import('~~/server/api/me/progressions/[progressionId]/submit.post');
+const importHandler = () => import('~~/server/api/me/progressions/[progressionId]/submit.post');
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
@@ -121,15 +121,13 @@ describe('POST /api/me/progressions/:progressionId/submit', () => {
     mockPrismaHarnessRun.create.mockResolvedValue(null);
     mockPrismaAlert.create.mockResolvedValue(null);
     mockPrismaProgressionUpdate.mockResolvedValue(null);
-    mockPrismaTransaction.mockImplementation(
-      async (fn: (tx: unknown) => Promise<unknown>) => {
-        const tx = {
-          submission: { create: vi.fn().mockResolvedValue({ id: SUBMISSION_ID }) },
-          harnessRun: { create: vi.fn().mockResolvedValue({ id: HARNESS_RUN_ID }) },
-        };
-        return fn(tx);
-      },
-    );
+    mockPrismaTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+      const tx = {
+        submission: { create: vi.fn().mockResolvedValue({ id: SUBMISSION_ID }) },
+        harnessRun: { create: vi.fn().mockResolvedValue({ id: HARNESS_RUN_ID }) },
+      };
+      return fn(tx);
+    });
   });
 
   it("retourne 401 si l'utilisateur n'est pas authentifié", async () => {
