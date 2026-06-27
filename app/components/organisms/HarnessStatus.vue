@@ -15,6 +15,7 @@
  */
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { HarnessRunSummary } from '~~/shared/schemas/submission';
+import type { CheckResult, ChecksJson } from '~~/shared/types/harness';
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -29,6 +30,7 @@ const props = defineProps<Props>();
 
 const { t } = useT();
 const supabase = useSupabaseClient();
+const reducedMotion = useReducedMotion();
 
 // ─── État ─────────────────────────────────────────────────────────────────────
 
@@ -207,23 +209,13 @@ const statusLabel = computed(() => {
   return t(`submission.status.${run.value.status.toLowerCase()}`);
 });
 
-/** Checks parsés depuis checksJson */
-interface CheckResult {
-  id: string;
-  name: string;
-  passed: boolean;
-  message?: string;
-}
-
 const checks = computed<CheckResult[]>(() => {
-  if (!run.value?.checksJson) {
+  const json = run.value?.checksJson;
+  if (!json || typeof json !== 'object' || Array.isArray(json)) {
     return [];
   }
-  const json = run.value.checksJson;
-  if (!Array.isArray(json)) {
-    return [];
-  }
-  return json as CheckResult[];
+  const envelope = json as ChecksJson;
+  return Array.isArray(envelope.checks) ? envelope.checks : [];
 });
 
 // ─── Lifecycle ────────────────────────────────────────────────────────────────
@@ -265,7 +257,7 @@ onUnmounted(() => {
         variant="soft"
         :icon="statusIcon"
         :title="statusLabel"
-        :class="{ 'animate-pulse': run.status === 'RUNNING' || run.status === 'QUEUED' }"
+        :class="{ 'animate-pulse': (run.status === 'RUNNING' || run.status === 'QUEUED') && !reducedMotion }"
       >
         <template #description>
           <span v-if="run.status === 'QUEUED'">{{ t('submission.status.queuedDescription') }}</span>
@@ -302,18 +294,18 @@ onUnmounted(() => {
         <ul class="flex flex-col gap-2" role="list">
           <li
             v-for="check in checks"
-            :key="check.id"
+            :key="check.check_id"
             class="flex items-start gap-3 rounded-lg border border-border-subtle bg-surface p-3"
           >
             <!-- Icône résultat -->
             <UIcon
-              :name="check.passed ? 'i-tabler-circle-check' : 'i-tabler-circle-x'"
+              :name="check.status === 'success' ? 'i-tabler-circle-check' : 'i-tabler-circle-x'"
               :class="[
                 'mt-0.5 size-4 shrink-0',
-                check.passed ? 'text-success-fg' : 'text-danger-fg',
+                check.status === 'success' ? 'text-success-fg' : 'text-danger-fg',
               ]"
               :aria-label="
-                check.passed
+                check.status === 'success'
                   ? t('submission.status.checkPassed')
                   : t('submission.status.checkFailed')
               "
@@ -321,7 +313,7 @@ onUnmounted(() => {
 
             <!-- Contenu check -->
             <div class="flex flex-col gap-0.5">
-              <span class="text-sm font-medium text-text-strong">{{ check.name }}</span>
+              <span class="text-sm font-medium text-text-strong">{{ check.check_id }}</span>
               <span v-if="check.message" class="text-xs text-text-muted">{{ check.message }}</span>
             </div>
           </li>
@@ -343,7 +335,7 @@ onUnmounted(() => {
         <!-- Barre de progression animée -->
         <div class="h-1.5 w-full overflow-hidden rounded-full bg-muted" aria-hidden="true">
           <div
-            class="h-full w-2/3 animate-pulse rounded-full bg-accent"
+            :class="['h-full w-2/3 rounded-full bg-accent', { 'animate-pulse': !reducedMotion }]"
             style="animation-duration: 1.5s"
           />
         </div>

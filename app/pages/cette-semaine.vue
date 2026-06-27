@@ -90,6 +90,22 @@ function statusColor(status: string): string {
   }
 }
 
+const PROGRESSION_STATUS_LABELS: Record<string, string> = {
+  A_VENIR: 'week.status.A_VENIR',
+  EN_COURS: 'week.status.EN_COURS',
+  SOUMIS: 'week.status.SOUMIS',
+  VALIDE: 'week.status.VALIDE',
+  BLOQUE: 'week.status.BLOQUE',
+  EN_ALERTE: 'week.status.EN_ALERTE',
+  EN_RETARD: 'week.status.EN_RETARD',
+  VALIDE_OVERRIDE: 'week.status.VALIDE_OVERRIDE',
+};
+
+function statusLabel(status: string): string {
+  const key = PROGRESSION_STATUS_LABELS[status] ?? 'week.status.A_VENIR';
+  return t(key as Parameters<typeof t>[0]);
+}
+
 /** Icône du type de ressource */
 function resourceIcon(type: string): string {
   switch (type) {
@@ -218,10 +234,10 @@ function resourceIcon(type: string): string {
                 v-if="progression"
                 class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
                 :class="statusColor(progression.status)"
-                :aria-label="t(('week.status.' + progression.status) as any)"
+                :aria-label="statusLabel(progression.status)"
               >
                 <span :class="[statusIcon(progression.status), 'size-3']" aria-hidden="true" />
-                {{ t(`week.status.${progression.status}` as any) }}
+                {{ statusLabel(progression.status) }}
               </span>
 
               <!-- Compte à rebours -->
