@@ -742,6 +742,56 @@
       "invalidPayload": "Invalid payload."
     }
   },
+  "submissions": {
+    "page": {
+      "title": "My journey",
+      "subtitle": "History of all your submissions, from most recent to oldest."
+    },
+    "status": {
+      "PENDING": "Pending",
+      "RUNNING": "Running",
+      "VALIDATED": "Validated",
+      "VALIDATED_OVERRIDE": "Validated (manual)",
+      "FAILED": "Failed",
+      "TIMEOUT": "Timeout",
+      "BLOCKED": "Blocked"
+    },
+    "filter": {
+      "ariaLabel": "Filter submissions by status",
+      "all": "All",
+      "validated": "Validated",
+      "failed": "Failed",
+      "running": "Running",
+      "pending": "Pending"
+    },
+    "list": {
+      "ariaLabel": "Submissions list",
+      "count": "{count} submission | {count} submissions"
+    },
+    "empty": {
+      "title": "No submissions yet",
+      "descriptionAll": "You haven't submitted any deliverable yet. Start with the current week!",
+      "descriptionFiltered": "No submissions match this filter.",
+      "cta": "Go to current week"
+    },
+    "pagination": {
+      "ariaLabel": "Navigate between submission pages"
+    },
+    "card": {
+      "ariaLabel": "Submission — Week {week} — {module}",
+      "weekLabel": "Week {n}",
+      "attempt": "Attempt #{n}",
+      "viewReport": "View report",
+      "viewReportAriaLabel": "View GitHub Actions harness report (opens in new tab)",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details",
+      "harnessChecks": "Check results",
+      "noChecksData": "No check data available.",
+      "checkPassed": "Check passed",
+      "checkFailed": "Check failed",
+      "duration": "Duration: {s}s"
+    }
+  },
   "invitations": {
     "modalTitle": "Invite trainees",
     "modalSubtitle": "Send invitations by email or import a CSV file.",
