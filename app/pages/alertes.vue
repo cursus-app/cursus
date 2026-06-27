@@ -14,7 +14,6 @@
 import type { AlertKind } from '@prisma/client';
 import type { AlertItem, AlertKindFilter, AlertStatusFilter } from '~/composables/useAlerts';
 import { useAlerts } from '~/composables/useAlerts';
-import { useDebounceFn } from '@vueuse/core';
 
 definePageMeta({
   middleware: 'auth',
@@ -28,8 +27,7 @@ const toast = useToast();
 
 // ─── Composable alertes ─────────────────────────────────────────────────────
 
-const { alerts, meta, filters, isLoading, error, fetch, resolve, setFilter, setPage } =
-  useAlerts();
+const { alerts, meta, filters, isLoading, error, fetch, resolve, setFilter, setPage } = useAlerts();
 
 // ─── Filtres ─────────────────────────────────────────────────────────────────
 
@@ -126,12 +124,7 @@ const selectedStatus = computed({
         </p>
       </div>
       <!-- Compteur total -->
-      <UBadge
-        v-if="meta.total > 0"
-        color="neutral"
-        variant="subtle"
-        size="lg"
-      >
+      <UBadge v-if="meta.total > 0" color="neutral" variant="subtle" size="lg">
         {{ meta.total }}
       </UBadge>
     </div>
@@ -139,7 +132,11 @@ const selectedStatus = computed({
     <!-- ─── Barre de filtres ──────────────────────────────────────────── -->
     <div class="mb-6 flex flex-wrap items-center gap-3">
       <!-- Toggle statut -->
-      <div class="flex rounded-lg border border-border-subtle bg-surface" role="group" :aria-label="t('alerts.filters.statusLabel')">
+      <div
+        class="flex rounded-lg border border-border-subtle bg-surface"
+        role="group"
+        :aria-label="t('alerts.filters.statusLabel')"
+      >
         <button
           v-for="opt in STATUS_OPTIONS"
           :key="opt.value"
@@ -247,9 +244,9 @@ const selectedStatus = computed({
       <li v-for="alert in alerts" :key="alert.id" role="listitem">
         <AlertCard
           :id="alert.id"
-          :kind="(alert.kind as AlertKind)"
+          :kind="alert.kind as AlertKind"
           :severity="alert.severity"
-          :context="(alert.context as Record<string, unknown>)"
+          :context="alert.context as Record<string, unknown>"
           :created-at="alert.createdAt"
           :resolved-at="alert.resolvedAt"
           :resolved-by-id="alert.resolvedById"

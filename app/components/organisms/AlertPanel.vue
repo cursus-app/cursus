@@ -11,7 +11,6 @@
  * ST-08.3 — TT-08.3.2
  */
 import type { AlertKind, AlertSeverity } from '@prisma/client';
-import { useI18n } from 'vue-i18n';
 
 interface AlertUser {
   id: string;
@@ -61,13 +60,17 @@ const isSendingComment = ref(false);
 const isResolved = computed(() => props.alert?.resolvedAt !== null);
 
 const traineeName = computed(() => {
-  if (!props.alert) {return '';}
+  if (!props.alert) {
+    return '';
+  }
   return props.alert.user.fullName ?? props.alert.user.email;
 });
 
 /** Badge couleur selon le kind. */
 const kindBadgeColor = computed<'error' | 'warning' | 'info' | 'neutral'>(() => {
-  if (!props.alert) {return 'neutral';}
+  if (!props.alert) {
+    return 'neutral';
+  }
   const map: Record<AlertKind, 'error' | 'warning' | 'info' | 'neutral'> = {
     SUBMISSION_LATE: 'error',
     QUIZ_REPEATEDLY_FAILED: 'warning',
@@ -81,7 +84,9 @@ const kindBadgeColor = computed<'error' | 'warning' | 'info' | 'neutral'>(() => 
 
 /** Icône selon le kind. */
 const kindIcon = computed<string>(() => {
-  if (!props.alert) {return 'i-tabler-alert-triangle';}
+  if (!props.alert) {
+    return 'i-tabler-alert-triangle';
+  }
   const map: Record<AlertKind, string> = {
     SUBMISSION_LATE: 'i-tabler-clock-exclamation',
     QUIZ_REPEATEDLY_FAILED: 'i-tabler-help-circle',
@@ -106,7 +111,9 @@ function formatDate(iso: string): string {
 
 /** Clé de contexte à afficher (toutes les entrées significatives). */
 const contextEntries = computed<{ key: string; value: string }[]>(() => {
-  if (!props.alert?.context) {return [];}
+  if (!props.alert?.context) {
+    return [];
+  }
   return Object.entries(props.alert.context)
     .filter(([, v]) => v !== null && v !== undefined && v !== '')
     .map(([k, v]) => ({ key: k, value: String(v) }));
@@ -114,16 +121,19 @@ const contextEntries = computed<{ key: string; value: string }[]>(() => {
 
 /** Lien vers rapport harnais si sourceType = HarnessRun. */
 const harnessRunLink = computed<string | null>(() => {
-  if (!props.alert) {return null;}
+  if (!props.alert) {
+    return null;
+  }
   if (props.alert.sourceType === 'HarnessRun' && props.alert.sourceId) {
-    // @ts-expect-error — route dynamique non typée
     return `/submissions/${props.alert.sourceId}`;
   }
   return null;
 });
 
 async function handleResolve() {
-  if (!props.alert || isResolved.value) {return;}
+  if (!props.alert || isResolved.value) {
+    return;
+  }
   isResolvingAlert.value = true;
   try {
     emit('resolve', props.alert.id);
@@ -134,9 +144,12 @@ async function handleResolve() {
 }
 
 async function sendComment() {
-  if (!props.alert || !commentText.value.trim()) {return;}
+  if (!props.alert || !commentText.value.trim()) {
+    return;
+  }
   isSendingComment.value = true;
   try {
+    // @ts-expect-error — pas d'endpoint POST /api/notifications typé (opération interne valide)
     await $fetch('/api/notifications', {
       method: 'POST',
       body: {
@@ -164,9 +177,12 @@ async function sendComment() {
 }
 
 // Réinitialiser le commentaire quand on change d'alerte
-watch(() => props.alert?.id, () => {
-  commentText.value = '';
-});
+watch(
+  () => props.alert?.id,
+  () => {
+    commentText.value = '';
+  },
+);
 </script>
 
 <template>
@@ -175,7 +191,7 @@ watch(() => props.alert?.id, () => {
     :title="props.alert ? t(`alerts.kinds.${props.alert.kind}`) : ''"
     :description="traineeName"
     side="right"
-    :ui="{ width: 'max-w-lg' }"
+    class="max-w-lg"
   >
     <template #header>
       <div class="flex items-center gap-3 p-4">
@@ -193,7 +209,13 @@ watch(() => props.alert?.id, () => {
               {{ t(`alerts.kinds.${props.alert.kind}`) }}
             </UBadge>
             <UBadge
-              :color="props.alert.severity === 'HIGH' ? 'error' : props.alert.severity === 'MEDIUM' ? 'warning' : 'neutral'"
+              :color="
+                props.alert.severity === 'HIGH'
+                  ? 'error'
+                  : props.alert.severity === 'MEDIUM'
+                    ? 'warning'
+                    : 'neutral'
+              "
               variant="outline"
               size="sm"
             >
@@ -209,7 +231,10 @@ watch(() => props.alert?.id, () => {
       <div v-if="props.alert" class="flex flex-col gap-6 px-4 py-4">
         <!-- ─── Infos générales ─────────────────────────────────────── -->
         <section aria-labelledby="alert-info-heading">
-          <h3 id="alert-info-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-subtle">
+          <h3
+            id="alert-info-heading"
+            class="mb-3 text-xs font-semibold tracking-wide text-text-subtle uppercase"
+          >
             {{ t('alerts.panel.info') }}
           </h3>
           <dl class="space-y-2 text-sm">
@@ -223,14 +248,19 @@ watch(() => props.alert?.id, () => {
             </div>
             <div v-if="isResolved && props.alert.resolvedBy" class="flex justify-between gap-2">
               <dt class="text-text-muted">{{ t('alerts.panel.resolvedBy') }}</dt>
-              <dd class="text-text-default">{{ props.alert.resolvedBy.fullName ?? t('alerts.resolvedBySystem') }}</dd>
+              <dd class="text-text-default">
+                {{ props.alert.resolvedBy.fullName ?? t('alerts.resolvedBySystem') }}
+              </dd>
             </div>
           </dl>
         </section>
 
         <!-- ─── Contexte ───────────────────────────────────────────── -->
         <section v-if="contextEntries.length > 0" aria-labelledby="alert-context-heading">
-          <h3 id="alert-context-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-subtle">
+          <h3
+            id="alert-context-heading"
+            class="mb-3 text-xs font-semibold tracking-wide text-text-subtle uppercase"
+          >
             {{ t('alerts.panel.context') }}
           </h3>
           <dl class="divide-y divide-border-subtle rounded-lg border border-border-subtle bg-muted">
@@ -240,14 +270,17 @@ watch(() => props.alert?.id, () => {
               class="flex flex-col gap-0.5 px-3 py-2"
             >
               <dt class="text-xs text-text-muted">{{ entry.key }}</dt>
-              <dd class="break-words text-sm text-text-default">{{ entry.value }}</dd>
+              <dd class="text-sm break-words text-text-default">{{ entry.value }}</dd>
             </div>
           </dl>
         </section>
 
         <!-- ─── Lien rapport harnais ───────────────────────────────── -->
         <section v-if="harnessRunLink" aria-labelledby="alert-harness-heading">
-          <h3 id="alert-harness-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-subtle">
+          <h3
+            id="alert-harness-heading"
+            class="mb-3 text-xs font-semibold tracking-wide text-text-subtle uppercase"
+          >
             {{ t('alerts.panel.harnessReport') }}
           </h3>
           <NuxtLink
@@ -261,7 +294,10 @@ watch(() => props.alert?.id, () => {
 
         <!-- ─── Commentaire formateur ─────────────────────────────── -->
         <section v-if="!isResolved" aria-labelledby="alert-comment-heading">
-          <h3 id="alert-comment-heading" class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-subtle">
+          <h3
+            id="alert-comment-heading"
+            class="mb-3 text-xs font-semibold tracking-wide text-text-subtle uppercase"
+          >
             {{ t('alerts.actions.comment') }}
           </h3>
           <div class="space-y-2">
@@ -290,11 +326,7 @@ watch(() => props.alert?.id, () => {
 
     <template v-if="props.alert && !isResolved" #footer>
       <div class="flex justify-end gap-3 border-t border-border-subtle p-4">
-        <UButton
-          color="neutral"
-          variant="ghost"
-          @click="isOpen = false"
-        >
+        <UButton color="neutral" variant="ghost" @click="isOpen = false">
           {{ t('common.close') }}
         </UButton>
         <UButton
