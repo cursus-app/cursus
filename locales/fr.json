@@ -742,6 +742,56 @@
       "invalidPayload": "Payload invalide."
     }
   },
+  "submissions": {
+    "page": {
+      "title": "Mon parcours",
+      "subtitle": "Historique de toutes tes soumissions, de la plus récente à la plus ancienne."
+    },
+    "status": {
+      "PENDING": "En attente",
+      "RUNNING": "En cours",
+      "VALIDATED": "Validé",
+      "VALIDATED_OVERRIDE": "Validé (manuel)",
+      "FAILED": "Échoué",
+      "TIMEOUT": "Timeout",
+      "BLOCKED": "Bloqué"
+    },
+    "filter": {
+      "ariaLabel": "Filtrer les soumissions par statut",
+      "all": "Toutes",
+      "validated": "Validées",
+      "failed": "Échouées",
+      "running": "En cours",
+      "pending": "En attente"
+    },
+    "list": {
+      "ariaLabel": "Liste des soumissions",
+      "count": "{count} soumission | {count} soumissions"
+    },
+    "empty": {
+      "title": "Aucune soumission pour le moment",
+      "descriptionAll": "Tu n'as encore soumis aucun livrable. Commence par la semaine en cours !",
+      "descriptionFiltered": "Aucune soumission ne correspond à ce filtre.",
+      "cta": "Voir ma semaine en cours"
+    },
+    "pagination": {
+      "ariaLabel": "Navigation entre les pages de soumissions"
+    },
+    "card": {
+      "ariaLabel": "Soumission — Semaine {week} — {module}",
+      "weekLabel": "Semaine {n}",
+      "attempt": "Tentative n°{n}",
+      "viewReport": "Voir le rapport",
+      "viewReportAriaLabel": "Voir le rapport harnais GitHub Actions (nouvel onglet)",
+      "showDetails": "Voir les détails",
+      "hideDetails": "Masquer les détails",
+      "harnessChecks": "Résultats des checks",
+      "noChecksData": "Pas de données de checks disponibles.",
+      "checkPassed": "Check réussi",
+      "checkFailed": "Check échoué",
+      "duration": "Durée : {s}s"
+    }
+  },
   "invitations": {
     "modalTitle": "Inviter des stagiaires",
     "modalSubtitle": "Envoyez des invitations par email ou importez un fichier CSV.",
