@@ -96,7 +96,7 @@ describe('triggerHarnessRun', () => {
     );
   });
 
-  it('inclut deployUrl dans l\'événement Inngest si fourni', async () => {
+  it("inclut deployUrl dans l'événement Inngest si fourni", async () => {
     const { triggerHarnessRun } = await getModule();
     await triggerHarnessRun({ ...baseOpts, deployUrl: 'https://my-app.vercel.app' });
 
@@ -120,7 +120,7 @@ describe('triggerHarnessRun', () => {
     );
   });
 
-  it('propage l\'erreur 429 si le rate limit est dépassé', async () => {
+  it("propage l'erreur 429 si le rate limit est dépassé", async () => {
     const { triggerHarnessRun } = await getModule();
     const rateLimitError = new Error('Trop de requêtes');
     // @ts-expect-error — H3Error properties not on standard Error, added for test simulation
@@ -134,7 +134,7 @@ describe('triggerHarnessRun', () => {
     expect(mockInngestSend).not.toHaveBeenCalled();
   });
 
-  it('lève une erreur 404 si la submission n\'existe pas', async () => {
+  it("lève une erreur 404 si la submission n'existe pas", async () => {
     const { triggerHarnessRun } = await getModule();
     mockSubmissionFindUnique.mockResolvedValue(null);
 
@@ -146,7 +146,7 @@ describe('triggerHarnessRun', () => {
     expect(mockHarnessRunCreate).not.toHaveBeenCalled();
   });
 
-  it('n\'appelle pas Inngest si la création DB échoue', async () => {
+  it("n'appelle pas Inngest si la création DB échoue", async () => {
     const { triggerHarnessRun } = await getModule();
     mockHarnessRunCreate.mockRejectedValue(new Error('DB error'));
 

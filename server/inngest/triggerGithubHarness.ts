@@ -207,6 +207,7 @@ export const triggerGithubHarness = inngest.createFunction(
     id: 'trigger-github-harness',
     name: 'Harnais — Déclenchement workflow GitHub Actions',
     retries: 5,
+    triggers: [{ event: 'harness/trigger' }],
     onFailure: async ({ event, error }) => {
       // DLQ : retries épuisées → marquer le run TIMEOUT
       const data = event.data as { harnessRunId?: string; submissionId?: string };
@@ -231,14 +232,10 @@ export const triggerGithubHarness = inngest.createFunction(
           'harness.dlq.marked_timeout',
         );
       } catch (dbError) {
-        logger.error(
-          { harnessRunId, dbError },
-          'harness.dlq.update_failed',
-        );
+        logger.error({ harnessRunId, dbError }, 'harness.dlq.update_failed');
       }
     },
   },
-  { event: 'harness/trigger' },
   async ({ event, step }) => {
     const { harnessRunId, submissionId, repoUrl, deployUrl, criteriaJson } = event.data as {
       harnessRunId: string;
@@ -295,7 +292,7 @@ export const triggerGithubHarness = inngest.createFunction(
       return dispatchWorkflow(installationToken, {
         submission_id: submissionId,
         repo_url: repoUrl,
-        deploy_url: deployUrl,
+        ...(deployUrl !== undefined ? { deploy_url: deployUrl } : {}),
         criteria_json: criteriaJson,
       });
     });

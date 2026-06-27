@@ -159,22 +159,20 @@ describe('POST /api/harness/webhook', () => {
     mockHarnessRunFindFirst.mockResolvedValue(null);
 
     // $transaction exécute le callback
-    mockTransaction.mockImplementation(
-      async (fn: (tx: unknown) => Promise<unknown>) => {
-        const tx = {
-          harnessRun: {
-            update: mockHarnessRunUpdate,
-          },
-          submission: {
-            findUnique: mockSubmissionFindUnique,
-            update: mockSubmissionUpdate,
-          },
-          cohortModule: { findFirst: mockCohortModuleFindFirst },
-          progression: { updateMany: mockProgressionUpdateMany },
-        };
-        return fn(tx);
-      },
-    );
+    mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
+      const tx = {
+        harnessRun: {
+          update: mockHarnessRunUpdate,
+        },
+        submission: {
+          findUnique: mockSubmissionFindUnique,
+          update: mockSubmissionUpdate,
+        },
+        cohortModule: { findFirst: mockCohortModuleFindFirst },
+        progression: { updateMany: mockProgressionUpdateMany },
+      };
+      return fn(tx);
+    });
 
     mockHarnessRunUpdate.mockResolvedValue({
       id: 'harness-run-id-1',
@@ -216,7 +214,7 @@ describe('POST /api/harness/webhook', () => {
       await expect(handler({})).rejects.toMatchObject({ statusCode: 401 });
     });
 
-    it('accepte sans vérification HMAC si le secret n\'est pas configuré', async () => {
+    it("accepte sans vérification HMAC si le secret n'est pas configuré", async () => {
       process.env['GITHUB_APP_WEBHOOK_SECRET'] = '';
       const handler = await getHandler();
       const body = JSON.stringify(validPayload);

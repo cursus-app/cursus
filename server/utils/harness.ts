@@ -61,10 +61,7 @@ export async function triggerHarnessRun(
     select: { id: true },
   });
 
-  logger.info(
-    { harnessRunId: harnessRun.id, submissionId },
-    'harness.run.queued',
-  );
+  logger.info({ harnessRunId: harnessRun.id, submissionId }, 'harness.run.queued');
 
   // Dispatcher l'événement Inngest (async — ne pas awaiter le workflow GH)
   await inngest.send({

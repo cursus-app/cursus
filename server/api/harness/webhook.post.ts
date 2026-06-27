@@ -107,7 +107,8 @@ export default defineEventHandler(async (event) => {
 
   // ── 2. Vérification HMAC (si secret configuré) ────────────────────────────
   if (webhookSecret) {
-    const receivedSig = getHeader(event, 'x-harness-signature') ?? getHeader(event, 'x-hub-signature-256');
+    const receivedSig =
+      getHeader(event, 'x-harness-signature') ?? getHeader(event, 'x-hub-signature-256');
 
     if (!receivedSig) {
       logger.warn({}, 'harness.webhook.missing_signature');
