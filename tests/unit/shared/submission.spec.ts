@@ -28,13 +28,13 @@ describe('GITHUB_REPO_URL_REGEX', () => {
     expect(GITHUB_REPO_URL_REGEX.test('https://example.com')).toBe(false);
   });
 
-  it("rejette github.com sans path complet (org/repo manquant)", () => {
+  it('rejette github.com sans path complet (org/repo manquant)', () => {
     expect(GITHUB_REPO_URL_REGEX.test('https://github.com/johndoe')).toBe(false);
     expect(GITHUB_REPO_URL_REGEX.test('https://github.com/')).toBe(false);
     expect(GITHUB_REPO_URL_REGEX.test('https://github.com')).toBe(false);
   });
 
-  it("rejette les URL malformées", () => {
+  it('rejette les URL malformées', () => {
     expect(GITHUB_REPO_URL_REGEX.test('not-a-url')).toBe(false);
     expect(GITHUB_REPO_URL_REGEX.test('')).toBe(false);
     expect(GITHUB_REPO_URL_REGEX.test('github.com/johndoe/repo')).toBe(false);

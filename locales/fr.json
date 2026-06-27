@@ -963,7 +963,7 @@
   "submission": {
     "fields": {
       "repoUrl": "URL du dépôt GitHub",
-      "repoUrlHint": "Doit appartenir à votre compte @{handle}",
+      "repoUrlHint": "Doit appartenir à votre compte {'@'}{handle}",
       "repoUrlPlaceholder": "https://github.com/{handle}/mon-projet",
       "deployUrl": "URL de déploiement (optionnel)",
       "deployUrlHint": "Doit commencer par https://",
@@ -1020,7 +1020,7 @@
       "repoUrlRequired": "L'URL du dépôt GitHub est requise",
       "notGithubUrl": "L'URL doit être un dépôt GitHub valide (https://github.com/...)",
       "deployNotHttps": "L'URL de déploiement doit commencer par https://",
-      "repoNotOwned": "Le dépôt doit appartenir à votre compte GitHub (@{handle})",
+      "repoNotOwned": "Le dépôt doit appartenir à votre compte GitHub ({'@'}{handle})",
       "githubHandleRequired": "Liez votre compte GitHub avant de soumettre",
       "alreadyRunning": "Une analyse est déjà en cours pour ce module",
       "alreadyValidated": "Ce module est déjà validé",
