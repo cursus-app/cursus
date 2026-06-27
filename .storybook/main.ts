@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/vue3-vite';
 
-const worktreeRoot = '/Users/sadjad/Dev/perso/cursus/.claude/worktrees/storybook';
+const worktreeRoot = process.cwd();
 
 const config: StorybookConfig = {
   stories: ['../app/components/**/*.stories.ts', '../stories/**/*.stories.ts'],
