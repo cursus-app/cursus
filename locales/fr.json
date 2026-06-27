@@ -710,6 +710,61 @@
       "cookies": "Cookies"
     }
   },
+  "cohorte": {
+    "dashboard": {
+      "tabsAriaLabel": "Vues de la cohorte",
+      "tabs": {
+        "overview": "Vue générale",
+        "heatmap": "Heatmap"
+      },
+      "kpiRegionLabel": "Indicateurs clés de la cohorte",
+      "kpi": {
+        "medianProgress": "Médiane progression",
+        "medianProgressAriaLabel": "Médiane de progression : {value}%",
+        "openAlerts": "Alertes ouvertes",
+        "openAlertsAriaLabel": "{value} alerte(s) ouverte(s)",
+        "capstonesThisWeek": "Capstones cette semaine",
+        "capstonesThisWeekAriaLabel": "{value} capstone(s) à venir cette semaine",
+        "submissionRate": "Taux de soumission",
+        "submissionRateAriaLabel": "Taux de soumission : {value}%"
+      },
+      "gridAriaLabel": "Grille de progression des stagiaires par module",
+      "traineesColumnLabel": "Stagiaire",
+      "cellAriaLabel": "{trainee} — {module} (Semaine {week}) — {status}",
+      "legendAriaLabel": "Légende des statuts",
+      "unknownTrainee": "Stagiaire inconnu",
+      "searchPlaceholder": "Rechercher un stagiaire…",
+      "filter": {
+        "alertsOnly": "Alertes uniquement",
+        "lateOnly": "En retard uniquement"
+      },
+      "export": {
+        "csvButton": "Exporter CSV"
+      },
+      "empty": {
+        "noTrainees": "Aucun stagiaire dans cette cohorte. Invitez des stagiaires pour commencer.",
+        "noResults": "Aucun stagiaire ne correspond aux filtres sélectionnés."
+      },
+      "status": {
+        "A_VENIR": "À venir",
+        "EN_COURS": "En cours",
+        "SOUMIS": "Soumis",
+        "VALIDE": "Validé",
+        "BLOQUE": "Bloqué",
+        "EN_ALERTE": "En alerte",
+        "EN_RETARD": "En retard",
+        "VALIDE_OVERRIDE": "Validé (override)"
+      },
+      "drawer": {
+        "title": "Détail du stagiaire",
+        "dueDate": "Date limite :",
+        "hasAlert": "Une alerte est ouverte pour ce module.",
+        "viewProfile": "Voir le profil complet",
+        "lastSubmission": "Dernière soumission",
+        "noSubmission": "Aucune soumission"
+      }
+    }
+  },
   "harness": {
     "status": {
       "QUEUED": "En attente",
@@ -740,6 +795,44 @@
       "submissionNotFound": "Soumission introuvable.",
       "runNotFound": "Run de harnais introuvable.",
       "invalidPayload": "Payload invalide."
+    },
+    "checks": {
+      "repo_exists_public": {
+        "label": "Dépôt public accessible",
+        "help": "Assurez-vous que votre dépôt GitHub est bien public et que l'URL correspond exactement à celle indiquée dans votre soumission."
+      },
+      "branch_exists": {
+        "label": "Branches requises présentes",
+        "help": "Vérifiez que toutes les branches demandées existent dans votre dépôt (ex : main, feature/login). Vous pouvez les créer avec `git checkout -b <nom-branche>` puis `git push origin <nom-branche>`."
+      },
+      "pr_merged": {
+        "label": "Pull Request fusionnée",
+        "help": "Assurez-vous que la Pull Request attendue a bien été fusionnée (statut « Merged ») sur GitHub. Les PR en attente ou fermées sans merge ne sont pas acceptées."
+      },
+      "file_exists": {
+        "label": "Fichier obligatoire présent",
+        "help": "Vérifiez que le fichier attendu est présent dans votre dépôt au chemin exact indiqué dans le livrable. N'oubliez pas de committer et pousser le fichier."
+      },
+      "tests_pass": {
+        "label": "Tests unitaires",
+        "help": "Lancez vos tests localement avec la commande indiquée dans le livrable. Assurez-vous que tous les tests passent avant de soumettre. Consultez la sortie du harnais pour les détails des échecs."
+      },
+      "linter_pass": {
+        "label": "Linter (qualité du code)",
+        "help": "Lancez le linter localement (ex : `npm run lint`) et corrigez toutes les erreurs signalées avant de soumettre. Un avertissement traité comme erreur peut faire échouer ce check."
+      },
+      "url_responds": {
+        "label": "URL de déploiement accessible",
+        "help": "Vérifiez que votre application est bien déployée et accessible publiquement à l'URL fournie. Attendez quelques minutes si vous venez de déployer, puis re-soumettez."
+      },
+      "lighthouse_min": {
+        "label": "Score Lighthouse minimum",
+        "help": "Votre application doit atteindre les seuils Lighthouse indiqués (Performance, Accessibilité, Bonnes pratiques, SEO). Utilisez DevTools Chrome → Onglet Lighthouse pour analyser et corriger les points en échec."
+      },
+      "commits_signed": {
+        "label": "Commits signés (GPG)",
+        "help": "Configurez la signature GPG de vos commits : `git config commit.gpgsign true`. Assurez-vous que votre clé GPG est bien liée à votre compte GitHub. Le nombre minimum de commits signés est indiqué dans le livrable."
+      }
     }
   },
   "submissions": {
@@ -1030,6 +1123,38 @@
       "invalidSubmissionId": "Identifiant de soumission invalide",
       "notFound": "Soumission introuvable",
       "invalidBody": "Données de soumission invalides"
+    }
+  },
+  "override": {
+    "button": {
+      "label": "Valider manuellement",
+      "ariaLabel": "Valider manuellement ce livrable"
+    },
+    "modal": {
+      "title": "Valider manuellement",
+      "description": "Cette action valide le livrable sans passer par le harnais. Un motif obligatoire sera archivé en audit.",
+      "reasonLabel": "Motif de l'override",
+      "reasonPlaceholder": "Explique pourquoi tu valides manuellement ce livrable…",
+      "reasonHint": "Minimum {min} caractères requis.",
+      "reasonTooShort": "Le motif doit contenir au moins {min} caractères",
+      "reasonTooLong": "Le motif ne peut pas dépasser {max} caractères",
+      "submitButton": "Valider manuellement"
+    },
+    "badge": {
+      "label": "Validé manuellement",
+      "tooltipReason": "Motif : {reason}",
+      "tooltipBy": "Par {name}",
+      "tooltipDate": "Le {date}"
+    },
+    "toast": {
+      "success": "Livrable validé manuellement",
+      "successDetail": "Le stagiaire {name} a été notifié"
+    },
+    "errors": {
+      "title": "Erreur lors de l'override",
+      "generic": "Une erreur est survenue. Réessaie plus tard.",
+      "forbidden": "Tu n'as pas les droits pour valider manuellement ce livrable.",
+      "alreadyTerminal": "Ce livrable est déjà validé, aucun override n'est possible."
     }
   }
 }
