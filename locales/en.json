@@ -833,9 +833,9 @@
       "submitting": "Sending…",
       "submitAriaLabel": "Send the blocker report to your trainer",
       "minLengthError": "{min} characters minimum",
-      "charRemaining": "{count, plural, one {# character remaining} other {# characters remaining}}",
+      "charRemaining": "{count} characters remaining",
       "charCount": "{count}/{max}",
-      "charOverMax": "{count, plural, one {# character over limit} other {# characters over limit}}"
+      "charOverMax": "{count} characters over the limit"
     },
     "toast": {
       "success": "Your trainer has been alerted and will reply shortly.",

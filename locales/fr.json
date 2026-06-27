@@ -833,9 +833,9 @@
       "submitting": "Envoi en cours…",
       "submitAriaLabel": "Envoyer le signalement de blocage au formateur",
       "minLengthError": "{min} caractères minimum",
-      "charRemaining": "Encore {count, plural, one {# caractère} other {# caractères}} à saisir",
+      "charRemaining": "Encore {count} caractères à saisir",
       "charCount": "{count}/{max}",
-      "charOverMax": "{count, plural, one {# caractère en trop} other {# caractères en trop}}"
+      "charOverMax": "{count} caractères en trop"
     },
     "toast": {
       "success": "Ton formateur a été alerté, il va te répondre rapidement.",
