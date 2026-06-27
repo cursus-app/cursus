@@ -990,7 +990,6 @@
       "generic": "An error occurred. Please try again later.",
       "forbidden": "You do not have permission to manually validate this deliverable.",
       "alreadyTerminal": "This deliverable is already validated, no override is possible."
-
     }
   }
 }

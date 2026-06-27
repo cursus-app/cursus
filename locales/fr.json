@@ -990,7 +990,6 @@
       "generic": "Une erreur est survenue. Réessaie plus tard.",
       "forbidden": "Tu n'as pas les droits pour valider manuellement ce livrable.",
       "alreadyTerminal": "Ce livrable est déjà validé, aucun override n'est possible."
-
     }
   }
 }
