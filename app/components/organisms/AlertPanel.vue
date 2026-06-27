@@ -149,8 +149,8 @@ async function sendComment() {
   }
   isSendingComment.value = true;
   try {
-    // @ts-expect-error — pas d'endpoint POST /api/notifications typé (opération interne valide)
     await $fetch('/api/notifications', {
+      // @ts-expect-error — pas d'endpoint POST /api/notifications typé (opération interne valide)
       method: 'POST',
       body: {
         userId: props.alert.user.id,
