@@ -817,5 +817,38 @@
       "internalError": "An internal error occurred. Please try again later.",
       "invalidLocale": "Unsupported locale. Use 'fr' or 'en'."
     }
+  },
+  "blocked": {
+    "button": {
+      "label": "I'm stuck",
+      "alreadySent": "Alert sent",
+      "alreadySentLabel": "You have already sent an alert — wait for your trainer's reply"
+    },
+    "modal": {
+      "title": "Describe your blocker",
+      "subtitle": "Module: {module}",
+      "label": "Describe your blocker in 3 sentences",
+      "placeholder": "E.g.: I've been stuck since yesterday trying to configure my Docker environment…",
+      "submit": "Send",
+      "submitting": "Sending…",
+      "submitAriaLabel": "Send the blocker report to your trainer",
+      "minLengthError": "{min} characters minimum",
+      "charRemaining": "{count} characters remaining",
+      "charCount": "{count}/{max}",
+      "charOverMax": "{count} characters over the limit"
+    },
+    "toast": {
+      "success": "Your trainer has been alerted and will reply shortly.",
+      "alreadyOpen": "You already have an open alert — wait for your trainer's reply.",
+      "rateLimited": "Too many alerts sent. Try again in a few hours.",
+      "error": "An error occurred. Please try again later."
+    },
+    "errors": {
+      "messageTooShort": "Message must be at least 20 characters",
+      "messageTooLong": "Message must not exceed 500 characters",
+      "invalidBody": "Invalid request body",
+      "progressionNotFound": "Progression not found",
+      "forbidden": "You can only report a blocker on your own progression"
+    }
   }
 }
