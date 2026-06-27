@@ -740,6 +740,44 @@
       "submissionNotFound": "Soumission introuvable.",
       "runNotFound": "Run de harnais introuvable.",
       "invalidPayload": "Payload invalide."
+    },
+    "checks": {
+      "repo_exists_public": {
+        "label": "Dépôt public accessible",
+        "help": "Assurez-vous que votre dépôt GitHub est bien public et que l'URL correspond exactement à celle indiquée dans votre soumission."
+      },
+      "branch_exists": {
+        "label": "Branches requises présentes",
+        "help": "Vérifiez que toutes les branches demandées existent dans votre dépôt (ex : main, feature/login). Vous pouvez les créer avec `git checkout -b <nom-branche>` puis `git push origin <nom-branche>`."
+      },
+      "pr_merged": {
+        "label": "Pull Request fusionnée",
+        "help": "Assurez-vous que la Pull Request attendue a bien été fusionnée (statut « Merged ») sur GitHub. Les PR en attente ou fermées sans merge ne sont pas acceptées."
+      },
+      "file_exists": {
+        "label": "Fichier obligatoire présent",
+        "help": "Vérifiez que le fichier attendu est présent dans votre dépôt au chemin exact indiqué dans le livrable. N'oubliez pas de committer et pousser le fichier."
+      },
+      "tests_pass": {
+        "label": "Tests unitaires",
+        "help": "Lancez vos tests localement avec la commande indiquée dans le livrable. Assurez-vous que tous les tests passent avant de soumettre. Consultez la sortie du harnais pour les détails des échecs."
+      },
+      "linter_pass": {
+        "label": "Linter (qualité du code)",
+        "help": "Lancez le linter localement (ex : `npm run lint`) et corrigez toutes les erreurs signalées avant de soumettre. Un avertissement traité comme erreur peut faire échouer ce check."
+      },
+      "url_responds": {
+        "label": "URL de déploiement accessible",
+        "help": "Vérifiez que votre application est bien déployée et accessible publiquement à l'URL fournie. Attendez quelques minutes si vous venez de déployer, puis re-soumettez."
+      },
+      "lighthouse_min": {
+        "label": "Score Lighthouse minimum",
+        "help": "Votre application doit atteindre les seuils Lighthouse indiqués (Performance, Accessibilité, Bonnes pratiques, SEO). Utilisez DevTools Chrome → Onglet Lighthouse pour analyser et corriger les points en échec."
+      },
+      "commits_signed": {
+        "label": "Commits signés (GPG)",
+        "help": "Configurez la signature GPG de vos commits : `git config commit.gpgsign true`. Assurez-vous que votre clé GPG est bien liée à votre compte GitHub. Le nombre minimum de commits signés est indiqué dans le livrable."
+      }
     }
   },
   "submissions": {
