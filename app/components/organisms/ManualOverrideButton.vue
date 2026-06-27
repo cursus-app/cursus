@@ -100,9 +100,9 @@ async function handleSubmit(): Promise<void> {
 
     toast.add({
       title: t('override.toast.success'),
-      description: props.traineeName
-        ? t('override.toast.successDetail', { name: props.traineeName })
-        : undefined,
+      ...(props.traineeName
+        ? { description: t('override.toast.successDetail', { name: props.traineeName }) }
+        : {}),
       color: 'success',
       icon: 'i-tabler-check',
     });
@@ -159,7 +159,14 @@ watch(isOpen, (open) => {
   </div>
 
   <!-- Modal d'override -->
-  <UModal :open="isOpen" @update:open="(v) => { if (!v) closeModal() }">
+  <UModal
+    :open="isOpen"
+    @update:open="
+      (v) => {
+        if (!v) closeModal();
+      }
+    "
+  >
     <template #content>
       <div
         role="dialog"
@@ -193,10 +200,7 @@ watch(isOpen, (open) => {
 
         <!-- Textarea motif -->
         <div class="space-y-1.5">
-          <label
-            for="override-reason"
-            class="block text-sm font-medium text-text-default"
-          >
+          <label for="override-reason" class="block text-sm font-medium text-text-default">
             {{ t('override.modal.reasonLabel') }}
             <span class="text-danger-fg" aria-hidden="true">*</span>
           </label>
@@ -252,12 +256,7 @@ watch(isOpen, (open) => {
 
         <!-- Actions -->
         <div class="mt-5 flex justify-end gap-3">
-          <UButton
-            color="neutral"
-            variant="ghost"
-            :disabled="loading"
-            @click="closeModal"
-          >
+          <UButton color="neutral" variant="ghost" :disabled="loading" @click="closeModal">
             {{ t('common.cancel') }}
           </UButton>
           <UButton

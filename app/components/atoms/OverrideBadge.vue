@@ -65,7 +65,7 @@ const tooltipId = `override-badge-tooltip-${Math.random().toString(36).slice(2, 
       v-if="tooltipText"
       :id="tooltipId"
       role="tooltip"
-      class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-max max-w-xs -translate-x-1/2 rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-default shadow-sm opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
+      class="pointer-events-none absolute bottom-full left-1/2 z-50 mb-2 w-max max-w-xs -translate-x-1/2 rounded-lg border border-border-subtle bg-surface px-3 py-1.5 text-xs text-text-default opacity-0 shadow-sm transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
     >
       {{ tooltipText }}
     </span>

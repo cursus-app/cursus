@@ -41,8 +41,7 @@ function makeStub(fetchImpl: (body: unknown) => Promise<unknown>) {
       const errorMsg = ref<string | null>(null);
 
       const isTerminal = computed(
-        () =>
-          props.currentStatus === 'VALIDE' || props.currentStatus === 'VALIDE_OVERRIDE',
+        () => props.currentStatus === 'VALIDE' || props.currentStatus === 'VALIDE_OVERRIDE',
       );
 
       const charCount = computed(() => reason.value.length);
@@ -62,9 +61,7 @@ function makeStub(fetchImpl: (body: unknown) => Promise<unknown>) {
 
       const canSubmit = computed(
         () =>
-          reason.value.length >= MIN_REASON &&
-          reason.value.length <= MAX_REASON &&
-          !loading.value,
+          reason.value.length >= MIN_REASON && reason.value.length <= MAX_REASON && !loading.value,
       );
 
       function openModal() {
@@ -93,9 +90,9 @@ function makeStub(fetchImpl: (body: unknown) => Promise<unknown>) {
         } catch (err: unknown) {
           const e = err as { statusCode?: number };
           if (e.statusCode === 403) {
-            errorMsg.value = 'Tu n\'as pas les droits pour valider manuellement ce livrable.';
+            errorMsg.value = "Tu n'as pas les droits pour valider manuellement ce livrable.";
           } else if (e.statusCode === 422) {
-            errorMsg.value = 'Ce livrable est déjà validé, aucun override n\'est possible.';
+            errorMsg.value = "Ce livrable est déjà validé, aucun override n'est possible.";
           } else {
             errorMsg.value = 'Une erreur est survenue. Réessaie plus tard.';
           }
@@ -258,7 +255,7 @@ describe('ManualOverrideButton', () => {
     expect(submitBtn.attributes('disabled')).toBeDefined();
   });
 
-  it('affiche un message d\'erreur quand le motif est trop court', async () => {
+  it("affiche un message d'erreur quand le motif est trop court", async () => {
     const stub = makeStub(vi.fn());
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
@@ -270,16 +267,20 @@ describe('ManualOverrideButton', () => {
   });
 
   it('le bouton submit est activé quand le motif est valide (≥ 20 chars)', async () => {
-    const stub = makeStub(vi.fn().mockResolvedValue({ id: 'p-1', status: 'VALIDE_OVERRIDE', overrideReason: 'raison' }));
+    const stub = makeStub(
+      vi.fn().mockResolvedValue({ id: 'p-1', status: 'VALIDE_OVERRIDE', overrideReason: 'raison' }),
+    );
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison suffisamment longue pour passer la validation locale');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison suffisamment longue pour passer la validation locale');
     expect(wrapper.find('[data-testid="submit-btn"]').attributes('disabled')).toBeUndefined();
   });
 
-  it('ne montre pas de message d\'erreur quand le champ est encore vierge', async () => {
+  it("ne montre pas de message d'erreur quand le champ est encore vierge", async () => {
     const stub = makeStub(vi.fn());
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
@@ -291,14 +292,20 @@ describe('ManualOverrideButton', () => {
   // ── Appel API et émission d'événement ────────────────────────────────────────
 
   it('émet overridden avec la progression mise à jour après succès', async () => {
-    const updatedProgression = { id: 'p-1', status: 'VALIDE_OVERRIDE', overrideReason: 'Raison test valide longue' };
+    const updatedProgression = {
+      id: 'p-1',
+      status: 'VALIDE_OVERRIDE',
+      overrideReason: 'Raison test valide longue',
+    };
     const fetchMock = vi.fn().mockResolvedValue(updatedProgression);
     const stub = makeStub(fetchMock);
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison test valide longue suffisante');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison test valide longue suffisante');
     await wrapper.find('[data-testid="submit-btn"]').trigger('click');
     // Attendre la résolution de la Promise
     await new Promise((r) => setTimeout(r, 0));
@@ -308,13 +315,17 @@ describe('ManualOverrideButton', () => {
   });
 
   it('ferme la modal après un override réussi', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ id: 'p-1', status: 'VALIDE_OVERRIDE', overrideReason: 'raison' });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValue({ id: 'p-1', status: 'VALIDE_OVERRIDE', overrideReason: 'raison' });
     const stub = makeStub(fetchMock);
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison suffisamment longue pour passer');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison suffisamment longue pour passer');
     await wrapper.find('[data-testid="submit-btn"]').trigger('click');
     await new Promise((r) => setTimeout(r, 0));
     expect(wrapper.find('[data-testid="override-modal"]').exists()).toBe(false);
@@ -322,14 +333,16 @@ describe('ManualOverrideButton', () => {
 
   // ── Gestion des erreurs API ───────────────────────────────────────────────────
 
-  it('affiche un message 403 quand l\'API retourne forbidden', async () => {
+  it("affiche un message 403 quand l'API retourne forbidden", async () => {
     const fetchMock = vi.fn().mockRejectedValue({ statusCode: 403 });
     const stub = makeStub(fetchMock);
     const wrapper = mount(stub, {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison suffisamment longue pour passer la validation');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison suffisamment longue pour passer la validation');
     await wrapper.find('[data-testid="submit-btn"]').trigger('click');
     await new Promise((r) => setTimeout(r, 0));
     const apiError = wrapper.find('[data-testid="api-error"]');
@@ -344,7 +357,9 @@ describe('ManualOverrideButton', () => {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison suffisamment longue pour passer la validation');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison suffisamment longue pour passer la validation');
     await wrapper.find('[data-testid="submit-btn"]').trigger('click');
     await new Promise((r) => setTimeout(r, 0));
     const apiError = wrapper.find('[data-testid="api-error"]');
@@ -359,7 +374,9 @@ describe('ManualOverrideButton', () => {
       props: { progressionId: 'p-1', currentStatus: 'EN_COURS' } as Props,
     });
     await wrapper.find('[data-testid="override-open-btn"]').trigger('click');
-    await wrapper.find('[data-testid="reason-textarea"]').setValue('Raison suffisamment longue pour passer la validation');
+    await wrapper
+      .find('[data-testid="reason-textarea"]')
+      .setValue('Raison suffisamment longue pour passer la validation');
     await wrapper.find('[data-testid="submit-btn"]').trigger('click');
     await new Promise((r) => setTimeout(r, 0));
     const apiError = wrapper.find('[data-testid="api-error"]');

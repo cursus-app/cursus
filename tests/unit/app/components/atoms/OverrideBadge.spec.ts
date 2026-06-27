@@ -34,7 +34,9 @@ const OverrideBadgeStub = {
       if (props.overrideAt) {
         const d =
           typeof props.overrideAt === 'string' ? new Date(props.overrideAt) : props.overrideAt;
-        parts.push(`Le ${d.toLocaleDateString('fr', { year: 'numeric', month: 'short', day: 'numeric' })}`);
+        parts.push(
+          `Le ${d.toLocaleDateString('fr', { year: 'numeric', month: 'short', day: 'numeric' })}`,
+        );
       }
       return parts.join(' · ');
     }
@@ -76,7 +78,7 @@ describe('OverrideBadge', () => {
     expect(badge.classes()).toContain('text-warning-fg');
   });
 
-  it('ne montre pas de tooltip quand il n\'y a pas de détails', () => {
+  it("ne montre pas de tooltip quand il n'y a pas de détails", () => {
     const wrapper = mount(OverrideBadgeStub);
     expect(wrapper.find('[data-testid="override-badge-tooltip"]').exists()).toBe(false);
   });
@@ -140,7 +142,7 @@ describe('OverrideBadge', () => {
     expect(badge.attributes('aria-describedby')).toBe('override-badge-tooltip');
   });
 
-  it('n\'a pas aria-describedby quand aucun tooltip', () => {
+  it("n'a pas aria-describedby quand aucun tooltip", () => {
     const wrapper = mount(OverrideBadgeStub);
     const badge = wrapper.find('[data-testid="override-badge"]');
     expect(badge.attributes('aria-describedby')).toBeUndefined();
