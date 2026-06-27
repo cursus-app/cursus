@@ -45,9 +45,7 @@ const OTHER_USER_ID = '550e8400-e29b-41d4-a716-446655440099';
 const RUN_ID = '550e8400-e29b-41d4-a716-446655440004';
 
 const CHECKS_JSON = {
-  checks: [
-    { check_id: 'repo_exists_public', status: 'success', message: 'Repo trouvé et public' },
-  ],
+  checks: [{ check_id: 'repo_exists_public', status: 'success', message: 'Repo trouvé et public' }],
 };
 
 const defaultRun = {
@@ -65,9 +63,7 @@ describe('GET /api/me/harness-runs/:id', () => {
   beforeEach(async () => {
     vi.clearAllMocks();
     vi.resetModules();
-    const mod = await import(
-      '~~/server/api/me/harness-runs/[id].get'
-    );
+    const mod = await import('~~/server/api/me/harness-runs/[id].get');
     handler = mod.default as (...args: unknown[]) => unknown;
   });
 
