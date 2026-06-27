@@ -14,6 +14,7 @@
 //   6. Active cohorts only — stagiaire vide → early return
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { detectAlertsForCohort } from '~~/server/inngest/detectProgressionAlerts';
 
 // ─── Mocks hoistés ──────────────────────────────────────────────────────────
 // vi.mock est hoisted au début du fichier — les variables utilisées dans la
@@ -50,10 +51,6 @@ vi.mock('~~/server/inngest/client', () => ({
     })),
   },
 }));
-
-// ─── Import après mocks ──────────────────────────────────────────────────────
-
-import { detectAlertsForCohort } from '~~/server/inngest/detectProgressionAlerts';
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

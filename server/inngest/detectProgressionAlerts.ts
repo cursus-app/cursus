@@ -18,7 +18,7 @@
 import { inngest } from '~~/server/inngest/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
-import type { AlertKind, AlertSeverity, ProgressionStatus } from '@prisma/client';
+import type { Prisma, AlertKind, AlertSeverity, ProgressionStatus } from '@prisma/client';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
@@ -145,7 +145,7 @@ export async function detectAlertsForCohort(cohorteId: string, now: Date): Promi
     }),
   ]);
 
-  if (stagiaireIds.length === 0) return 0;
+  if (stagiaireIds.length === 0) { return 0; }
 
   const cohortModuleIds = cohortModules.map((cm) => cm.id);
   const moduleIdByCMId = new Map(cohortModules.map((cm) => [cm.id, cm.moduleId]));
@@ -206,7 +206,7 @@ export async function detectAlertsForCohort(cohorteId: string, now: Date): Promi
   for (const p of lateProgressions) {
     const moduleId = moduleIdByCMId.get(p.cohortModuleId);
     const moduleTitle = titleByCMId.get(p.cohortModuleId);
-    if (!moduleId) continue;
+    if (!moduleId) { continue; }
 
     const daysLate = Math.floor((now.getTime() - p.dueDate.getTime()) / (24 * 60 * 60 * 1_000));
     alertInputs.push({
@@ -276,7 +276,7 @@ export async function detectAlertsForCohort(cohorteId: string, now: Date): Promi
   for (const p of stalledProgressions) {
     const moduleId = moduleIdByCMId.get(p.cohortModuleId);
     const moduleTitle = titleByCMId.get(p.cohortModuleId);
-    if (!moduleId) continue;
+    if (!moduleId) { continue; }
 
     const daysStalled = Math.floor(
       (now.getTime() - p.updatedAt.getTime()) / (24 * 60 * 60 * 1_000),
@@ -324,7 +324,7 @@ export async function detectAlertsForCohort(cohorteId: string, now: Date): Promi
         severity: SEVERITY_BY_KIND[input.kind],
         sourceType: 'progression',
         sourceId: input.sourceId,
-        context: input.context,
+        context: input.context as Prisma.InputJsonValue,
       },
     });
 
