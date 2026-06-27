@@ -157,6 +157,16 @@ describe('useAppI18n — localeOptions', () => {
     expect(localeOptions.value[0]).toMatchObject({ code: 'fr', name: 'Français' });
     expect(localeOptions.value[1]).toMatchObject({ code: 'en', name: 'English' });
   });
+
+  it('utilise code comme fallback si name et language sont absents (couvre ?? l[code])', () => {
+    // Ce test couvre les branches nullish ?? dans localeOptions.map()
+    const original = mockLocalesRef.value;
+    mockLocalesRef.value = [{ code: 'fr' }, { code: 'en' }] as typeof original;
+    const { localeOptions } = useAppI18n();
+    expect(localeOptions.value[0]).toMatchObject({ code: 'fr', name: 'fr', language: 'fr' });
+    expect(localeOptions.value[1]).toMatchObject({ code: 'en', name: 'en', language: 'en' });
+    mockLocalesRef.value = original;
+  });
 });
 
 describe('useAppI18n — switchLocale', () => {

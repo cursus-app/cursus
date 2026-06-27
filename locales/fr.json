@@ -734,5 +734,30 @@
       "alreadyAccepted": "Cette invitation a déjà été acceptée",
       "revoked": "Cette invitation a été révoquée"
     }
+  },
+  "email": {
+    "subject": {
+      "welcome": "Bienvenue sur Cursus, {name} !",
+      "invitation": "{inviterName} t'invite à rejoindre {cohorteName} sur Cursus",
+      "weekReminder": "Rappel : livrable à soumettre",
+      "harnessResult": "Résultat du harnais",
+      "alertLate": "Alerte : stagiaire en retard sur \"{moduleName}\""
+    },
+    "footer": {
+      "copyright": "© {year} Cursus. Tous droits réservés.",
+      "member": "Tu reçois cet email car tu es membre de la plateforme Cursus.",
+      "expiry": "Ce lien expire dans 7 jours. Si tu n'as pas demandé cette invitation, ignore cet email."
+    }
+  },
+  "server": {
+    "errors": {
+      "unauthorized": "Accès non autorisé.",
+      "forbidden": "Vous n'avez pas les droits pour effectuer cette action.",
+      "notFound": "Ressource introuvable.",
+      "badRequest": "Requête invalide.",
+      "conflict": "Conflit de données.",
+      "internalError": "Une erreur interne est survenue. Réessayez plus tard.",
+      "invalidLocale": "Locale non supportée. Utilisez 'fr' ou 'en'."
+    }
   }
 }
