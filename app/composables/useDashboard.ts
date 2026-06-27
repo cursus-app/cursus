@@ -1,11 +1,16 @@
 /**
  * Composable useDashboard — données agrégées du dashboard stagiaire.
  *
- * Compatible SSR (useAsyncData). Expose :
+ * Utilise $fetch pour être testable unitairement (même pattern que
+ * useNotifications, useMySubmissions, etc.).
+ *
+ * Expose :
  *   - data      : DashboardData | null
- *   - status    : 'idle' | 'pending' | 'success' | 'error'
- *   - error     : Error | null
- *   - refresh() : revalidation manuelle
+ *   - isLoading : boolean
+ *   - error     : string | null
+ *   - fetch()   : chargement initial / revalidation
+ *   - hasCurrentWeek : boolean
+ *   - hasNoCohort    : boolean
  *
  * ST-13.1
  */
@@ -59,27 +64,44 @@ export interface DashboardData {
 }
 
 export function useDashboard() {
-  const { data, status, error, refresh } = useAsyncData<DashboardData>('dashboard', () =>
-    $fetch<DashboardData>('/api/me/dashboard'),
-  );
+  const data = ref<DashboardData | null>(null);
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
+  const loaded = ref(false);
 
-  const isLoading = computed(() => status.value === 'pending');
+  async function fetch() {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      data.value = await $fetch<DashboardData>('/api/me/dashboard');
+      loaded.value = true;
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : String(err);
+    } finally {
+      isLoading.value = false;
+    }
+  }
 
+  /** true si le module de la semaine courante est défini */
   const hasCurrentWeek = computed(() => !!data.value?.currentWeek.moduleId);
 
+  /**
+   * true quand les données sont chargées et que le stagiaire n'est
+   * affecté à aucune cohorte (pas de module en cours, pas de total modules)
+   */
   const hasNoCohort = computed(
     () =>
-      status.value === 'success' &&
+      loaded.value &&
+      !isLoading.value &&
       !data.value?.currentWeek.moduleId &&
       !data.value?.progress.totalModules,
   );
 
   return {
     data,
-    status,
-    error,
-    refresh,
     isLoading,
+    error,
+    fetch,
     hasCurrentWeek,
     hasNoCohort,
   };

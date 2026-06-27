@@ -53,7 +53,10 @@ useSeoMeta({
 });
 
 // ── Données dashboard ─────────────────────────────────────────────────────────
-const { data, isLoading } = useDashboard();
+const { data, isLoading, fetch: fetchDashboard } = useDashboard();
+onMounted(() => {
+  void fetchDashboard();
+});
 
 // Computed helpers
 const progressLabel = computed(() => {
