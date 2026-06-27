@@ -710,6 +710,38 @@
       "cookies": "Cookies"
     }
   },
+  "harness": {
+    "status": {
+      "QUEUED": "En attente",
+      "RUNNING": "En cours",
+      "SUCCESS": "Validé",
+      "FAILURE": "Échoué",
+      "TIMEOUT": "Délai dépassé",
+      "CANCELLED": "Annulé"
+    },
+    "check": {
+      "success": "Réussi",
+      "failure": "Échoué",
+      "error": "Erreur",
+      "skipped": "Ignoré"
+    },
+    "trigger": {
+      "queued": "Harnais en attente de déclenchement",
+      "running": "Harnais en cours d'exécution",
+      "rateLimitReached": "Trop de soumissions. Réessayez dans une heure.",
+      "failed": "Le déclenchement du harnais a échoué."
+    },
+    "webhook": {
+      "received": "Résultat reçu",
+      "invalidSignature": "Signature invalide — requête rejetée.",
+      "processed": "Résultat enregistré."
+    },
+    "errors": {
+      "submissionNotFound": "Soumission introuvable.",
+      "runNotFound": "Run de harnais introuvable.",
+      "invalidPayload": "Payload invalide."
+    }
+  },
   "invitations": {
     "modalTitle": "Inviter des stagiaires",
     "modalSubtitle": "Envoyez des invitations par email ou importez un fichier CSV.",

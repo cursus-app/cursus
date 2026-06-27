@@ -710,6 +710,38 @@
       "cookies": "Cookies"
     }
   },
+  "harness": {
+    "status": {
+      "QUEUED": "Queued",
+      "RUNNING": "Running",
+      "SUCCESS": "Validated",
+      "FAILURE": "Failed",
+      "TIMEOUT": "Timed out",
+      "CANCELLED": "Cancelled"
+    },
+    "check": {
+      "success": "Passed",
+      "failure": "Failed",
+      "error": "Error",
+      "skipped": "Skipped"
+    },
+    "trigger": {
+      "queued": "Harness queued for dispatch",
+      "running": "Harness is running",
+      "rateLimitReached": "Too many submissions. Try again in one hour.",
+      "failed": "Failed to trigger the harness."
+    },
+    "webhook": {
+      "received": "Result received",
+      "invalidSignature": "Invalid signature — request rejected.",
+      "processed": "Result recorded."
+    },
+    "errors": {
+      "submissionNotFound": "Submission not found.",
+      "runNotFound": "Harness run not found.",
+      "invalidPayload": "Invalid payload."
+    }
+  },
   "invitations": {
     "modalTitle": "Invite trainees",
     "modalSubtitle": "Send invitations by email or import a CSV file.",
