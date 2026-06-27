@@ -959,5 +959,77 @@
         "upcoming": "Upcoming"
       }
     }
+  },
+  "alerts": {
+    "title": "Alerts",
+    "subtitle": "Manage your trainees' alerts.",
+    "resolveSuccess": "Alert marked as resolved",
+    "autoResolved": "Auto-resolved",
+    "resolvedBy": "Resolved by {name}",
+    "resolvedBySystem": "System",
+    "kinds": {
+      "SUBMISSION_LATE": "Late submission",
+      "QUIZ_REPEATEDLY_FAILED": "Quiz failed (x3)",
+      "SUBMISSION_REPEATEDLY_FAILED": "Repeated submission failures",
+      "STAGIAIRE_BLOCKED": "Trainee blocked",
+      "PROGRESS_STALLED": "Progress stalled",
+      "CAPSTONE_OVERDUE": "Capstone overdue"
+    },
+    "severity": {
+      "HIGH": "Critical",
+      "MEDIUM": "Important",
+      "LOW": "Info"
+    },
+    "filters": {
+      "all": "All types",
+      "open": "Open",
+      "resolved": "Resolved",
+      "kindLabel": "Alert type",
+      "kindPlaceholder": "All types",
+      "statusLabel": "Status",
+      "searchLabel": "Search trainee",
+      "searchPlaceholder": "Name or email…",
+      "reset": "Reset filters"
+    },
+    "actions": {
+      "resolve": "Mark resolved",
+      "resolveConfirm": "Mark as resolved",
+      "comment": "Add a comment"
+    },
+    "comment": {
+      "placeholder": "Leave a message to the trainee…",
+      "send": "Send",
+      "sent": "Message sent to trainee",
+      "error": "Could not send the message. Please retry.",
+      "notifTitle": "Message from your trainer"
+    },
+    "card": {
+      "ariaLabel": "{name} — {kind}"
+    },
+    "panel": {
+      "info": "Information",
+      "context": "Context",
+      "harnessReport": "Harness report",
+      "viewReport": "View report",
+      "createdAt": "Created at",
+      "resolvedAt": "Resolved at",
+      "resolvedBy": "Resolved by"
+    },
+    "list": {
+      "ariaLabel": "Alert list"
+    },
+    "pagination": {
+      "ariaLabel": "Alert pagination"
+    },
+    "empty": {
+      "title": "No alerts",
+      "description": "No alerts for your cohorts at the moment."
+    },
+    "time": {
+      "justNow": "just now",
+      "minutesAgo": "{n} min ago",
+      "hoursAgo": "{n} h ago",
+      "daysAgo": "{n} days ago"
+    }
   }
 }
