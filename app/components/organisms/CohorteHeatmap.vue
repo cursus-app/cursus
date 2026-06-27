@@ -55,9 +55,15 @@ const filterLateOnly = ref(route.query['late'] === 'true');
 // Synchroniser les filtres dans l'URL pour partage de vue
 watch([searchQuery, filterAlertsOnly, filterLateOnly], () => {
   const query: Record<string, string> = {};
-  if (searchQuery.value) {query['q'] = searchQuery.value;}
-  if (filterAlertsOnly.value) {query['alerts'] = 'true';}
-  if (filterLateOnly.value) {query['late'] = 'true';}
+  if (searchQuery.value) {
+    query['q'] = searchQuery.value;
+  }
+  if (filterAlertsOnly.value) {
+    query['alerts'] = 'true';
+  }
+  if (filterLateOnly.value) {
+    query['late'] = 'true';
+  }
   void router.replace({ query });
 });
 
@@ -389,7 +395,7 @@ function hideTooltip() {
                   :src="trainee.avatarUrl"
                   :alt="traineeDisplayName(trainee)"
                   class="size-7 rounded-full object-cover"
-                >
+                />
                 <UIcon v-else name="i-tabler-user" class="size-4 text-text-subtle" />
               </div>
               <span class="truncate text-xs font-medium text-text-default">
@@ -408,11 +414,11 @@ function hideTooltip() {
               :data-grid-row="rowIdx"
               :data-grid-col="colIdx"
               tabindex="0"
-              class="group relative min-w-[80px] cursor-pointer border-r border-border-subtle p-1.5 outline-none last:border-r-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+              class="group relative min-w-[80px] cursor-pointer border-r border-border-subtle p-1.5 outline-none last:border-r-0 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               :class="[
                 STATUS_COLORS[getCell(trainee.id, mod.id).status],
                 STATUS_PATTERNS[getCell(trainee.id, mod.id).status],
-                isCurrentWeek(mod.dueDate) ? 'ring-1 ring-inset ring-accent/30' : '',
+                isCurrentWeek(mod.dueDate) ? 'ring-1 ring-accent/30 ring-inset' : '',
               ]"
               @click="openCellDetail(trainee, mod)"
               @keydown="handleGridKeydown($event, rowIdx, colIdx)"
@@ -481,7 +487,7 @@ function hideTooltip() {
     </div>
 
     <!-- Drawer de détail cellule -->
-    <UModal v-model:open="showDrawer" :ui="{ width: 'sm:max-w-md' }">
+    <UModal v-model:open="showDrawer" class="sm:max-w-md">
       <template #content>
         <div
           v-if="selectedCell"
