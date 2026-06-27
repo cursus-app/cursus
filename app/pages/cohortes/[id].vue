@@ -55,7 +55,9 @@ const activeTab = ref<'overview' | 'heatmap'>('overview');
 const canManage = computed(() => canManageCohorte(cohorteId.value));
 
 async function loadDashboard() {
-  if (!canManage.value || !cohorteId.value) {return;}
+  if (!canManage.value || !cohorteId.value) {
+    return;
+  }
   isDashboardLoading.value = true;
   try {
     dashboardData.value = await $fetch<DashboardResponse>(
@@ -663,7 +665,7 @@ function memberDisplayName(member: CohorteMember): string {
                 :src="member.user.avatarUrl"
                 :alt="memberDisplayName(member)"
                 class="size-9 rounded-full object-cover"
-              >
+              />
               <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
             </div>
 
@@ -736,7 +738,7 @@ function memberDisplayName(member: CohorteMember): string {
                 :src="member.user.avatarUrl"
                 :alt="member.user.fullName ?? ''"
                 class="size-9 rounded-full object-cover"
-              >
+              />
               <UIcon v-else name="i-tabler-user" class="size-5 text-text-subtle" />
             </div>
             <div class="min-w-0 flex-1">
@@ -916,7 +918,7 @@ function memberDisplayName(member: CohorteMember): string {
               :checked="editModuleIds.length === 0"
               class="accent-accent"
               @change="setGlobalAccess"
-            >
+            />
             <label for="scope-global" class="cursor-pointer text-sm text-text-default">
               {{ t('cohortes.team.globalAccessLabel') }}
             </label>
@@ -943,7 +945,7 @@ function memberDisplayName(member: CohorteMember): string {
                   :checked="editModuleIds.includes(mod.id)"
                   class="accent-accent"
                   @change="toggleModule(mod.id)"
-                >
+                />
                 <label
                   :for="`module-${mod.id}`"
                   class="flex-1 cursor-pointer text-sm text-text-default"

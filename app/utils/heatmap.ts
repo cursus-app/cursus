@@ -131,7 +131,4 @@ export function generateCsvContent(
 export const LATE_STATUSES: ProgressionStatus[] = ['EN_RETARD', 'BLOQUE'];
 export const ALERT_STATUSES: ProgressionStatus[] = ['EN_ALERTE', ...LATE_STATUSES];
 export const VALIDATED_STATUSES: ProgressionStatus[] = ['VALIDE', 'VALIDE_OVERRIDE'];
-export const SUBMITTED_STATUSES: ProgressionStatus[] = [
-  'SOUMIS',
-  ...VALIDATED_STATUSES,
-];
+export const SUBMITTED_STATUSES: ProgressionStatus[] = ['SOUMIS', ...VALIDATED_STATUSES];

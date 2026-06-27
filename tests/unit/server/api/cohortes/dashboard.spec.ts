@@ -56,7 +56,10 @@ const mockCreateError = vi.fn((opts: { statusCode: number; message: string }) =>
 });
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
-vi.stubGlobal('getRouterParam', vi.fn((_, key: string) => (key === 'id' ? 'cohorte-123' : null)));
+vi.stubGlobal(
+  'getRouterParam',
+  vi.fn((_, key: string) => (key === 'id' ? 'cohorte-123' : null)),
+);
 
 // ─── Helpers de test ──────────────────────────────────────────────────────────
 
@@ -75,11 +78,23 @@ const MEMBERSHIP_FORMATEUR = { id: 'mbr-001', role: 'FORMATEUR_PRINCIPAL' };
 const TRAINEES_MEMBERSHIPS = [
   {
     userId: 'user-1',
-    user: { id: 'user-1', fullName: 'Alice Dupont', avatarUrl: null, githubHandle: 'alice', deletedAt: null },
+    user: {
+      id: 'user-1',
+      fullName: 'Alice Dupont',
+      avatarUrl: null,
+      githubHandle: 'alice',
+      deletedAt: null,
+    },
   },
   {
     userId: 'user-2',
-    user: { id: 'user-2', fullName: 'Bob Martin', avatarUrl: null, githubHandle: 'bob', deletedAt: null },
+    user: {
+      id: 'user-2',
+      fullName: 'Bob Martin',
+      avatarUrl: null,
+      githubHandle: 'bob',
+      deletedAt: null,
+    },
   },
 ];
 
@@ -124,7 +139,7 @@ describe('computeMedian — helper', () => {
     expect(computeMedian([42])).toBe(42);
   });
 
-  it('retourne la médiane pour un nombre impair d\'éléments', async () => {
+  it("retourne la médiane pour un nombre impair d'éléments", async () => {
     const { computeMedian } = await importHandler();
     expect(computeMedian([10, 50, 90])).toBe(50);
   });
@@ -189,7 +204,7 @@ describe('GET /api/cohortes/:id/dashboard — authentication', () => {
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 401 });
   });
 
-  it('retourne 404 si l\'utilisateur n\'a pas de profil DB', async () => {
+  it("retourne 404 si l'utilisateur n'a pas de profil DB", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: 'ghost-user' });
     mockUserFindUnique.mockResolvedValue(null);
     const { default: handler } = await importHandler();
@@ -199,7 +214,7 @@ describe('GET /api/cohortes/:id/dashboard — authentication', () => {
 
 // ─── Tests endpoint — Contrôle d'accès (RLS) ─────────────────────────────────
 
-describe('GET /api/cohortes/:id/dashboard — contrôle d\'accès', () => {
+describe("GET /api/cohortes/:id/dashboard — contrôle d'accès", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.resetModules();
@@ -211,7 +226,7 @@ describe('GET /api/cohortes/:id/dashboard — contrôle d\'accès', () => {
     mockAlertFindMany.mockResolvedValue([]);
   });
 
-  it('retourne 403 si stagiaire tente d\'accéder au dashboard', async () => {
+  it("retourne 403 si stagiaire tente d'accéder au dashboard", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: 'stagiaire-001' });
     mockUserFindUnique.mockResolvedValue(STAGIAIRE_DB_USER);
     mockMembershipFindFirst.mockResolvedValue(null); // pas formateur de la cohorte
@@ -220,16 +235,19 @@ describe('GET /api/cohortes/:id/dashboard — contrôle d\'accès', () => {
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('retourne 403 si formateur d\'une autre cohorte tente d\'accéder', async () => {
+  it("retourne 403 si formateur d'une autre cohorte tente d'accéder", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: 'formateur-autre' });
-    mockUserFindUnique.mockResolvedValue({ id: 'formateur-autre', globalRole: 'FORMATEUR_PRINCIPAL' });
+    mockUserFindUnique.mockResolvedValue({
+      id: 'formateur-autre',
+      globalRole: 'FORMATEUR_PRINCIPAL',
+    });
     mockMembershipFindFirst.mockResolvedValue(null); // pas dans CETTE cohorte
 
     const { default: handler } = await importHandler();
     await expect(handler(makeEvent())).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('autorise l\'admin même sans membership dans la cohorte', async () => {
+  it("autorise l'admin même sans membership dans la cohorte", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: 'admin-001' });
     mockUserFindUnique.mockResolvedValue(ADMIN_DB_USER);
     // Pas d'appel à findFirst car admin bypasse le check
@@ -292,13 +310,14 @@ describe('GET /api/cohortes/:id/dashboard — structure de la réponse', () => {
     expect(result.heatmap).toHaveLength(4);
   });
 
-  it('attribue le statut A_VENIR quand aucune progression n\'existe', async () => {
+  it("attribue le statut A_VENIR quand aucune progression n'existe", async () => {
     const { default: handler } = await importHandler();
     const result = await handler(makeEvent());
 
     // user-2 n'a pas de progression pour cm-2 → A_VENIR
     const cell = result.heatmap.find(
-      (c: { userId: string; cohortModuleId: string }) => c.userId === 'user-2' && c.cohortModuleId === 'cm-2',
+      (c: { userId: string; cohortModuleId: string }) =>
+        c.userId === 'user-2' && c.cohortModuleId === 'cm-2',
     );
     expect(cell?.status).toBe('A_VENIR');
   });
@@ -308,7 +327,8 @@ describe('GET /api/cohortes/:id/dashboard — structure de la réponse', () => {
     const result = await handler(makeEvent());
 
     const alertedCell = result.heatmap.find(
-      (c: { userId: string; cohortModuleId: string }) => c.userId === 'user-1' && c.cohortModuleId === 'cm-1',
+      (c: { userId: string; cohortModuleId: string }) =>
+        c.userId === 'user-1' && c.cohortModuleId === 'cm-1',
     );
     expect(alertedCell?.hasAlert).toBe(true);
   });
@@ -318,7 +338,8 @@ describe('GET /api/cohortes/:id/dashboard — structure de la réponse', () => {
     const result = await handler(makeEvent());
 
     const validatedCell = result.heatmap.find(
-      (c: { userId: string; cohortModuleId: string }) => c.userId === 'user-2' && c.cohortModuleId === 'cm-1',
+      (c: { userId: string; cohortModuleId: string }) =>
+        c.userId === 'user-2' && c.cohortModuleId === 'cm-1',
     );
     expect(validatedCell?.status).toBe('VALIDE');
   });

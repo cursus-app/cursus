@@ -70,11 +70,7 @@ const cards = computed<KpiCard[]>(() => [
     role="region"
     :aria-label="t('cohorte.dashboard.kpiRegionLabel')"
   >
-    <UCard
-      v-for="card in cards"
-      :key="card.label"
-      class="border border-border-subtle bg-surface"
-    >
+    <UCard v-for="card in cards" :key="card.label" class="border border-border-subtle bg-surface">
       <div class="flex items-start gap-3">
         <div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
           <UIcon :name="card.icon" class="size-5" :class="card.accent" aria-hidden="true" />
@@ -84,7 +80,7 @@ const cards = computed<KpiCard[]>(() => [
           <template v-if="loading">
             <div class="mt-1 h-7 w-14 animate-pulse rounded bg-muted" aria-hidden="true" />
           </template>
-          <p v-else class="mt-0.5 text-2xl font-semibold tabular-nums text-text-strong">
+          <p v-else class="mt-0.5 text-2xl font-semibold text-text-strong tabular-nums">
             {{ card.value }}
           </p>
         </div>

@@ -59,7 +59,9 @@ export interface DashboardResponse {
 // ─── Helper — médiane ────────────────────────────────────────────────────────
 
 export function computeMedian(values: number[]): number {
-  if (values.length === 0) {return 0;}
+  if (values.length === 0) {
+    return 0;
+  }
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   if (sorted.length % 2 === 0) {
@@ -78,7 +80,9 @@ export function computeSubmissionRate(
   const weekStart = new Date(now);
   weekStart.setDate(weekStart.getDate() - 7);
   const relevant = progressions.filter((p) => p.dueDate >= weekStart && p.dueDate <= now);
-  if (relevant.length === 0) {return 0;}
+  if (relevant.length === 0) {
+    return 0;
+  }
   const submitted = relevant.filter((p) =>
     (['SOUMIS', 'VALIDE', 'VALIDE_OVERRIDE'] as ProgressionStatus[]).includes(p.status),
   ).length;
@@ -136,10 +140,7 @@ export default defineEventHandler(async (event): Promise<DashboardResponse> => {
       select: { id: true },
     });
     if (!membership) {
-      logger.warn(
-        { userIdHash: hashId(dbUser.id), cohorteId },
-        'cohorte.dashboard.forbidden',
-      );
+      logger.warn({ userIdHash: hashId(dbUser.id), cohorteId }, 'cohorte.dashboard.forbidden');
       throw createError({ statusCode: 403, message: 'cohortes.errors.forbidden' });
     }
   }
@@ -206,7 +207,9 @@ export default defineEventHandler(async (event): Promise<DashboardResponse> => {
   // Médiane : % de modules validés par stagiaire
   const totalModules = cohortModuleIds.length;
   const progressByUser = traineeIds.map((uid) => {
-    if (totalModules === 0) {return 0;}
+    if (totalModules === 0) {
+      return 0;
+    }
     const userProgressions = progressions.filter((p) => p.userId === uid);
     const validated = userProgressions.filter((p) =>
       (['VALIDE', 'VALIDE_OVERRIDE'] as ProgressionStatus[]).includes(p.status),

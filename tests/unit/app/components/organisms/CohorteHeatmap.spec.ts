@@ -87,10 +87,14 @@ describe('generateCsvContent — export CSV', () => {
       { id: 'u99', fullName: 'Nom, Prénom', avatarUrl: null, githubHandle: 'test' },
     ];
     const moduleFirst = MODULES[0];
-    if (!moduleFirst) { throw new Error('fixture missing'); }
-    const csv = generateCsvContent(traineeWithComma, [moduleFirst], [
-      { userId: 'u99', cohortModuleId: 'cm1', status: 'VALIDE' as const, hasAlert: false },
-    ]);
+    if (!moduleFirst) {
+      throw new Error('fixture missing');
+    }
+    const csv = generateCsvContent(
+      traineeWithComma,
+      [moduleFirst],
+      [{ userId: 'u99', cohortModuleId: 'cm1', status: 'VALIDE' as const, hasAlert: false }],
+    );
     // Le nom avec virgule doit être entre guillemets
     expect(csv).toContain('"Nom, Prénom"');
   });
@@ -107,7 +111,9 @@ describe('generateCsvContent — export CSV', () => {
       },
     ];
     const traineeFirst = TRAINEES[0];
-    if (!traineeFirst) { throw new Error('fixture missing'); }
+    if (!traineeFirst) {
+      throw new Error('fixture missing');
+    }
     const csv = generateCsvContent([traineeFirst], moduleWithQuote, [
       { userId: 'u1', cohortModuleId: 'cm99', status: 'VALIDE' as const, hasAlert: false },
     ]);
@@ -115,12 +121,14 @@ describe('generateCsvContent — export CSV', () => {
     expect(csv).toContain('"Module ""Avancé"""');
   });
 
-  it('attribue le statut A_VENIR si la cellule n\'existe pas dans la heatmap', () => {
+  it("attribue le statut A_VENIR si la cellule n'existe pas dans la heatmap", () => {
     const sparseHeatmap = [
       { userId: 'u1', cohortModuleId: 'cm1', status: 'VALIDE' as const, hasAlert: false },
     ];
     const traineeFirst = TRAINEES[0];
-    if (!traineeFirst) { throw new Error('fixture missing'); }
+    if (!traineeFirst) {
+      throw new Error('fixture missing');
+    }
     const csv = generateCsvContent([traineeFirst], MODULES, sparseHeatmap);
     // cm2 n'est pas dans la heatmap pour u1 → A_VENIR
     expect(csv).toContain('A_VENIR');
@@ -131,7 +139,9 @@ describe('generateCsvContent — export CSV', () => {
     const lines = csv.split('\n').filter(Boolean);
     expect(lines).toHaveLength(1);
     const firstLine = lines[0];
-    if (!firstLine) { throw new Error('No lines'); }
+    if (!firstLine) {
+      throw new Error('No lines');
+    }
     expect(firstLine).toContain('stagiaire');
   });
 
@@ -145,17 +155,21 @@ describe('generateCsvContent — export CSV', () => {
     const traineeFirst = TRAINEES[0];
     const moduleFirst = MODULES[0];
     const heatmapFirst = HEATMAP[0];
-    if (!traineeFirst || !moduleFirst || !heatmapFirst) { throw new Error('fixture missing'); }
+    if (!traineeFirst || !moduleFirst || !heatmapFirst) {
+      throw new Error('fixture missing');
+    }
     const csv = generateCsvContent([traineeFirst], [moduleFirst], [heatmapFirst]);
     expect(csv).toContain('2026-06-01');
   });
 
-  it('utilise l\'id comme nom de stagiaire si fullName et githubHandle sont null', () => {
+  it("utilise l'id comme nom de stagiaire si fullName et githubHandle sont null", () => {
     const traineeWithNoName = [
       { id: 'u-ghost', fullName: null, avatarUrl: null, githubHandle: null },
     ];
     const moduleFirst = MODULES[0];
-    if (!moduleFirst) { throw new Error('fixture missing'); }
+    if (!moduleFirst) {
+      throw new Error('fixture missing');
+    }
     const csv = generateCsvContent(traineeWithNoName, [moduleFirst], []);
     expect(csv).toContain('u-ghost');
   });
@@ -165,8 +179,14 @@ describe('generateCsvContent — export CSV', () => {
 
 describe('STATUS_COLORS — mapping statut → classes CSS', () => {
   const ALL_STATUSES = [
-    'A_VENIR', 'EN_COURS', 'SOUMIS', 'VALIDE',
-    'BLOQUE', 'EN_ALERTE', 'EN_RETARD', 'VALIDE_OVERRIDE',
+    'A_VENIR',
+    'EN_COURS',
+    'SOUMIS',
+    'VALIDE',
+    'BLOQUE',
+    'EN_ALERTE',
+    'EN_RETARD',
+    'VALIDE_OVERRIDE',
   ];
 
   it('contient une entrée pour chaque valeur de ProgressionStatus', () => {
@@ -179,10 +199,12 @@ describe('STATUS_COLORS — mapping statut → classes CSS', () => {
   it('utilise uniquement des tokens de design system (pas de primitifs Tailwind)', () => {
     const allClasses = Object.values(STATUS_COLORS).join(' ');
     // Ne doit pas contenir de primitifs comme bg-green-500, text-red-600, etc.
-    expect(allClasses).not.toMatch(/(?:bg|text|border)-(?:green|red|orange|yellow|blue|purple|gray|zinc|slate|neutral)-\d{3}/);
+    expect(allClasses).not.toMatch(
+      /(?:bg|text|border)-(?:green|red|orange|yellow|blue|purple|gray|zinc|slate|neutral)-\d{3}/,
+    );
   });
 
-  it('n\'utilise pas de couleurs en dur (#xxx, rgb(), oklch())', () => {
+  it("n'utilise pas de couleurs en dur (#xxx, rgb(), oklch())", () => {
     const allClasses = Object.values(STATUS_COLORS).join(' ');
     expect(allClasses).not.toMatch(/#[0-9a-fA-F]{3,6}/);
     expect(allClasses).not.toMatch(/rgb\(/);
@@ -229,8 +251,14 @@ describe('STATUS_ICONS — icônes Tabler par statut', () => {
 
   it('contient une icône pour chaque statut ProgressionStatus', () => {
     const expectedStatuses = [
-      'A_VENIR', 'EN_COURS', 'SOUMIS', 'VALIDE',
-      'BLOQUE', 'EN_ALERTE', 'EN_RETARD', 'VALIDE_OVERRIDE',
+      'A_VENIR',
+      'EN_COURS',
+      'SOUMIS',
+      'VALIDE',
+      'BLOQUE',
+      'EN_ALERTE',
+      'EN_RETARD',
+      'VALIDE_OVERRIDE',
     ];
     for (const status of expectedStatuses) {
       expect(STATUS_ICONS).toHaveProperty(status);
@@ -243,8 +271,14 @@ describe('STATUS_ICONS — icônes Tabler par statut', () => {
 describe('STATUS_PATTERNS — motifs accessibilité daltoniens', () => {
   it('contient un motif (même vide) pour chaque statut', () => {
     const expectedStatuses = [
-      'A_VENIR', 'EN_COURS', 'SOUMIS', 'VALIDE',
-      'BLOQUE', 'EN_ALERTE', 'EN_RETARD', 'VALIDE_OVERRIDE',
+      'A_VENIR',
+      'EN_COURS',
+      'SOUMIS',
+      'VALIDE',
+      'BLOQUE',
+      'EN_ALERTE',
+      'EN_RETARD',
+      'VALIDE_OVERRIDE',
     ];
     for (const status of expectedStatuses) {
       expect(STATUS_PATTERNS).toHaveProperty(status);
