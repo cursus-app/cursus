@@ -34,7 +34,7 @@ export interface HarnessReport {
     total: number;
   };
   /** ISO 8601 — renseigné quand le rapport est finalisé */
-  completedAt?: string;
+  completedAt?: string | undefined;
 }
 
 // ─── Catalogue des check IDs connus au MVP ─────────────────────────────────────
