@@ -959,5 +959,38 @@
         "upcoming": "Upcoming"
       }
     }
+  },
+  "override": {
+    "button": {
+      "label": "Validate manually",
+      "ariaLabel": "Manually validate this deliverable"
+    },
+    "modal": {
+      "title": "Manual validation",
+      "description": "This action validates the deliverable without going through the harness. A mandatory reason will be archived in the audit log.",
+      "reasonLabel": "Override reason",
+      "reasonPlaceholder": "Explain why you are manually validating this deliverable…",
+      "reasonHint": "Minimum {min} characters required.",
+      "reasonTooShort": "The reason must be at least {min} characters",
+      "reasonTooLong": "The reason cannot exceed {max} characters",
+      "submitButton": "Validate manually"
+    },
+    "badge": {
+      "label": "Manually validated",
+      "tooltipReason": "Reason: {reason}",
+      "tooltipBy": "By {name}",
+      "tooltipDate": "On {date}"
+    },
+    "toast": {
+      "success": "Deliverable manually validated",
+      "successDetail": "Trainee {name} has been notified"
+    },
+    "errors": {
+      "title": "Override error",
+      "generic": "An error occurred. Please try again later.",
+      "forbidden": "You do not have permission to manually validate this deliverable.",
+      "alreadyTerminal": "This deliverable is already validated, no override is possible."
+
+    }
   }
 }
