@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import AppToast from './AppToast.vue';
+import { useAppToast } from '~/composables/useAppToast';
 
 const meta: Meta<typeof AppToast> = {
   title: 'Molecules/Toast',

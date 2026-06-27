@@ -19,13 +19,24 @@ const config: StorybookConfig = {
     // Imports dynamiques : ces packages sont des peer deps / devDeps mais
     // ne sont pas résolvables depuis un import statique dans .storybook/main.ts
     // (contexte Node de Storybook différent du contexte Vite).
-    const [{ mergeConfig }, { default: vue }, { default: tailwindcss }] = await Promise.all([
-      import('vite'),
-      import('@vitejs/plugin-vue'),
-      import('@tailwindcss/vite'),
-    ]);
+    const [{ mergeConfig }, { default: vue }, { default: tailwindcss }, { default: autoImport }] =
+      await Promise.all([
+        import('vite'),
+        import('@vitejs/plugin-vue'),
+        import('@tailwindcss/vite'),
+        // Réplique les auto-imports Nuxt pour que les composables Vue (ref, computed,
+        // useSlots…) fonctionnent dans Storybook sans import explicite.
+        import('unplugin-auto-import/vite'),
+      ]);
     return mergeConfig(config, {
-      plugins: [vue(), tailwindcss()],
+      plugins: [
+        vue(),
+        tailwindcss(),
+        autoImport({
+          imports: ['vue', 'vue-router'],
+          dts: false,
+        }),
+      ],
       resolve: {
         alias: {
           '~~': worktreeRoot,
