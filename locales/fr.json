@@ -628,6 +628,32 @@
       "noModulesAvailable": "Aucun module disponible pour ce cursus",
       "empty": "Aucun co-formateur pour l'instant"
     },
+    "schedule": {
+      "shiftButton": "Décaler le planning",
+      "modalTitle": "Décaler le planning",
+      "modalDescription": "Décalez toutes les échéances de la cohorte « {name} » de N jours. Les stagiaires seront notifiés.",
+      "daysLabel": "Nombre de jours (négatif = avancer)",
+      "daysPlaceholder": "Ex : 7",
+      "daysHint": "Entre -30 et +30 jours. Positif = reporter, négatif = avancer.",
+      "reasonLabel": "Raison (optionnelle)",
+      "reasonPlaceholder": "Ex : Jour férié, événement collectif…",
+      "previewButton": "Aperçu",
+      "previewTitle": "Aperçu du nouveau planning",
+      "previewModule": "Module",
+      "previewCurrentDate": "Date actuelle",
+      "previewNewDate": "Nouvelle date",
+      "previewEmpty": "Aucun module à décaler pour cette cohorte",
+      "confirmButton": "Appliquer le décalage",
+      "warningBackward": "Vous allez avancer les échéances. Les stagiaires pourraient être surpris.",
+      "confirmWarning": "Je confirme vouloir avancer les échéances",
+      "success": "Planning décalé de {days} jours. Les stagiaires ont été notifiés.",
+      "errors": {
+        "daysRequired": "Le nombre de jours est requis",
+        "daysZero": "Le nombre de jours ne peut pas être zéro",
+        "daysOutOfRange": "Le décalage doit être compris entre -30 et 30 jours",
+        "confirmRequired": "Confirmez le décalage en arrière pour continuer"
+      }
+    },
     "errors": {
       "nameTooShort": "Le nom doit contenir au moins 2 caractères",
       "nameTooLong": "Le nom ne peut pas dépasser 100 caractères",

@@ -82,3 +82,41 @@ export const coFormateurUpdateSchema = z.object({
 
 export type CoFormateurAddInput = z.infer<typeof coFormateurAddSchema>;
 export type CoFormateurUpdateInput = z.infer<typeof coFormateurUpdateSchema>;
+
+// ─── Décalage de planning ──────────────────────────────────────────────────────
+
+/**
+ * Body de POST /api/cohortes/:id/shift-schedule
+ * days: entier non nul entre -30 et 30
+ * reason: raison optionnelle (max 500 char)
+ * preview: si true, retourne un aperçu sans appliquer
+ * confirmed: requis si days < 0 (décalage en arrière)
+ */
+export const shiftScheduleBodySchema = z
+  .object({
+    days: z
+      .number({ required_error: 'cohortes.schedule.errors.daysRequired' })
+      .int()
+      .min(-30, 'cohortes.schedule.errors.daysOutOfRange')
+      .max(30, 'cohortes.schedule.errors.daysOutOfRange'),
+    reason: z.string().max(500).optional(),
+    preview: z.boolean().optional().default(false),
+    confirmed: z.boolean().optional().default(false),
+  })
+  .refine((d) => d.days !== 0, {
+    message: 'cohortes.schedule.errors.daysZero',
+    path: ['days'],
+  });
+
+/** Query pour GET /api/cohortes/:id/shift-schedule?days=N (preview only) */
+export const shiftScheduleQuerySchema = z.object({
+  days: z.coerce
+    .number({ required_error: 'cohortes.schedule.errors.daysRequired' })
+    .int()
+    .min(-30, 'cohortes.schedule.errors.daysOutOfRange')
+    .max(30, 'cohortes.schedule.errors.daysOutOfRange')
+    .refine((v) => v !== 0, { message: 'cohortes.schedule.errors.daysZero' }),
+});
+
+export type ShiftScheduleBody = z.infer<typeof shiftScheduleBodySchema>;
+export type ShiftScheduleQuery = z.infer<typeof shiftScheduleQuerySchema>;
