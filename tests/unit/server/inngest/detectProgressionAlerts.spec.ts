@@ -173,9 +173,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       // 2 échecs sur le même quiz → seuil atteint
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([
@@ -207,9 +205,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([
         { userId: STAGIAIRE_ID, quizId: QUIZ_ID },
@@ -227,9 +223,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       const QUIZ_ID_2 = '77777777-7777-7777-7777-777777777777';
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([
@@ -252,9 +246,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([]);
 
@@ -285,9 +277,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([]);
 
@@ -496,9 +486,7 @@ describe('detectAlertsForCohort', () => {
       setupMemberships();
       setupCohortModules();
 
-      mockPrisma.progression.findMany
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([]);
+      mockPrisma.progression.findMany.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
       mockPrisma.quizAttempt.findMany.mockResolvedValueOnce([]);
       mockPrisma.submission.findMany.mockResolvedValueOnce([]);
