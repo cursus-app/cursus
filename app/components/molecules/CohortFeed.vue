@@ -34,7 +34,9 @@ function formatDate(iso: string): string {
 }
 
 function eventIcon(type: DashboardFeedItem['type']): string {
-  if (type === 'BADGE') { return 'i-tabler-award'; }
+  if (type === 'BADGE') {
+    return 'i-tabler-award';
+  }
   return 'i-tabler-circle-check';
 }
 
@@ -80,11 +82,7 @@ function eventLabel(item: DashboardFeedItem): string {
 
     <!-- Liste d'événements -->
     <ul v-else class="space-y-4" role="list">
-      <li
-        v-for="(item, index) in props.feed"
-        :key="index"
-        class="flex items-start gap-3"
-      >
+      <li v-for="(item, index) in props.feed" :key="index" class="flex items-start gap-3">
         <!-- Icône événement -->
         <div
           class="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-success-bg"
@@ -98,10 +96,7 @@ function eventLabel(item: DashboardFeedItem): string {
           <p class="text-sm text-text-default">
             {{ eventLabel(item) }}
           </p>
-          <time
-            :datetime="item.occurredAt"
-            class="text-xs text-text-muted"
-          >
+          <time :datetime="item.occurredAt" class="text-xs text-text-muted">
             {{ formatDate(item.occurredAt) }}
           </time>
         </div>

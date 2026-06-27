@@ -57,7 +57,9 @@ const { data, isLoading } = useDashboard();
 
 // Computed helpers
 const progressLabel = computed(() => {
-  if (!data.value) { return ''; }
+  if (!data.value) {
+    return '';
+  }
   const { completedModules, totalModules } = data.value.progress;
   return t('dashboard.progress.label', { completed: completedModules, total: totalModules });
 });
@@ -68,7 +70,7 @@ const progressLabel = computed(() => {
     <!-- Skip link (a11y) -->
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-accent-text focus:outline-none"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-accent-text focus:outline-none"
     >
       {{ t('nav.skipToContent') }}
     </a>
@@ -82,10 +84,7 @@ const progressLabel = computed(() => {
         <!-- ── Colonne gauche : Hero + Progression ──────────────────────────── -->
         <div class="space-y-6">
           <!-- Section 1 : Cette semaine (hero) -->
-          <DashboardHero
-            :data="data?.currentWeek ?? null"
-            :is-loading="isLoading"
-          />
+          <DashboardHero :data="data?.currentWeek ?? null" :is-loading="isLoading" />
 
           <!-- Section 2 : Ma progression -->
           <section
@@ -154,11 +153,7 @@ const progressLabel = computed(() => {
             <!-- Skeleton -->
             <template v-if="isLoading">
               <div class="flex gap-3">
-                <CSkeleton
-                  v-for="i in 3"
-                  :key="i"
-                  class="size-12 rounded-lg"
-                />
+                <CSkeleton v-for="i in 3" :key="i" class="size-12 rounded-lg" />
               </div>
             </template>
 
@@ -180,11 +175,7 @@ const progressLabel = computed(() => {
                 }}
               </p>
               <div class="flex flex-wrap gap-3">
-                <div
-                  v-for="badge in data.badges.last3"
-                  :key="badge.id"
-                  class="group relative"
-                >
+                <div v-for="badge in data.badges.last3" :key="badge.id" class="group relative">
                   <!-- Badge icon ou fallback -->
                   <div
                     class="flex size-12 items-center justify-center rounded-lg bg-muted ring-1 ring-border-subtle transition-shadow group-hover:ring-accent"
@@ -219,18 +210,12 @@ const progressLabel = computed(() => {
 
           <!-- Section 4 : Fil de la cohorte -->
           <div class="rounded-xl border border-border-subtle bg-surface p-6">
-            <CohortFeed
-              :feed="data?.feed ?? []"
-              :is-loading="isLoading"
-            />
+            <CohortFeed :feed="data?.feed ?? []" :is-loading="isLoading" />
           </div>
 
           <!-- Section 5 : Prochaines échéances -->
           <div class="rounded-xl border border-border-subtle bg-surface p-6">
-            <DeadlineList
-              :deadlines="data?.upcomingDeadlines ?? []"
-              :is-loading="isLoading"
-            />
+            <DeadlineList :deadlines="data?.upcomingDeadlines ?? []" :is-loading="isLoading" />
           </div>
         </div>
       </div>

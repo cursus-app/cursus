@@ -59,20 +59,13 @@ export interface DashboardData {
 }
 
 export function useDashboard() {
-  const {
-    data,
-    status,
-    error,
-    refresh,
-  } = useAsyncData<DashboardData>('dashboard', () =>
+  const { data, status, error, refresh } = useAsyncData<DashboardData>('dashboard', () =>
     $fetch<DashboardData>('/api/me/dashboard'),
   );
 
   const isLoading = computed(() => status.value === 'pending');
 
-  const hasCurrentWeek = computed(
-    () => !!data.value?.currentWeek.moduleId,
-  );
+  const hasCurrentWeek = computed(() => !!data.value?.currentWeek.moduleId);
 
   const hasNoCohort = computed(
     () =>

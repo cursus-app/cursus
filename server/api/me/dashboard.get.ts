@@ -58,10 +58,7 @@ export default defineEventHandler(async (event) => {
   const activeMembership = dbUser.memberships[0] ?? null;
   const cohorteId = activeMembership?.cohorteId ?? null;
 
-  logger.info(
-    { userIdHash: hashId(userId), cohorteId },
-    'dashboard.viewed',
-  );
+  logger.info({ userIdHash: hashId(userId), cohorteId }, 'dashboard.viewed');
 
   // ── 1 · Module de la semaine en cours ────────────────────────────────────────
   // Récupère le CohortModule dont la dueDate est la plus proche dans le futur
@@ -154,13 +151,10 @@ export default defineEventHandler(async (event) => {
         status: { in: ['VALIDE', 'VALIDE_OVERRIDE'] },
       },
     }),
-    cohorteId
-      ? prisma.cohortModule.count({ where: { cohorteId } })
-      : Promise.resolve(0),
+    cohorteId ? prisma.cohortModule.count({ where: { cohorteId } }) : Promise.resolve(0),
   ]);
 
-  const progressPct =
-    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+  const progressPct = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const progress = {
     completedModules: completedCount,

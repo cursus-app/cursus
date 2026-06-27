@@ -34,18 +34,34 @@ function formatDate(iso: string): string {
 }
 
 function statusIcon(status: string | null): string {
-  if (status === 'VALIDE' || status === 'VALIDE_OVERRIDE') { return 'i-tabler-circle-check'; }
-  if (status === 'SOUMIS') { return 'i-tabler-clock-check'; }
-  if (status === 'EN_RETARD' || status === 'EN_ALERTE') { return 'i-tabler-alert-triangle'; }
-  if (status === 'BLOQUE') { return 'i-tabler-ban'; }
+  if (status === 'VALIDE' || status === 'VALIDE_OVERRIDE') {
+    return 'i-tabler-circle-check';
+  }
+  if (status === 'SOUMIS') {
+    return 'i-tabler-clock-check';
+  }
+  if (status === 'EN_RETARD' || status === 'EN_ALERTE') {
+    return 'i-tabler-alert-triangle';
+  }
+  if (status === 'BLOQUE') {
+    return 'i-tabler-ban';
+  }
   return 'i-tabler-circle-dashed';
 }
 
 function statusColor(status: string | null): string {
-  if (status === 'VALIDE' || status === 'VALIDE_OVERRIDE') { return 'text-success-fg'; }
-  if (status === 'SOUMIS') { return 'text-accent'; }
-  if (status === 'EN_RETARD' || status === 'EN_ALERTE') { return 'text-warning-fg'; }
-  if (status === 'BLOQUE') { return 'text-danger-fg'; }
+  if (status === 'VALIDE' || status === 'VALIDE_OVERRIDE') {
+    return 'text-success-fg';
+  }
+  if (status === 'SOUMIS') {
+    return 'text-accent';
+  }
+  if (status === 'EN_RETARD' || status === 'EN_ALERTE') {
+    return 'text-warning-fg';
+  }
+  if (status === 'BLOQUE') {
+    return 'text-danger-fg';
+  }
   return 'text-text-muted';
 }
 
@@ -102,7 +118,11 @@ function statusAriaLabel(status: string | null): string {
       >
         <!-- Indicateur de statut -->
         <span
-          :class="[statusIcon(deadline.progressionStatus), 'size-5 shrink-0', statusColor(deadline.progressionStatus)]"
+          :class="[
+            statusIcon(deadline.progressionStatus),
+            'size-5 shrink-0',
+            statusColor(deadline.progressionStatus),
+          ]"
           :aria-label="statusAriaLabel(deadline.progressionStatus)"
           role="img"
         />
@@ -112,10 +132,7 @@ function statusAriaLabel(status: string | null): string {
           <p class="truncate text-sm font-medium text-text-strong">
             {{ deadline.moduleTitle }}
           </p>
-          <time
-            :datetime="deadline.dueDate"
-            class="text-xs text-text-muted"
-          >
+          <time :datetime="deadline.dueDate" class="text-xs text-text-muted">
             {{ formatDate(deadline.dueDate) }}
           </time>
         </div>

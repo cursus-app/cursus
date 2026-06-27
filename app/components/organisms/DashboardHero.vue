@@ -49,11 +49,15 @@ onUnmounted(() => {
 });
 
 const countdown = computed((): string => {
-  if (!props.data?.dueDate) { return ''; }
+  if (!props.data?.dueDate) {
+    return '';
+  }
   const due = new Date(props.data.dueDate);
   const diff = due.getTime() - now.value.getTime();
 
-  if (diff <= 0) { return t('dashboard.hero.overdue'); }
+  if (diff <= 0) {
+    return t('dashboard.hero.overdue');
+  }
 
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -66,7 +70,9 @@ const countdown = computed((): string => {
 
 const statusLabel = computed((): string => {
   const status = props.data?.status;
-  if (!status) { return ''; }
+  if (!status) {
+    return '';
+  }
   const map: Record<string, string> = {
     EN_COURS: t('dashboard.hero.status.inProgress'),
     A_VENIR: t('dashboard.hero.status.upcoming'),
@@ -80,9 +86,15 @@ const statusLabel = computed((): string => {
 
 const statusColor = computed((): string => {
   const status = props.data?.status;
-  if (status === 'SOUMIS') { return 'text-success-fg bg-success-bg'; }
-  if (status === 'EN_RETARD' || status === 'EN_ALERTE') { return 'text-warning-fg bg-warning-bg'; }
-  if (status === 'BLOQUE') { return 'text-danger-fg bg-danger-bg'; }
+  if (status === 'SOUMIS') {
+    return 'text-success-fg bg-success-bg';
+  }
+  if (status === 'EN_RETARD' || status === 'EN_ALERTE') {
+    return 'text-warning-fg bg-warning-bg';
+  }
+  if (status === 'BLOQUE') {
+    return 'text-danger-fg bg-danger-bg';
+  }
   return 'text-text-muted bg-muted';
 });
 
@@ -124,12 +136,7 @@ const isOverdue = computed(
             {{ t('dashboard.hero.noCohort.description') }}
           </p>
         </div>
-        <UButton
-          to="/cursus"
-          color="primary"
-          size="lg"
-          leading-icon="i-tabler-book-open"
-        >
+        <UButton to="/cursus" color="primary" size="lg" leading-icon="i-tabler-book-open">
           {{ t('dashboard.hero.noCohort.cta') }}
         </UButton>
       </div>
