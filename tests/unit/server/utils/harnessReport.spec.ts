@@ -22,9 +22,9 @@ describe('parseHarnessReport', () => {
     it('retourne un rapport complet avec summary recalculé', () => {
       const input = {
         checks: [
-          { checkId: 'repo_exists_public', status: 'success', message: 'OK' },
-          { checkId: 'branch_exists', status: 'failure', message: 'Branche absente' },
-          { checkId: 'tests_pass', status: 'skipped', message: 'Skipped' },
+          { check_id: 'repo_exists_public', status: 'success', message: 'OK' },
+          { check_id: 'branch_exists', status: 'failure', message: 'Branche absente' },
+          { check_id: 'tests_pass', status: 'skipped', message: 'Skipped' },
         ],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 }, // intentionnellement faux
         completedAt: '2026-06-27T10:00:00Z',
@@ -44,10 +44,10 @@ describe('parseHarnessReport', () => {
     it('compte "error" et "failure" comme failed', () => {
       const input = {
         checks: [
-          { checkId: 'tests_pass', status: 'failure', message: 'Tests KO' },
-          { checkId: 'linter_pass', status: 'error', message: 'Timeout' },
-          { checkId: 'url_responds', status: 'success', message: 'OK' },
-          { checkId: 'lighthouse_min', status: 'pending', message: 'En attente' },
+          { check_id: 'tests_pass', status: 'failure', message: 'Tests KO' },
+          { check_id: 'linter_pass', status: 'error', message: 'Timeout' },
+          { check_id: 'url_responds', status: 'success', message: 'OK' },
+          { check_id: 'lighthouse_min', status: 'pending', message: 'En attente' },
         ],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
@@ -64,7 +64,7 @@ describe('parseHarnessReport', () => {
       const input = {
         checks: [
           {
-            checkId: 'lighthouse_min',
+            check_id: 'lighthouse_min',
             status: 'success',
             message: 'Scores OK',
             details: { performance: 95, accessibility: 100 },
@@ -125,14 +125,14 @@ describe('parseHarnessReport', () => {
     });
 
     it('retourne un rapport vide pour un tableau (pas un objet)', () => {
-      const report = parseHarnessReport([{ checkId: 'repo_exists_public', status: 'success' }]);
+      const report = parseHarnessReport([{ check_id: 'repo_exists_public', status: 'success' }]);
 
       expect(report.checks).toHaveLength(0);
     });
 
     it('retourne un rapport vide si un check a un statut invalide', () => {
       const input = {
-        checks: [{ checkId: 'repo_exists_public', status: 'invalid_status', message: 'bad' }],
+        checks: [{ check_id: 'repo_exists_public', status: 'invalid_status', message: 'bad' }],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
 
@@ -141,9 +141,9 @@ describe('parseHarnessReport', () => {
       expect(report.checks).toHaveLength(0);
     });
 
-    it('retourne un rapport vide si checkId est vide', () => {
+    it('retourne un rapport vide si check_id est vide', () => {
       const input = {
-        checks: [{ checkId: '', status: 'success', message: 'OK' }],
+        checks: [{ check_id: '', status: 'success', message: 'OK' }],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
 
@@ -154,7 +154,7 @@ describe('parseHarnessReport', () => {
 
     it('retourne un rapport vide si durationMs est négatif', () => {
       const input = {
-        checks: [{ checkId: 'tests_pass', status: 'success', message: 'OK', durationMs: -100 }],
+        checks: [{ check_id: 'tests_pass', status: 'success', message: 'OK', durationMs: -100 }],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
 
@@ -180,7 +180,7 @@ describe('parseHarnessReport', () => {
     it('summary total = nb de checks', () => {
       const input = {
         checks: Array.from({ length: 9 }, (_, i) => ({
-          checkId: KNOWN_CHECK_IDS[i] ?? 'unknown',
+          check_id: KNOWN_CHECK_IDS[i] ?? 'unknown',
           status: 'success' as const,
           message: 'OK',
         })),
@@ -199,7 +199,7 @@ describe('parseHarnessReport', () => {
       const statuses = ['success', 'failure', 'error', 'skipped', 'pending', 'success'] as const;
       const input = {
         checks: statuses.map((status, i) => ({
-          checkId: `check_${i}`,
+          check_id: `check_${i}`,
           status,
           message: `result ${i}`,
         })),
