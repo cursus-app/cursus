@@ -710,6 +710,61 @@
       "cookies": "Cookies"
     }
   },
+  "cohorte": {
+    "dashboard": {
+      "tabsAriaLabel": "Vues de la cohorte",
+      "tabs": {
+        "overview": "Vue générale",
+        "heatmap": "Heatmap"
+      },
+      "kpiRegionLabel": "Indicateurs clés de la cohorte",
+      "kpi": {
+        "medianProgress": "Médiane progression",
+        "medianProgressAriaLabel": "Médiane de progression : {value}%",
+        "openAlerts": "Alertes ouvertes",
+        "openAlertsAriaLabel": "{value} alerte(s) ouverte(s)",
+        "capstonesThisWeek": "Capstones cette semaine",
+        "capstonesThisWeekAriaLabel": "{value} capstone(s) à venir cette semaine",
+        "submissionRate": "Taux de soumission",
+        "submissionRateAriaLabel": "Taux de soumission : {value}%"
+      },
+      "gridAriaLabel": "Grille de progression des stagiaires par module",
+      "traineesColumnLabel": "Stagiaire",
+      "cellAriaLabel": "{trainee} — {module} (Semaine {week}) — {status}",
+      "legendAriaLabel": "Légende des statuts",
+      "unknownTrainee": "Stagiaire inconnu",
+      "searchPlaceholder": "Rechercher un stagiaire…",
+      "filter": {
+        "alertsOnly": "Alertes uniquement",
+        "lateOnly": "En retard uniquement"
+      },
+      "export": {
+        "csvButton": "Exporter CSV"
+      },
+      "empty": {
+        "noTrainees": "Aucun stagiaire dans cette cohorte. Invitez des stagiaires pour commencer.",
+        "noResults": "Aucun stagiaire ne correspond aux filtres sélectionnés."
+      },
+      "status": {
+        "A_VENIR": "À venir",
+        "EN_COURS": "En cours",
+        "SOUMIS": "Soumis",
+        "VALIDE": "Validé",
+        "BLOQUE": "Bloqué",
+        "EN_ALERTE": "En alerte",
+        "EN_RETARD": "En retard",
+        "VALIDE_OVERRIDE": "Validé (override)"
+      },
+      "drawer": {
+        "title": "Détail du stagiaire",
+        "dueDate": "Date limite :",
+        "hasAlert": "Une alerte est ouverte pour ce module.",
+        "viewProfile": "Voir le profil complet",
+        "lastSubmission": "Dernière soumission",
+        "noSubmission": "Aucune soumission"
+      }
+    }
+  },
   "harness": {
     "status": {
       "QUEUED": "En attente",

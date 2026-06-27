@@ -710,6 +710,61 @@
       "cookies": "Cookies"
     }
   },
+  "cohorte": {
+    "dashboard": {
+      "tabsAriaLabel": "Cohort views",
+      "tabs": {
+        "overview": "Overview",
+        "heatmap": "Heatmap"
+      },
+      "kpiRegionLabel": "Cohort key performance indicators",
+      "kpi": {
+        "medianProgress": "Median progress",
+        "medianProgressAriaLabel": "Median progress: {value}%",
+        "openAlerts": "Open alerts",
+        "openAlertsAriaLabel": "{value} open alert(s)",
+        "capstonesThisWeek": "Capstones this week",
+        "capstonesThisWeekAriaLabel": "{value} capstone(s) due this week",
+        "submissionRate": "Submission rate",
+        "submissionRateAriaLabel": "Submission rate: {value}%"
+      },
+      "gridAriaLabel": "Trainee progress grid by module",
+      "traineesColumnLabel": "Trainee",
+      "cellAriaLabel": "{trainee} — {module} (Week {week}) — {status}",
+      "legendAriaLabel": "Status legend",
+      "unknownTrainee": "Unknown trainee",
+      "searchPlaceholder": "Search a trainee…",
+      "filter": {
+        "alertsOnly": "Alerts only",
+        "lateOnly": "Late only"
+      },
+      "export": {
+        "csvButton": "Export CSV"
+      },
+      "empty": {
+        "noTrainees": "No trainees in this cohort yet. Invite trainees to get started.",
+        "noResults": "No trainees match the selected filters."
+      },
+      "status": {
+        "A_VENIR": "Upcoming",
+        "EN_COURS": "In progress",
+        "SOUMIS": "Submitted",
+        "VALIDE": "Validated",
+        "BLOQUE": "Blocked",
+        "EN_ALERTE": "Alert",
+        "EN_RETARD": "Late",
+        "VALIDE_OVERRIDE": "Validated (override)"
+      },
+      "drawer": {
+        "title": "Trainee detail",
+        "dueDate": "Due date:",
+        "hasAlert": "An alert is open for this module.",
+        "viewProfile": "View full profile",
+        "lastSubmission": "Last submission",
+        "noSubmission": "No submission"
+      }
+    }
+  },
   "harness": {
     "status": {
       "QUEUED": "Queued",
