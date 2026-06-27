@@ -1,19 +1,25 @@
 // Types partagés pour le harnais de validation automatique (EP-06).
 // Utilisés côté server (handler webhook, utils) ET côté client (affichage résultats).
+// ST-06.3 : types enrichis pour le rapport lisible (cartes par check).
+
+/** Statut d'un check individuel. */
+export type CheckStatus = 'success' | 'failure' | 'error' | 'skipped' | 'pending';
 
 /**
  * Résultat d'un check individuel retourné par le runner GitHub Actions.
  * Stocké dans HarnessRun.checksJson.checks[].
  */
 export interface CheckResult {
-  /** Identifiant technique du check (ex. 'repo_exists_public', 'tests_pass'). */
-  check_id: string;
-  /** Statut final du check. */
-  status: 'success' | 'failure' | 'error' | 'skipped';
-  /** Message lisible (affiché au stagiaire). */
+  /** Identifiant technique du check (ex : "repo_exists_public"). */
+  checkId: string;
+  /** Statut du check. */
+  status: CheckStatus;
+  /** Message humain fourni par le harnais. */
   message: string;
-  /** Détails supplémentaires (stack trace, diff, logs…). Optionnel. */
-  details?: unknown;
+  /** Détails techniques bruts (JSON freeform). */
+  details?: Record<string, unknown>;
+  /** Durée d'exécution en millisecondes. */
+  durationMs?: number;
 }
 
 /**
@@ -57,4 +63,19 @@ export interface HarnessWebhookPayload {
   started_at: string;
   /** Timestamp ISO 8601 de la fin du run. */
   finished_at: string;
+}
+
+/** Rapport complet d'un run harnais. */
+export interface HarnessReport {
+  /** Liste des résultats par check. */
+  checks: CheckResult[];
+  /** Récapitulatif global. */
+  summary: {
+    passed: number;
+    failed: number;
+    skipped: number;
+    total: number;
+  };
+  /** Date de fin d'exécution ISO 8601. */
+  completedAt?: string;
 }

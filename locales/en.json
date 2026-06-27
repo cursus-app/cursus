@@ -740,9 +740,82 @@
       "submissionNotFound": "Submission not found.",
       "runNotFound": "Harness run not found.",
       "invalidPayload": "Invalid payload."
+    },
+    "report": {
+      "title": "Validation report",
+      "queued": "Waiting to start…",
+      "running": "Checks in progress…",
+      "timeoutTitle": "Timed out",
+      "timeoutDescription": "The harness took too long to respond. Contact your instructor if the problem persists.",
+      "cancelled": "This run was cancelled.",
+      "noChecks": "No checks to display.",
+      "noData": "Report not available.",
+      "summaryAllPassed": "Well done! All checks passed.",
+      "summaryAllFailed": "No checks passed. Re-read the instructions and try again!",
+      "summaryMix": "{passed}/{total} checks passed",
+      "viewDetails": "View technical details",
+      "duration": "{ms} ms",
+      "unknownCheckHelp": "This check is not documented. Contact your instructor.",
+      "statusLabel": {
+        "success": "Passed",
+        "failure": "Failed",
+        "error": "Error",
+        "skipped": "Skipped",
+        "pending": "Pending"
+      }
+    },
+    "checks": {
+      "repo_exists_public": {
+        "label": "Public repository accessible",
+        "help": "Make sure your repository is public and the URL is correct."
+      },
+      "branch_exists": {
+        "label": "main/master branch present",
+        "help": "The default branch must exist in your repository."
+      },
+      "branches": {
+        "label": "Required branches present",
+        "help": "All required branches must exist in your repository."
+      },
+      "tests_pass": {
+        "label": "Unit tests",
+        "help": "All your tests must pass. Run `npm test` or `pnpm test` locally."
+      },
+      "linter_pass": {
+        "label": "Code quality (Linter)",
+        "help": "Fix ESLint errors. Run `npm run lint` or `pnpm lint` locally."
+      },
+      "url_responds": {
+        "label": "Application accessible online",
+        "help": "The deployment URL must respond with HTTP 200."
+      },
+      "deploy_up": {
+        "label": "Deployment accessible",
+        "help": "The deployment URL must respond and be accessible."
+      },
+      "lighthouse_min": {
+        "label": "Lighthouse score ≥70",
+        "help": "Optimise your application's performance. Check the Lighthouse recommendations."
+      },
+      "lighthouse_score": {
+        "label": "Lighthouse score",
+        "help": "Your application's Lighthouse score must reach the required minimum threshold."
+      },
+      "commits_signed": {
+        "label": "Signed commits",
+        "help": "Enable GPG signing on your commits. Check the GitHub documentation."
+      },
+      "signed_commits": {
+        "label": "Signed commits (GPG)",
+        "help": "Your commits must be GPG-signed. Check the GitHub documentation."
+      },
+      "readme_present": {
+        "label": "README present",
+        "help": "A README.md file must be present at the root of your repository."
+      }
     }
   },
-  "submissions": {
+    "submissions": {
     "page": {
       "title": "My journey",
       "subtitle": "History of all your submissions, from most recent to oldest."

@@ -740,9 +740,82 @@
       "submissionNotFound": "Soumission introuvable.",
       "runNotFound": "Run de harnais introuvable.",
       "invalidPayload": "Payload invalide."
+    },
+    "report": {
+      "title": "Rapport de validation",
+      "queued": "En attente de démarrage…",
+      "running": "Vérifications en cours…",
+      "timeoutTitle": "Délai dépassé",
+      "timeoutDescription": "Le harnais a mis trop de temps à répondre. Contacte ton formateur si le problème persiste.",
+      "cancelled": "Ce run a été annulé.",
+      "noChecks": "Aucune vérification à afficher.",
+      "noData": "Rapport non disponible.",
+      "summaryAllPassed": "Bravo ! Tous les checks sont réussis.",
+      "summaryAllFailed": "Aucun check réussi. Relis les consignes et réessaie !",
+      "summaryMix": "{passed}/{total} checks réussis",
+      "viewDetails": "Voir les détails techniques",
+      "duration": "{ms} ms",
+      "unknownCheckHelp": "Ce check n'est pas documenté. Contacte ton formateur.",
+      "statusLabel": {
+        "success": "Réussi",
+        "failure": "Échoué",
+        "error": "Erreur",
+        "skipped": "Ignoré",
+        "pending": "En attente"
+      }
+    },
+    "checks": {
+      "repo_exists_public": {
+        "label": "Dépôt public accessible",
+        "help": "Vérifiez que votre dépôt est public et que l'URL est correcte."
+      },
+      "branch_exists": {
+        "label": "Branche main/master présente",
+        "help": "La branche par défaut doit exister dans votre dépôt."
+      },
+      "branches": {
+        "label": "Branches requises présentes",
+        "help": "Toutes les branches demandées doivent exister dans votre dépôt."
+      },
+      "tests_pass": {
+        "label": "Tests unitaires",
+        "help": "Vos tests doivent tous passer. Lancez `npm test` ou `pnpm test` localement."
+      },
+      "linter_pass": {
+        "label": "Qualité du code (Linter)",
+        "help": "Corrigez les erreurs ESLint. Lancez `npm run lint` ou `pnpm lint` localement."
+      },
+      "url_responds": {
+        "label": "Application accessible en ligne",
+        "help": "L'URL de déploiement doit répondre avec un code HTTP 200."
+      },
+      "deploy_up": {
+        "label": "Déploiement accessible",
+        "help": "L'URL de déploiement doit répondre et être accessible."
+      },
+      "lighthouse_min": {
+        "label": "Score Lighthouse ≥70",
+        "help": "Optimisez les performances de votre application. Consultez les recommandations Lighthouse."
+      },
+      "lighthouse_score": {
+        "label": "Score Lighthouse",
+        "help": "Le score Lighthouse de votre application doit atteindre le seuil minimum requis."
+      },
+      "commits_signed": {
+        "label": "Commits signés",
+        "help": "Activez la signature GPG sur vos commits. Consultez la documentation GitHub."
+      },
+      "signed_commits": {
+        "label": "Commits signés (GPG)",
+        "help": "Vos commits doivent être signés avec GPG. Consultez la documentation GitHub."
+      },
+      "readme_present": {
+        "label": "README présent",
+        "help": "Un fichier README.md doit être présent à la racine de votre dépôt."
+      }
     }
   },
-  "submissions": {
+    "submissions": {
     "page": {
       "title": "Mon parcours",
       "subtitle": "Historique de toutes tes soumissions, de la plus récente à la plus ancienne."
