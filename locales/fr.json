@@ -997,5 +997,37 @@
         "upcoming": "À venir"
       }
     }
+  },
+  "override": {
+    "button": {
+      "label": "Valider manuellement",
+      "ariaLabel": "Valider manuellement ce livrable"
+    },
+    "modal": {
+      "title": "Valider manuellement",
+      "description": "Cette action valide le livrable sans passer par le harnais. Un motif obligatoire sera archivé en audit.",
+      "reasonLabel": "Motif de l'override",
+      "reasonPlaceholder": "Explique pourquoi tu valides manuellement ce livrable…",
+      "reasonHint": "Minimum {min} caractères requis.",
+      "reasonTooShort": "Le motif doit contenir au moins {min} caractères",
+      "reasonTooLong": "Le motif ne peut pas dépasser {max} caractères",
+      "submitButton": "Valider manuellement"
+    },
+    "badge": {
+      "label": "Validé manuellement",
+      "tooltipReason": "Motif : {reason}",
+      "tooltipBy": "Par {name}",
+      "tooltipDate": "Le {date}"
+    },
+    "toast": {
+      "success": "Livrable validé manuellement",
+      "successDetail": "Le stagiaire {name} a été notifié"
+    },
+    "errors": {
+      "title": "Erreur lors de l'override",
+      "generic": "Une erreur est survenue. Réessaie plus tard.",
+      "forbidden": "Tu n'as pas les droits pour valider manuellement ce livrable.",
+      "alreadyTerminal": "Ce livrable est déjà validé, aucun override n'est possible."
+    }
   }
 }
