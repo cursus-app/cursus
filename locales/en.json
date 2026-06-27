@@ -885,6 +885,71 @@
       "duration": "Duration: {s}s"
     }
   },
+  "week": {
+    "pageTitle": "This week — Cursus",
+    "hero": {
+      "breadcrumb": "Cohort: {cohort}",
+      "title": "Week {week} of {total} — {moduleTitle}",
+      "objectives": "Objectives",
+      "xpReward": "{xp} XP to earn"
+    },
+    "status": {
+      "A_VENIR": "Upcoming",
+      "EN_COURS": "In progress",
+      "SOUMIS": "Submitted",
+      "VALIDE": "Validated",
+      "BLOQUE": "Blocked",
+      "EN_ALERTE": "Alert",
+      "EN_RETARD": "Late",
+      "VALIDE_OVERRIDE": "Manually validated"
+    },
+    "countdown": {
+      "ariaLabel": "{days} days, {hours} hours and {minutes} minutes remaining",
+      "ariaLate": "Late by {days} days, {hours} hours and {minutes} minutes",
+      "late": "{days}d late"
+    },
+    "lateWarning": {
+      "title": "You are {days} day late | You are {days} days late",
+      "description": "Don't hesitate to ask your trainer for help.",
+      "cta": "Ask for help"
+    },
+    "resources": {
+      "title": "This week's resources",
+      "ariaLabel": "Module resource list"
+    },
+    "deliverable": {
+      "title": "Deliverable",
+      "repoUrlLabel": "GitHub repository URL",
+      "repoUrlPlaceholder": "https://github.com/your-account/my-project",
+      "submitButton": "Submit deliverable",
+      "submitAriaLabel": "Submit deliverable for validation",
+      "submitHint": "The GitHub Actions harness will automatically validate your deliverable.",
+      "submitted": "Deliverable submitted — awaiting validation"
+    },
+    "quiz": {
+      "title": "Weekly quiz",
+      "description": "Validate your knowledge with the module quiz.",
+      "startButton": "Start quiz",
+      "startAriaLabel": "Start this week's quiz"
+    },
+    "timeline": {
+      "title": "My journey",
+      "subtitle": "{done}/{total} modules validated",
+      "ariaLabel": "Journey timeline",
+      "week": "Week {n}",
+      "daysLeft": "{days} day left | {days} days left",
+      "lateDays": "{days} day late | {days} days late",
+      "empty": "No modules yet"
+    },
+    "noCohort": {
+      "title": "No active cohort",
+      "description": "You are not enrolled in an active cohort yet. Contact your trainer."
+    },
+    "noModule": {
+      "title": "You're ahead!",
+      "description": "All modules in your cohort are completed. Congratulations!"
+    }
+  },
   "invitations": {
     "modalTitle": "Invite trainees",
     "modalSubtitle": "Send invitations by email or import a CSV file.",
@@ -1123,6 +1188,78 @@
       "invalidSubmissionId": "Invalid submission ID",
       "notFound": "Submission not found",
       "invalidBody": "Invalid submission data"
+    }
+  },
+  "alerts": {
+    "title": "Alerts",
+    "subtitle": "Manage your trainees' alerts.",
+    "resolveSuccess": "Alert marked as resolved",
+    "autoResolved": "Auto-resolved",
+    "resolvedBy": "Resolved by {name}",
+    "resolvedBySystem": "System",
+    "kinds": {
+      "SUBMISSION_LATE": "Late submission",
+      "QUIZ_REPEATEDLY_FAILED": "Quiz failed (x3)",
+      "SUBMISSION_REPEATEDLY_FAILED": "Repeated submission failures",
+      "STAGIAIRE_BLOCKED": "Trainee blocked",
+      "PROGRESS_STALLED": "Progress stalled",
+      "CAPSTONE_OVERDUE": "Capstone overdue"
+    },
+    "severity": {
+      "HIGH": "Critical",
+      "MEDIUM": "Important",
+      "LOW": "Info"
+    },
+    "filters": {
+      "all": "All types",
+      "open": "Open",
+      "resolved": "Resolved",
+      "kindLabel": "Alert type",
+      "kindPlaceholder": "All types",
+      "statusLabel": "Status",
+      "searchLabel": "Search trainee",
+      "searchPlaceholder": "Name or email…",
+      "reset": "Reset filters"
+    },
+    "actions": {
+      "resolve": "Mark resolved",
+      "resolveConfirm": "Mark as resolved",
+      "comment": "Add a comment"
+    },
+    "comment": {
+      "placeholder": "Leave a message to the trainee…",
+      "send": "Send",
+      "sent": "Message sent to trainee",
+      "error": "Could not send the message. Please retry.",
+      "notifTitle": "Message from your trainer"
+    },
+    "card": {
+      "ariaLabel": "{name} — {kind}"
+    },
+    "panel": {
+      "info": "Information",
+      "context": "Context",
+      "harnessReport": "Harness report",
+      "viewReport": "View report",
+      "createdAt": "Created at",
+      "resolvedAt": "Resolved at",
+      "resolvedBy": "Resolved by"
+    },
+    "list": {
+      "ariaLabel": "Alert list"
+    },
+    "pagination": {
+      "ariaLabel": "Alert pagination"
+    },
+    "empty": {
+      "title": "No alerts",
+      "description": "No alerts for your cohorts at the moment."
+    },
+    "time": {
+      "justNow": "just now",
+      "minutesAgo": "{n} min ago",
+      "hoursAgo": "{n} h ago",
+      "daysAgo": "{n} days ago"
     }
   },
   "override": {
