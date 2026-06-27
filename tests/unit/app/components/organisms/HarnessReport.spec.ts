@@ -143,7 +143,7 @@ function mountReport(props: { report: HarnessReport | null; status: HarnessStatu
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
 describe('HarnessReport — état QUEUED', () => {
-  it('affiche l\'indicateur de chargement', () => {
+  it("affiche l'indicateur de chargement", () => {
     const wrapper = mountReport({ report: null, status: 'QUEUED' });
     expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(true);
   });
@@ -158,14 +158,14 @@ describe('HarnessReport — état QUEUED', () => {
     expect(wrapper.find('[data-testid="loading-text"]').text()).toContain('En attente');
   });
 
-  it('n\'affiche PAS la barre de résumé', () => {
+  it("n'affiche PAS la barre de résumé", () => {
     const wrapper = mountReport({ report: null, status: 'QUEUED' });
     expect(wrapper.find('[data-testid="summary-bar"]').exists()).toBe(false);
   });
 });
 
 describe('HarnessReport — état RUNNING', () => {
-  it('affiche l\'indicateur de chargement', () => {
+  it("affiche l'indicateur de chargement", () => {
     const wrapper = mountReport({ report: null, status: 'RUNNING' });
     expect(wrapper.find('[data-testid="loading-indicator"]').exists()).toBe(true);
   });
@@ -190,7 +190,7 @@ describe('HarnessReport — état RUNNING', () => {
 });
 
 describe('HarnessReport — état TIMEOUT', () => {
-  it('affiche l\'état de timeout', () => {
+  it("affiche l'état de timeout", () => {
     const wrapper = mountReport({ report: null, status: 'TIMEOUT' });
     expect(wrapper.find('[data-testid="timeout-state"]').exists()).toBe(true);
   });
@@ -205,19 +205,19 @@ describe('HarnessReport — état TIMEOUT', () => {
     expect(wrapper.find('[data-testid="timeout-title"]').text()).toBe('Délai dépassé');
   });
 
-  it('n\'affiche PAS les squelettes', () => {
+  it("n'affiche PAS les squelettes", () => {
     const wrapper = mountReport({ report: null, status: 'TIMEOUT' });
     expect(wrapper.find('[data-testid="skeleton-card"]').exists()).toBe(false);
   });
 });
 
 describe('HarnessReport — état CANCELLED', () => {
-  it('affiche l\'état annulé', () => {
+  it("affiche l'état annulé", () => {
     const wrapper = mountReport({ report: null, status: 'CANCELLED' });
     expect(wrapper.find('[data-testid="cancelled-state"]').exists()).toBe(true);
   });
 
-  it('n\'affiche PAS les squelettes', () => {
+  it("n'affiche PAS les squelettes", () => {
     const wrapper = mountReport({ report: null, status: 'CANCELLED' });
     expect(wrapper.find('[data-testid="skeleton-card"]').exists()).toBe(false);
   });
@@ -229,7 +229,7 @@ describe('HarnessReport — état SUCCESS', () => {
     expect(wrapper.find('[data-testid="summary-bar"]').exists()).toBe(true);
   });
 
-  it('n\'affiche PAS les squelettes', () => {
+  it("n'affiche PAS les squelettes", () => {
     const wrapper = mountReport({ report: makeReport(), status: 'SUCCESS' });
     expect(wrapper.find('[data-testid="skeleton-card"]').exists()).toBe(false);
   });
@@ -248,10 +248,7 @@ describe('HarnessReport — état SUCCESS', () => {
 
   it('la barre de résumé affiche "Bravo !" quand tous les checks passent', () => {
     const report = makeReport({
-      checks: [
-        makeCheck({ status: 'success' }),
-        makeCheck({ status: 'success' }),
-      ],
+      checks: [makeCheck({ status: 'success' }), makeCheck({ status: 'success' })],
     });
     const wrapper = mountReport({ report, status: 'SUCCESS' });
     expect(wrapper.find('[data-testid="summary-bar"]').text()).toContain('Bravo');
@@ -264,12 +261,9 @@ describe('HarnessReport — état FAILURE', () => {
     expect(wrapper.find('[data-testid="summary-bar"]').exists()).toBe(true);
   });
 
-  it('la barre de résumé affiche le message d\'échec total si 0 réussi', () => {
+  it("la barre de résumé affiche le message d'échec total si 0 réussi", () => {
     const report = makeReport({
-      checks: [
-        makeCheck({ status: 'failure' }),
-        makeCheck({ status: 'failure' }),
-      ],
+      checks: [makeCheck({ status: 'failure' }), makeCheck({ status: 'failure' })],
     });
     const wrapper = mountReport({ report, status: 'FAILURE' });
     expect(wrapper.find('[data-testid="summary-bar"]').text()).toContain('Aucun check réussi');
@@ -303,7 +297,10 @@ describe('HarnessReport — état FAILURE', () => {
 
 describe('HarnessReport — message "aucun check"', () => {
   it('affiche le message si la liste de checks est vide', () => {
-    const report = makeReport({ checks: [], summary: { passed: 0, failed: 0, skipped: 0, total: 0 } });
+    const report = makeReport({
+      checks: [],
+      summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
+    });
     const wrapper = mountReport({ report, status: 'SUCCESS' });
     expect(wrapper.find('[data-testid="no-checks"]').exists()).toBe(true);
   });

@@ -69,9 +69,7 @@ const CheckCard = {
       return STATUS_LABELS[this.check.status];
     },
     hasDetails(this: CheckCardProps) {
-      return (
-        this.check.details !== undefined && Object.keys(this.check.details).length > 0
-      );
+      return this.check.details !== undefined && Object.keys(this.check.details).length > 0;
     },
     showHelpMessage(this: CheckCardProps) {
       return (
@@ -144,27 +142,27 @@ describe('CheckCard — icône par statut', () => {
 });
 
 describe('CheckCard — aria-label du statut', () => {
-  it('l\'icône a un aria-label correspondant au statut success', () => {
+  it("l'icône a un aria-label correspondant au statut success", () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'success' }), label: 'X', index: 0 });
     expect(wrapper.find('[data-testid="status-icon"]').attributes('aria-label')).toBe('Réussi');
   });
 
-  it('l\'icône a un aria-label correspondant au statut failure', () => {
+  it("l'icône a un aria-label correspondant au statut failure", () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'failure' }), label: 'X', index: 0 });
     expect(wrapper.find('[data-testid="status-icon"]').attributes('aria-label')).toBe('Échoué');
   });
 
-  it('l\'icône a un aria-label correspondant au statut error', () => {
+  it("l'icône a un aria-label correspondant au statut error", () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'error' }), label: 'X', index: 0 });
     expect(wrapper.find('[data-testid="status-icon"]').attributes('aria-label')).toBe('Erreur');
   });
 
-  it('l\'icône a un aria-label correspondant au statut skipped', () => {
+  it("l'icône a un aria-label correspondant au statut skipped", () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'skipped' }), label: 'X', index: 0 });
     expect(wrapper.find('[data-testid="status-icon"]').attributes('aria-label')).toBe('Ignoré');
   });
 
-  it('l\'icône a un aria-label correspondant au statut pending', () => {
+  it("l'icône a un aria-label correspondant au statut pending", () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'pending' }), label: 'X', index: 0 });
     expect(wrapper.find('[data-testid="status-icon"]').attributes('aria-label')).toBe('En attente');
   });
@@ -189,7 +187,7 @@ describe('CheckCard — contenu', () => {
     expect(wrapper.find('[data-testid="check-message"]').text()).toBe('Tous les tests passent.');
   });
 
-  it('affiche le message d\'aide pour status=failure', () => {
+  it("affiche le message d'aide pour status=failure", () => {
     const wrapper = mountCard({
       check: makeCheck({ status: 'failure', message: 'Échec.' }),
       label: 'Tests',
@@ -200,7 +198,7 @@ describe('CheckCard — contenu', () => {
     expect(wrapper.find('[data-testid="help-message"]').text()).toBe('Corrigez vos tests.');
   });
 
-  it('affiche le message d\'aide pour status=error', () => {
+  it("affiche le message d'aide pour status=error", () => {
     const wrapper = mountCard({
       check: makeCheck({ status: 'error', message: 'Crash interne.' }),
       label: 'Tests',
@@ -210,17 +208,17 @@ describe('CheckCard — contenu', () => {
     expect(wrapper.find('[data-testid="help-message"]').exists()).toBe(true);
   });
 
-  it('n\'affiche PAS le message d\'aide pour status=success', () => {
+  it("n'affiche PAS le message d'aide pour status=success", () => {
     const wrapper = mountCard({
       check: makeCheck({ status: 'success' }),
       label: 'Tests',
-      helpMessage: 'Un message d\'aide',
+      helpMessage: "Un message d'aide",
       index: 0,
     });
     expect(wrapper.find('[data-testid="help-message"]').exists()).toBe(false);
   });
 
-  it('n\'affiche PAS le message d\'aide si helpMessage est null', () => {
+  it("n'affiche PAS le message d'aide si helpMessage est null", () => {
     const wrapper = mountCard({
       check: makeCheck({ status: 'failure' }),
       label: 'Tests',
@@ -240,7 +238,7 @@ describe('CheckCard — contenu', () => {
     expect(wrapper.find('[data-testid="duration"]').text()).toContain('1234');
   });
 
-  it('n\'affiche pas la durée si durationMs est absent', () => {
+  it("n'affiche pas la durée si durationMs est absent", () => {
     const wrapper = mountCard({
       check: makeCheck({ durationMs: undefined }),
       label: 'Tests',
@@ -251,7 +249,7 @@ describe('CheckCard — contenu', () => {
 });
 
 describe('CheckCard — accordion détails', () => {
-  it('affiche l\'accordion quand details est présent', () => {
+  it("affiche l'accordion quand details est présent", () => {
     const wrapper = mountCard({
       check: makeCheck({ details: { output: 'test output', exitCode: 0 } }),
       label: 'Tests',
@@ -260,7 +258,7 @@ describe('CheckCard — accordion détails', () => {
     expect(wrapper.find('[data-testid="details-accordion"]').exists()).toBe(true);
   });
 
-  it('n\'affiche PAS l\'accordion quand details est absent', () => {
+  it("n'affiche PAS l'accordion quand details est absent", () => {
     const wrapper = mountCard({
       check: makeCheck({ details: undefined }),
       label: 'Tests',
@@ -269,7 +267,7 @@ describe('CheckCard — accordion détails', () => {
     expect(wrapper.find('[data-testid="details-accordion"]').exists()).toBe(false);
   });
 
-  it('n\'affiche PAS l\'accordion quand details est un objet vide', () => {
+  it("n'affiche PAS l'accordion quand details est un objet vide", () => {
     const wrapper = mountCard({
       check: makeCheck({ details: {} }),
       label: 'Tests',
@@ -293,17 +291,23 @@ describe('CheckCard — accordion détails', () => {
 describe('CheckCard — classe bordure', () => {
   it('applique la bonne classe de bordure pour success', () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'success' }), label: 'X', index: 0 });
-    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe('border-l-success-fg');
+    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe(
+      'border-l-success-fg',
+    );
   });
 
   it('applique la bonne classe de bordure pour failure', () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'failure' }), label: 'X', index: 0 });
-    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe('border-l-danger-fg');
+    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe(
+      'border-l-danger-fg',
+    );
   });
 
   it('applique la bonne classe de bordure pour error', () => {
     const wrapper = mountCard({ check: makeCheck({ status: 'error' }), label: 'X', index: 0 });
-    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe('border-l-warning-fg');
+    expect(wrapper.find('[data-testid="check-card"]').attributes('data-border')).toBe(
+      'border-l-warning-fg',
+    );
   });
 });
 
@@ -313,7 +317,7 @@ describe('CheckCard — a11y', () => {
     expect(wrapper.find('[data-testid="status-icon"]').attributes('role')).toBe('img');
   });
 
-  it('l\'article a un aria-labelledby pointant vers le titre', () => {
+  it("l'article a un aria-labelledby pointant vers le titre", () => {
     const wrapper = mountCard({ check: makeCheck(), label: 'X', index: 3 });
     expect(wrapper.find('[data-testid="check-card"]').attributes('aria-labelledby')).toBe(
       'check-card-summary-3',

@@ -74,15 +74,11 @@ function getCheckMeta(checkId: string): CheckMeta {
 
 // ─── États ────────────────────────────────────────────────────────────────────
 
-const isLoading = computed(
-  () => props.status === 'QUEUED' || props.status === 'RUNNING',
-);
+const isLoading = computed(() => props.status === 'QUEUED' || props.status === 'RUNNING');
 
 const isTimeout = computed(() => props.status === 'TIMEOUT');
 const isCancelled = computed(() => props.status === 'CANCELLED');
-const isDone = computed(
-  () => props.status === 'SUCCESS' || props.status === 'FAILURE',
-);
+const isDone = computed(() => props.status === 'SUCCESS' || props.status === 'FAILURE');
 
 // ─── Virtualisation ──────────────────────────────────────────────────────────
 
@@ -93,9 +89,7 @@ const checksToRender = computed<CheckResult[]>(() => {
   return props.report.checks;
 });
 
-const useVirtualization = computed(
-  () => checksToRender.value.length > VIRTUALIZATION_THRESHOLD,
-);
+const useVirtualization = computed(() => checksToRender.value.length > VIRTUALIZATION_THRESHOLD);
 
 /** Refs pour l'Intersection Observer (virtualisation). */
 const visibleChecks = ref<Set<number>>(new Set());
@@ -197,11 +191,7 @@ const statusIconClass = computed<string>(() => {
 </script>
 
 <template>
-  <section
-    aria-labelledby="harness-report-heading"
-    aria-live="polite"
-    class="space-y-4"
-  >
+  <section aria-labelledby="harness-report-heading" aria-live="polite" class="space-y-4">
     <!-- Titre de la section -->
     <h2
       id="harness-report-heading"
@@ -220,10 +210,7 @@ const statusIconClass = computed<string>(() => {
         :aria-label="t('harness.report.running')"
       >
         <span
-          :class="[
-            'size-3 shrink-0 rounded-full bg-accent',
-            !reducedMotion && 'animate-pulse',
-          ]"
+          :class="['size-3 shrink-0 rounded-full bg-accent', !reducedMotion && 'animate-pulse']"
           aria-hidden="true"
         />
         <span class="text-sm font-medium text-text-default">
@@ -273,16 +260,17 @@ const statusIconClass = computed<string>(() => {
     <template v-else-if="isDone && report">
       <!-- Barre de résumé -->
       <div
-        :class="[
-          'flex items-center gap-3 rounded-lg px-4 py-3',
-          summaryClasses[summaryVariant],
-        ]"
+        :class="['flex items-center gap-3 rounded-lg px-4 py-3', summaryClasses[summaryVariant]]"
         role="status"
         :aria-label="summaryMessage"
       >
         <span
           :class="[
-            summaryVariant === 'success' ? 'i-tabler-trophy' : summaryVariant === 'danger' ? 'i-tabler-mood-sad' : 'i-tabler-chart-bar',
+            summaryVariant === 'success'
+              ? 'i-tabler-trophy'
+              : summaryVariant === 'danger'
+                ? 'i-tabler-mood-sad'
+                : 'i-tabler-chart-bar',
             'size-5 shrink-0',
           ]"
           aria-hidden="true"
@@ -296,7 +284,11 @@ const statusIconClass = computed<string>(() => {
           <!-- Sentinelle pour l'Intersection Observer (virtualisation) -->
           <div
             v-if="useVirtualization"
-            :ref="(el) => { if (el) cardRefs[index] = el as HTMLElement; }"
+            :ref="
+              (el) => {
+                if (el) cardRefs[index] = el as HTMLElement;
+              }
+            "
             :data-check-index="index"
             :class="{ 'min-h-[4rem]': !isCheckVisible(index) }"
           >

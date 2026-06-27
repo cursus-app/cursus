@@ -99,7 +99,11 @@ const detailsId = computed(() => `check-card-details-${props.index}`);
     <div class="flex items-start gap-3 px-4 py-3">
       <!-- Icône avec aria-label pour statut (jamais icône seule) -->
       <span
-        :class="[statusIcons[check.status], statusIconClasses[check.status], 'mt-0.5 size-5 shrink-0']"
+        :class="[
+          statusIcons[check.status],
+          statusIconClasses[check.status],
+          'mt-0.5 size-5 shrink-0',
+        ]"
         :aria-label="statusAriaLabels[check.status]"
         role="img"
       />
@@ -116,10 +120,7 @@ const detailsId = computed(() => `check-card-details-${props.index}`);
         </p>
 
         <!-- Message d'aide (uniquement en cas d'échec ou d'erreur) -->
-        <p
-          v-if="showHelpMessage"
-          class="mt-1 text-sm text-text-default"
-        >
+        <p v-if="showHelpMessage" class="mt-1 text-sm text-text-default">
           {{ helpMessage }}
         </p>
 
@@ -145,11 +146,7 @@ const detailsId = computed(() => `check-card-details-${props.index}`);
     </div>
 
     <!-- Accordion détails techniques (natif <details>/<summary>) -->
-    <details
-      v-if="hasDetails"
-      :id="detailsId"
-      class="border-t border-border-subtle"
-    >
+    <details v-if="hasDetails" :id="detailsId" class="border-t border-border-subtle">
       <summary
         class="flex cursor-pointer items-center gap-2 px-4 py-2 text-sm text-text-muted transition-colors hover:bg-muted hover:text-text-default focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:outline-none"
       >
@@ -158,8 +155,9 @@ const detailsId = computed(() => `check-card-details-${props.index}`);
       </summary>
       <div class="bg-muted px-4 py-3">
         <pre
-          class="overflow-x-auto whitespace-pre-wrap break-all font-mono text-xs text-text-default"
-        >{{ detailsJson }}</pre>
+          class="overflow-x-auto font-mono text-xs break-all whitespace-pre-wrap text-text-default"
+          >{{ detailsJson }}</pre
+        >
       </div>
     </details>
   </article>
