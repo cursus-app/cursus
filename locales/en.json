@@ -900,5 +900,64 @@
       "progressionNotFound": "Progression not found",
       "forbidden": "You can only report a blocker on your own progression"
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "seo": {
+      "title": "Cursus — Dashboard",
+      "description": "Your intern space: progress, badges, deliverables and deadlines."
+    },
+    "hero": {
+      "noCohort": {
+        "title": "You have not been assigned to a cohort yet",
+        "description": "Contact your trainer to join a cohort and start your journey.",
+        "cta": "Explore curricula"
+      },
+      "submitCta": "Submit my deliverable",
+      "viewSubmission": "View my submission",
+      "overdue": "Deadline passed",
+      "countdown": {
+        "days": "{days}d {hours}h remaining",
+        "hours": "{hours}h remaining"
+      },
+      "status": {
+        "inProgress": "In progress",
+        "upcoming": "Upcoming",
+        "submitted": "Submitted",
+        "late": "Late",
+        "alert": "Alert",
+        "blocked": "Blocked"
+      }
+    },
+    "progress": {
+      "title": "My progress",
+      "label": "{completed}/{total} modules validated",
+      "xpTotal": "XP accumulated"
+    },
+    "badges": {
+      "title": "XP & badges",
+      "empty": "Validate your first deliverable to earn your first badge!",
+      "total": "{n} badge earned | {n} badges earned"
+    },
+    "feed": {
+      "title": "Cohort feed",
+      "empty": "Be the first to validate a deliverable!",
+      "moduleValidated": "A deliverable was validated: {module}",
+      "badgeAwarded": "A badge was awarded: {badge}",
+      "genericEvent": "A positive event in the cohort"
+    },
+    "deadlines": {
+      "title": "Upcoming deadlines",
+      "empty": "No upcoming deadlines.",
+      "status": {
+        "validated": "Validated",
+        "submitted": "Submitted",
+        "inProgress": "In progress",
+        "late": "Late",
+        "alert": "Alert",
+        "blocked": "Blocked",
+        "upcoming": "Upcoming"
+      }
+    }
   }
 }
