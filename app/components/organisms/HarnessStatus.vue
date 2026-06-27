@@ -257,7 +257,9 @@ onUnmounted(() => {
         variant="soft"
         :icon="statusIcon"
         :title="statusLabel"
-        :class="{ 'animate-pulse': (run.status === 'RUNNING' || run.status === 'QUEUED') && !reducedMotion }"
+        :class="{
+          'animate-pulse': (run.status === 'RUNNING' || run.status === 'QUEUED') && !reducedMotion,
+        }"
       >
         <template #description>
           <span v-if="run.status === 'QUEUED'">{{ t('submission.status.queuedDescription') }}</span>
