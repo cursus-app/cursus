@@ -4,3 +4,4 @@ export { archiveCompletedCohortes } from './archiveCompletedCohortes';
 export { checkBrokenLinksFunction } from './check-broken-links';
 export { detectProgressionAlerts } from './detectProgressionAlerts';
 export { triggerGithubHarness } from './triggerGithubHarness';
+export { harnessTriggerFunction } from './harnessTrigger';
