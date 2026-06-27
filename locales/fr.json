@@ -885,6 +885,71 @@
       "duration": "Durée : {s}s"
     }
   },
+  "week": {
+    "pageTitle": "Cette semaine — Cursus",
+    "hero": {
+      "breadcrumb": "Cohorte : {cohort}",
+      "title": "Semaine {week} sur {total} — {moduleTitle}",
+      "objectives": "Objectifs",
+      "xpReward": "{xp} XP à gagner"
+    },
+    "status": {
+      "A_VENIR": "À venir",
+      "EN_COURS": "En cours",
+      "SOUMIS": "Soumis",
+      "VALIDE": "Validé",
+      "BLOQUE": "Bloqué",
+      "EN_ALERTE": "En alerte",
+      "EN_RETARD": "En retard",
+      "VALIDE_OVERRIDE": "Validé manuellement"
+    },
+    "countdown": {
+      "ariaLabel": "{days} jours, {hours} heures et {minutes} minutes restants",
+      "ariaLate": "En retard de {days} jours, {hours} heures et {minutes} minutes",
+      "late": "En retard de {days} j"
+    },
+    "lateWarning": {
+      "title": "Tu as un retard de {days} jour | Tu as un retard de {days} jours",
+      "description": "N'hésite pas à demander de l'aide à ton formateur.",
+      "cta": "Demander de l'aide"
+    },
+    "resources": {
+      "title": "Ressources de la semaine",
+      "ariaLabel": "Liste des ressources du module"
+    },
+    "deliverable": {
+      "title": "Livrable à rendre",
+      "repoUrlLabel": "URL du dépôt GitHub",
+      "repoUrlPlaceholder": "https://github.com/ton-compte/mon-projet",
+      "submitButton": "Soumettre le livrable",
+      "submitAriaLabel": "Soumettre le livrable pour validation",
+      "submitHint": "Le harnais GitHub Actions validera automatiquement ton livrable.",
+      "submitted": "Livrable soumis — en cours de validation"
+    },
+    "quiz": {
+      "title": "Quiz de la semaine",
+      "description": "Valide tes connaissances avec le quiz du module.",
+      "startButton": "Commencer le quiz",
+      "startAriaLabel": "Commencer le quiz de la semaine"
+    },
+    "timeline": {
+      "title": "Mon parcours",
+      "subtitle": "{done}/{total} modules validés",
+      "ariaLabel": "Timeline du parcours",
+      "week": "Semaine {n}",
+      "daysLeft": "{days} jour restant | {days} jours restants",
+      "lateDays": "En retard de {days} jour | En retard de {days} jours",
+      "empty": "Aucun module pour l'instant"
+    },
+    "noCohort": {
+      "title": "Aucune cohorte active",
+      "description": "Tu n'es pas encore inscrit dans une cohorte active. Contacte ton formateur."
+    },
+    "noModule": {
+      "title": "Tu es en avance !",
+      "description": "Tous les modules de ta cohorte sont complétés. Bravo !"
+    }
+  },
   "invitations": {
     "modalTitle": "Inviter des stagiaires",
     "modalSubtitle": "Envoyez des invitations par email ou importez un fichier CSV.",
