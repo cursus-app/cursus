@@ -1053,6 +1053,78 @@
       }
     }
   },
+  "alerts": {
+    "title": "Alertes",
+    "subtitle": "Gérez les alertes de vos stagiaires.",
+    "resolveSuccess": "Alerte marquée comme traitée",
+    "autoResolved": "Résolu automatiquement",
+    "resolvedBy": "Résolu par {name}",
+    "resolvedBySystem": "Système",
+    "kinds": {
+      "SUBMISSION_LATE": "Livrable en retard",
+      "QUIZ_REPEATEDLY_FAILED": "Quiz échoué (x3)",
+      "SUBMISSION_REPEATEDLY_FAILED": "Soumissions répétées en échec",
+      "STAGIAIRE_BLOCKED": "Stagiaire bloqué",
+      "PROGRESS_STALLED": "Progression stagnante",
+      "CAPSTONE_OVERDUE": "Capstone en retard"
+    },
+    "severity": {
+      "HIGH": "Critique",
+      "MEDIUM": "Important",
+      "LOW": "Info"
+    },
+    "filters": {
+      "all": "Tous les types",
+      "open": "Ouvertes",
+      "resolved": "Résolues",
+      "kindLabel": "Type d'alerte",
+      "kindPlaceholder": "Tous les types",
+      "statusLabel": "Statut",
+      "searchLabel": "Rechercher un stagiaire",
+      "searchPlaceholder": "Nom ou email…",
+      "reset": "Réinitialiser les filtres"
+    },
+    "actions": {
+      "resolve": "Marquer traitée",
+      "resolveConfirm": "Marquer comme traitée",
+      "comment": "Ajouter un commentaire"
+    },
+    "comment": {
+      "placeholder": "Laissez un message au stagiaire…",
+      "send": "Envoyer",
+      "sent": "Message envoyé au stagiaire",
+      "error": "Impossible d'envoyer le message. Réessaie.",
+      "notifTitle": "Message de votre formateur"
+    },
+    "card": {
+      "ariaLabel": "{name} — {kind}"
+    },
+    "panel": {
+      "info": "Informations",
+      "context": "Contexte",
+      "harnessReport": "Rapport harnais",
+      "viewReport": "Voir le rapport",
+      "createdAt": "Créée le",
+      "resolvedAt": "Résolue le",
+      "resolvedBy": "Résolue par"
+    },
+    "list": {
+      "ariaLabel": "Liste des alertes"
+    },
+    "pagination": {
+      "ariaLabel": "Pagination des alertes"
+    },
+    "empty": {
+      "title": "Aucune alerte",
+      "description": "Aucune alerte pour vos cohortes actuellement."
+    },
+    "time": {
+      "justNow": "à l'instant",
+      "minutesAgo": "il y a {n} min",
+      "hoursAgo": "il y a {n} h",
+      "daysAgo": "il y a {n} j"
+    }
+  },
   "override": {
     "button": {
       "label": "Valider manuellement",
