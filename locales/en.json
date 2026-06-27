@@ -628,6 +628,32 @@
       "noModulesAvailable": "No modules available for this curriculum",
       "empty": "No co-instructors yet"
     },
+    "schedule": {
+      "shiftButton": "Shift schedule",
+      "modalTitle": "Shift schedule",
+      "modalDescription": "Shift all deadlines of cohort \"{name}\" by N days. Trainees will be notified.",
+      "daysLabel": "Number of days (negative = move earlier)",
+      "daysPlaceholder": "E.g. 7",
+      "daysHint": "Between -30 and +30 days. Positive = postpone, negative = move earlier.",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "E.g. Public holiday, collective event…",
+      "previewButton": "Preview",
+      "previewTitle": "New schedule preview",
+      "previewModule": "Module",
+      "previewCurrentDate": "Current date",
+      "previewNewDate": "New date",
+      "previewEmpty": "No modules to shift for this cohort",
+      "confirmButton": "Apply shift",
+      "warningBackward": "You are moving deadlines earlier. Trainees might be surprised.",
+      "confirmWarning": "I confirm I want to move deadlines earlier",
+      "success": "Schedule shifted by {days} days. Trainees have been notified.",
+      "errors": {
+        "daysRequired": "Number of days is required",
+        "daysZero": "Number of days cannot be zero",
+        "daysOutOfRange": "Shift must be between -30 and 30 days",
+        "confirmRequired": "Confirm the backward shift to proceed"
+      }
+    },
     "errors": {
       "nameTooShort": "Name must be at least 2 characters",
       "nameTooLong": "Name cannot exceed 100 characters",
