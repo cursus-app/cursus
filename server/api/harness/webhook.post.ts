@@ -23,7 +23,7 @@ const CheckResultSchema = z.object({
   check_id: z.string().min(1),
   status: z.enum(['success', 'failure', 'error', 'skipped']),
   message: z.string(),
-  details: z.unknown().optional(),
+  details: z.record(z.unknown()).optional(),
 });
 
 const WebhookPayloadSchema = z.object({
