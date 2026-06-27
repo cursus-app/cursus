@@ -24,10 +24,10 @@ vi.mock('h3', () => ({
 // Mock de server/utils/i18n pour parseAcceptLanguage (logique testée séparément)
 vi.mock('~~/server/utils/i18n', () => ({
   parseAcceptLanguage: (header: string) => {
-    if (!header) return 'fr';
+    if (!header) {return 'fr';}
     const lower = header.toLowerCase();
-    if (lower.includes('en')) return 'en';
-    if (lower.includes('fr')) return 'fr';
+    if (lower.includes('en')) {return 'en';}
+    if (lower.includes('fr')) {return 'fr';}
     return 'fr';
   },
   tServer: vi.fn((locale: string, key: string) => `${locale}:${key}`),
@@ -36,7 +36,7 @@ vi.mock('~~/server/utils/i18n', () => ({
 
 vi.mock('~~/shared/types/locale', () => ({
   normalizeSupportedLocale: (value: string): 'fr' | 'en' => {
-    if (value === 'en') return 'en';
+    if (value === 'en') {return 'en';}
     return 'fr';
   },
   isSupportedLocale: (value: string) => value === 'fr' || value === 'en',

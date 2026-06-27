@@ -60,7 +60,7 @@ function resolveKey(messages: Record<string, unknown>, key: string): string | nu
   const parts = key.split('.');
   let current: unknown = messages;
   for (const part of parts) {
-    if (typeof current !== 'object' || current === null) return null;
+    if (typeof current !== 'object' || current === null) {return null;}
     current = (current as Record<string, unknown>)[part];
   }
   return typeof current === 'string' ? current : null;
@@ -74,7 +74,7 @@ function interpolate(template: string, params: Record<string, string | number>):
 }
 
 function normalizeSupportedLocale(value: string): 'fr' | 'en' {
-  if (value === 'en') return 'en';
+  if (value === 'en') {return 'en';}
   return 'fr';
 }
 
@@ -111,7 +111,7 @@ function tServerBilingual(
 }
 
 function parseAcceptLanguage(header: string): 'fr' | 'en' {
-  if (!header) return 'fr';
+  if (!header) {return 'fr';}
   const parts = header
     .split(',')
     .map((part) => {
@@ -124,8 +124,8 @@ function parseAcceptLanguage(header: string): 'fr' | 'en' {
     .filter((p) => p.lang.length > 0)
     .sort((a, b) => b.quality - a.quality);
   for (const part of parts) {
-    if (part.lang === 'en') return 'en';
-    if (part.lang === 'fr') return 'fr';
+    if (part.lang === 'en') {return 'en';}
+    if (part.lang === 'fr') {return 'fr';}
   }
   return 'fr';
 }
