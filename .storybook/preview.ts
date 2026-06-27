@@ -1,5 +1,20 @@
 import type { Preview } from '@storybook/vue3';
+import { setup } from '@storybook/vue3';
+import { createI18n } from 'vue-i18n';
 import '../assets/css/main.css';
+
+// Fournit useI18n() aux composants qui le consomment via Nuxt auto-import.
+// `missing` retourne la clé brute — suffisant pour afficher les stories sans traductions réelles.
+const i18n = createI18n({
+  legacy: false,
+  locale: 'fr',
+  messages: { fr: {} },
+  missing: (_locale: string, key: string) => key,
+});
+
+setup((app) => {
+  app.use(i18n);
+});
 
 const preview: Preview = {
   parameters: {

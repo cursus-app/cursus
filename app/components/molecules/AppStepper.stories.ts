@@ -76,9 +76,19 @@ export const StepTwoActive: Story = {
     },
     template: `
       <AppStepper v-model="step" :steps="defaultSteps" class="max-w-2xl">
-        <template v-for="s in defaultSteps" #[('step-' + s.id)]="{ isActive }">
+        <template #step-identity="{ isActive }">
           <div v-if="isActive" class="rounded-lg border border-border-subtle bg-surface p-6">
-            <p class="text-sm text-text-muted">Contenu de l'étape : {{ s.label }}</p>
+            <p class="text-sm text-text-muted">Contenu de l'étape : Identité</p>
+          </div>
+        </template>
+        <template #step-profile="{ isActive }">
+          <div v-if="isActive" class="rounded-lg border border-border-subtle bg-surface p-6">
+            <p class="text-sm text-text-muted">Contenu de l'étape : Profil</p>
+          </div>
+        </template>
+        <template #step-confirm="{ isActive }">
+          <div v-if="isActive" class="rounded-lg border border-border-subtle bg-surface p-6">
+            <p class="text-sm text-text-muted">Contenu de l'étape : Confirmation</p>
           </div>
         </template>
       </AppStepper>
