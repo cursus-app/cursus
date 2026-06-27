@@ -710,6 +710,61 @@
       "cookies": "Cookies"
     }
   },
+  "cohorte": {
+    "dashboard": {
+      "tabsAriaLabel": "Cohort views",
+      "tabs": {
+        "overview": "Overview",
+        "heatmap": "Heatmap"
+      },
+      "kpiRegionLabel": "Cohort key performance indicators",
+      "kpi": {
+        "medianProgress": "Median progress",
+        "medianProgressAriaLabel": "Median progress: {value}%",
+        "openAlerts": "Open alerts",
+        "openAlertsAriaLabel": "{value} open alert(s)",
+        "capstonesThisWeek": "Capstones this week",
+        "capstonesThisWeekAriaLabel": "{value} capstone(s) due this week",
+        "submissionRate": "Submission rate",
+        "submissionRateAriaLabel": "Submission rate: {value}%"
+      },
+      "gridAriaLabel": "Trainee progress grid by module",
+      "traineesColumnLabel": "Trainee",
+      "cellAriaLabel": "{trainee} — {module} (Week {week}) — {status}",
+      "legendAriaLabel": "Status legend",
+      "unknownTrainee": "Unknown trainee",
+      "searchPlaceholder": "Search a trainee…",
+      "filter": {
+        "alertsOnly": "Alerts only",
+        "lateOnly": "Late only"
+      },
+      "export": {
+        "csvButton": "Export CSV"
+      },
+      "empty": {
+        "noTrainees": "No trainees in this cohort yet. Invite trainees to get started.",
+        "noResults": "No trainees match the selected filters."
+      },
+      "status": {
+        "A_VENIR": "Upcoming",
+        "EN_COURS": "In progress",
+        "SOUMIS": "Submitted",
+        "VALIDE": "Validated",
+        "BLOQUE": "Blocked",
+        "EN_ALERTE": "Alert",
+        "EN_RETARD": "Late",
+        "VALIDE_OVERRIDE": "Validated (override)"
+      },
+      "drawer": {
+        "title": "Trainee detail",
+        "dueDate": "Due date:",
+        "hasAlert": "An alert is open for this module.",
+        "viewProfile": "View full profile",
+        "lastSubmission": "Last submission",
+        "noSubmission": "No submission"
+      }
+    }
+  },
   "harness": {
     "status": {
       "QUEUED": "Queued",
@@ -740,6 +795,44 @@
       "submissionNotFound": "Submission not found.",
       "runNotFound": "Harness run not found.",
       "invalidPayload": "Invalid payload."
+    },
+    "checks": {
+      "repo_exists_public": {
+        "label": "Public repository accessible",
+        "help": "Make sure your GitHub repository is public and that the URL exactly matches the one provided in your submission."
+      },
+      "branch_exists": {
+        "label": "Required branches present",
+        "help": "Check that all required branches exist in your repository (e.g. main, feature/login). Create them with `git checkout -b <branch-name>` then `git push origin <branch-name>`."
+      },
+      "pr_merged": {
+        "label": "Pull Request merged",
+        "help": "Make sure the expected Pull Request has been merged (status \"Merged\") on GitHub. Pending or closed-without-merge PRs are not accepted."
+      },
+      "file_exists": {
+        "label": "Required file present",
+        "help": "Check that the expected file is present in your repository at the exact path specified in the deliverable. Remember to commit and push the file."
+      },
+      "tests_pass": {
+        "label": "Unit tests",
+        "help": "Run your tests locally using the command specified in the deliverable. Ensure all tests pass before submitting. Check the harness output for failure details."
+      },
+      "linter_pass": {
+        "label": "Linter (code quality)",
+        "help": "Run the linter locally (e.g. `npm run lint`) and fix all reported errors before submitting. A warning treated as error can fail this check."
+      },
+      "url_responds": {
+        "label": "Deployment URL accessible",
+        "help": "Verify your application is deployed and publicly accessible at the provided URL. Wait a few minutes if you just deployed, then resubmit."
+      },
+      "lighthouse_min": {
+        "label": "Minimum Lighthouse score",
+        "help": "Your application must reach the specified Lighthouse thresholds (Performance, Accessibility, Best Practices, SEO). Use Chrome DevTools → Lighthouse tab to analyse and fix failing points."
+      },
+      "commits_signed": {
+        "label": "Signed commits (GPG)",
+        "help": "Configure GPG commit signing: `git config commit.gpgsign true`. Make sure your GPG key is linked to your GitHub account. The minimum number of signed commits is specified in the deliverable."
+      }
     }
   },
   "submissions": {
@@ -1030,6 +1123,38 @@
       "minutesAgo": "{n} min ago",
       "hoursAgo": "{n} h ago",
       "daysAgo": "{n} days ago"
+    }
+  },
+  "override": {
+    "button": {
+      "label": "Validate manually",
+      "ariaLabel": "Manually validate this deliverable"
+    },
+    "modal": {
+      "title": "Manual validation",
+      "description": "This action validates the deliverable without going through the harness. A mandatory reason will be archived in the audit log.",
+      "reasonLabel": "Override reason",
+      "reasonPlaceholder": "Explain why you are manually validating this deliverable…",
+      "reasonHint": "Minimum {min} characters required.",
+      "reasonTooShort": "The reason must be at least {min} characters",
+      "reasonTooLong": "The reason cannot exceed {max} characters",
+      "submitButton": "Validate manually"
+    },
+    "badge": {
+      "label": "Manually validated",
+      "tooltipReason": "Reason: {reason}",
+      "tooltipBy": "By {name}",
+      "tooltipDate": "On {date}"
+    },
+    "toast": {
+      "success": "Deliverable manually validated",
+      "successDetail": "Trainee {name} has been notified"
+    },
+    "errors": {
+      "title": "Override error",
+      "generic": "An error occurred. Please try again later.",
+      "forbidden": "You do not have permission to manually validate this deliverable.",
+      "alreadyTerminal": "This deliverable is already validated, no override is possible."
     }
   }
 }
