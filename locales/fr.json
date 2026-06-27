@@ -900,5 +900,64 @@
       "progressionNotFound": "Progression introuvable",
       "forbidden": "Tu ne peux signaler un blocage que sur ta propre progression"
     }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "seo": {
+      "title": "Cursus — Tableau de bord",
+      "description": "Ton espace stagiaire : progression, badges, livrables et échéances."
+    },
+    "hero": {
+      "noCohort": {
+        "title": "Tu n'es pas encore affecté(e) à une cohorte",
+        "description": "Contacte ton formateur pour rejoindre une cohorte et commencer ton parcours.",
+        "cta": "Explorer les cursus"
+      },
+      "submitCta": "Soumettre mon livrable",
+      "viewSubmission": "Voir ma soumission",
+      "overdue": "Délai dépassé",
+      "countdown": {
+        "days": "{days}j {hours}h restants",
+        "hours": "{hours}h restantes"
+      },
+      "status": {
+        "inProgress": "En cours",
+        "upcoming": "À venir",
+        "submitted": "Soumis",
+        "late": "En retard",
+        "alert": "En alerte",
+        "blocked": "Bloqué"
+      }
+    },
+    "progress": {
+      "title": "Ma progression",
+      "label": "{completed}/{total} modules validés",
+      "xpTotal": "XP accumulés"
+    },
+    "badges": {
+      "title": "XP & badges",
+      "empty": "Valide ton premier livrable pour obtenir ton premier badge !",
+      "total": "{n} badge obtenu | {n} badges obtenus"
+    },
+    "feed": {
+      "title": "Fil de la cohorte",
+      "empty": "Sois le premier à valider un livrable !",
+      "moduleValidated": "Un livrable a été validé : {module}",
+      "badgeAwarded": "Un badge a été décerné : {badge}",
+      "genericEvent": "Un événement positif dans la cohorte"
+    },
+    "deadlines": {
+      "title": "Prochaines échéances",
+      "empty": "Aucune échéance à venir.",
+      "status": {
+        "validated": "Validé",
+        "submitted": "Soumis",
+        "inProgress": "En cours",
+        "late": "En retard",
+        "alert": "En alerte",
+        "blocked": "Bloqué",
+        "upcoming": "À venir"
+      }
+    }
   }
 }
