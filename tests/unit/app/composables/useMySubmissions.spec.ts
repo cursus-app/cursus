@@ -103,7 +103,7 @@ describe('useMySubmissions', () => {
     expect(c.isLoading.value).toBe(false);
   });
 
-  it("expose une erreur si $fetch échoue", async () => {
+  it('expose une erreur si $fetch échoue', async () => {
     mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
     const c = await buildComposable();
@@ -176,7 +176,7 @@ describe('useMySubmissions', () => {
     });
   });
 
-  it('les soumissions sont triées telles que retournées par l\'API (plus récentes en premier)', async () => {
+  it("les soumissions sont triées telles que retournées par l'API (plus récentes en premier)", async () => {
     // L'ordre est garanti par le serveur (orderBy: submittedAt desc).
     // Le composable ne ré-ordonne pas — il fait confiance à l'API.
     const subs = [

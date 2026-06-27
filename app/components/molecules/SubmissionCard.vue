@@ -29,9 +29,7 @@ const { submission } = defineProps<Props>();
 const { t, d } = useI18n();
 const isExpanded = ref(false);
 
-const formattedDate = computed(() =>
-  d(new Date(submission.submittedAt), 'long'),
-);
+const formattedDate = computed(() => d(new Date(submission.submittedAt), 'long'));
 
 /** Checks du HarnessRun — tableau d'objets { name, passed, message? } */
 interface CheckItem {
@@ -42,13 +40,12 @@ interface CheckItem {
 
 const checks = computed<CheckItem[]>(() => {
   const json = submission.latestHarnessRun?.checksJson;
-  if (!json || !Array.isArray(json)) { return []; }
+  if (!json || !Array.isArray(json)) {
+    return [];
+  }
   return (json as unknown[]).filter(
     (item): item is CheckItem =>
-      typeof item === 'object' &&
-      item !== null &&
-      'name' in item &&
-      'passed' in item,
+      typeof item === 'object' && item !== null && 'name' in item && 'passed' in item,
   );
 });
 
@@ -76,10 +73,7 @@ function toggleExpand() {
     <!-- En-tête : date + statut -->
     <div class="flex flex-wrap items-start justify-between gap-2">
       <div class="flex flex-col gap-0.5">
-        <time
-          :datetime="submission.submittedAt"
-          class="text-xs text-text-subtle"
-        >
+        <time :datetime="submission.submittedAt" class="text-xs text-text-subtle">
           {{ formattedDate }}
         </time>
         <p class="text-sm font-semibold text-text-strong">
@@ -125,11 +119,7 @@ function toggleExpand() {
           ]"
           aria-hidden="true"
         />
-        {{
-          isExpanded
-            ? t('submissions.card.hideDetails')
-            : t('submissions.card.showDetails')
-        }}
+        {{ isExpanded ? t('submissions.card.hideDetails') : t('submissions.card.showDetails') }}
       </button>
 
       <!-- Détails harnais (accordion) -->
@@ -151,24 +141,20 @@ function toggleExpand() {
 
         <!-- Liste des checks -->
         <ul v-else class="space-y-1" role="list" :aria-label="t('submissions.card.harnessChecks')">
-          <li
-            v-for="check in checks"
-            :key="check.name"
-            class="flex items-start gap-2 text-xs"
-          >
+          <li v-for="check in checks" :key="check.name" class="flex items-start gap-2 text-xs">
             <span
               :class="[
-                'mt-0.5 shrink-0 size-3.5',
+                'mt-0.5 size-3.5 shrink-0',
                 check.passed
                   ? 'i-tabler-circle-check text-success-fg'
                   : 'i-tabler-circle-x text-danger-fg',
               ]"
-              :aria-label="check.passed ? t('submissions.card.checkPassed') : t('submissions.card.checkFailed')"
+              :aria-label="
+                check.passed ? t('submissions.card.checkPassed') : t('submissions.card.checkFailed')
+              "
             />
             <span class="text-text-default">{{ check.name }}</span>
-            <span v-if="check.message" class="text-text-muted italic">
-              — {{ check.message }}
-            </span>
+            <span v-if="check.message" class="text-text-muted italic"> — {{ check.message }} </span>
           </li>
         </ul>
 

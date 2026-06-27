@@ -28,16 +28,8 @@ useSeoMeta({
   robots: 'noindex',
 });
 
-const {
-  submissions,
-  meta,
-  isLoading,
-  error,
-  filter,
-  setFilter,
-  setPage,
-  fetch,
-} = useMySubmissions();
+const { submissions, meta, isLoading, error, filter, setFilter, setPage, fetch } =
+  useMySubmissions();
 
 // Chargement initial
 onMounted(() => {
@@ -67,10 +59,7 @@ const SKELETON_COUNT = 5;
 </script>
 
 <template>
-  <main
-    id="main-content"
-    class="mx-auto max-w-3xl px-4 py-10 sm:px-6"
-  >
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
     <!-- Titre page -->
     <div class="mb-8">
       <h1 class="text-2xl font-semibold tracking-tight text-text-strong">
@@ -123,11 +112,7 @@ const SKELETON_COUNT = 5;
 
     <!-- Skeletons pendant le chargement -->
     <template v-if="isLoading">
-      <ol
-        class="space-y-3"
-        :aria-label="t('submissions.list.ariaLabel')"
-        aria-busy="true"
-      >
+      <ol class="space-y-3" :aria-label="t('submissions.list.ariaLabel')" aria-busy="true">
         <li v-for="i in SKELETON_COUNT" :key="i">
           <div class="rounded-xl border border-border-subtle bg-surface p-4 shadow-sm">
             <div class="flex items-start justify-between gap-2">
@@ -147,7 +132,11 @@ const SKELETON_COUNT = 5;
     <template v-else-if="!isLoading && submissions.length === 0">
       <AppEmptyState
         :title="t('submissions.empty.title')"
-        :description="filter === 'all' ? t('submissions.empty.descriptionAll') : t('submissions.empty.descriptionFiltered')"
+        :description="
+          filter === 'all'
+            ? t('submissions.empty.descriptionAll')
+            : t('submissions.empty.descriptionFiltered')
+        "
         icon="i-tabler-inbox"
         :action-label="filter === 'all' ? t('submissions.empty.cta') : undefined"
         :action-icon="filter === 'all' ? 'i-tabler-arrow-right' : undefined"
@@ -166,10 +155,7 @@ const SKELETON_COUNT = 5;
         }}
       </p>
 
-      <ol
-        class="space-y-3"
-        :aria-label="t('submissions.list.ariaLabel')"
-      >
+      <ol class="space-y-3" :aria-label="t('submissions.list.ariaLabel')">
         <li v-for="submission in submissions" :key="submission.id">
           <SubmissionCard :submission="submission" />
         </li>

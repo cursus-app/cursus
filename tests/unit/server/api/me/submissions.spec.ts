@@ -236,7 +236,7 @@ describe('GET /api/me/submissions', () => {
     await expect(() => handler(makeEvent())).rejects.toMatchObject({ statusCode: 400 });
   });
 
-  it("utilise userId de la session — pas un paramètre de requête (isolation)", async () => {
+  it('utilise userId de la session — pas un paramètre de requête (isolation)', async () => {
     const sessionUserId = 'user-session';
     mockServerSupabaseUser.mockResolvedValue({ id: sessionUserId });
     mockPrismaUser.findUnique.mockResolvedValue({ id: sessionUserId });

@@ -21,7 +21,16 @@ const PAGE_SIZE = 20;
 
 const querySchema = z.object({
   status: z
-    .enum(['all', 'PENDING', 'RUNNING', 'VALIDATED', 'VALIDATED_OVERRIDE', 'FAILED', 'TIMEOUT', 'BLOCKED'])
+    .enum([
+      'all',
+      'PENDING',
+      'RUNNING',
+      'VALIDATED',
+      'VALIDATED_OVERRIDE',
+      'FAILED',
+      'TIMEOUT',
+      'BLOCKED',
+    ])
     .optional()
     .default('all'),
   page: z
@@ -104,10 +113,7 @@ export default defineEventHandler(async (event) => {
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  logger.info(
-    { userId: dbUser.id, status, page, total },
-    'submissions.list',
-  );
+  logger.info({ userId: dbUser.id, status, page, total }, 'submissions.list');
 
   return {
     data: submissions.map((s) => ({

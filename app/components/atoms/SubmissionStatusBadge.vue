@@ -98,7 +98,10 @@ const sizeClasses: Record<string, string> = {
       variantClasses[config.variant],
     ]"
   >
-    <span :class="[config.icon, 'shrink-0', size === 'sm' ? 'size-3' : 'size-3.5']" aria-hidden="true" />
+    <span
+      :class="[config.icon, 'shrink-0', size === 'sm' ? 'size-3' : 'size-3.5']"
+      aria-hidden="true"
+    />
     {{ t(config.labelKey) }}
   </span>
 </template>

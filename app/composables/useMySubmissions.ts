@@ -82,8 +82,7 @@ export function useMySubmissions() {
       submissions.value = res.data;
       meta.value = res.meta;
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Erreur de chargement des soumissions';
+      const message = err instanceof Error ? err.message : 'Erreur de chargement des soumissions';
       error.value = message;
     } finally {
       isLoading.value = false;
