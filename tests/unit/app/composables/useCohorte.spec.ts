@@ -216,6 +216,24 @@ describe('useCohorte — createCohorte', () => {
 
     expect(mockTrack).toHaveBeenCalledWith('cohorte_created', { rhythm: 'WEEKLY' });
   });
+
+  it('sets error and throws on fetch failure (couvre lignes 130-132)', async () => {
+    mockFetch.mockRejectedValue({ data: { message: 'cohortes.errors.conflict' } });
+
+    const { useCohorte } = await import('~/composables/useCohorte');
+    const { createCohorte, error } = useCohorte();
+
+    await expect(
+      createCohorte({
+        name: 'Test',
+        cursusId: 'cursus-1',
+        startDate: '2026-09-01',
+        endDate: '2026-12-31',
+        rhythm: 'WEEKLY' as const,
+      }),
+    ).rejects.toBeDefined();
+    expect(error.value).toBe('cohortes.errors.conflict');
+  });
 });
 
 describe('useCohorte — updateCohorte', () => {

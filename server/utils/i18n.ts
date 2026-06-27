@@ -84,11 +84,7 @@ function interpolate(template: string, params: InterpolationParams): string {
  * @param params - Paramètres d'interpolation optionnels (ex : { count: 5 })
  * @returns Le message traduit, ou la clé elle-même si introuvable (avec log warn).
  */
-export function tServer(
-  locale: string,
-  key: string,
-  params?: InterpolationParams,
-): string {
+export function tServer(locale: string, key: string, params?: InterpolationParams): string {
   const safeLocale = normalizeSupportedLocale(locale);
   const messages = catalog[safeLocale] as Record<string, unknown>;
 
@@ -103,7 +99,10 @@ export function tServer(
   if (resolved === null) {
     // La clé est introuvable même en fallback FR → retourner la clé brute
     // et logguer un warn pour déclencher l'alerte CI (i18n.missing_key)
-    logger.warn({ locale: safeLocale, key, surface: 'server', event: 'i18n.missing_key' }, 'i18n.missing_key');
+    logger.warn(
+      { locale: safeLocale, key, surface: 'server', event: 'i18n.missing_key' },
+      'i18n.missing_key',
+    );
     return key;
   }
 

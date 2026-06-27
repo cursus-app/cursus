@@ -36,7 +36,7 @@ export function respondError(
   params?: Record<string, string | number>,
   options: RespondErrorOptions = {},
 ): ReturnType<typeof createError> {
-  const locale = event.context.locale ?? 'fr';
+  const locale = (event.context['locale'] as string | undefined) ?? 'fr';
   const { statusCode = 400, data } = options;
 
   const message = tServer(locale, errorKey, params);

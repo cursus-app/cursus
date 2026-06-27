@@ -373,4 +373,34 @@ describe('sendInvitationEmail', () => {
     expect(body.subject).toContain('Marc');
     expect(body.subject).toContain('Promo Automne 2026');
   });
+
+  it('rejette une URL non-https (http://) — couvre safeHttpsUrl throw', async () => {
+    const { sendInvitationEmail, EmailServiceError } = await import('~~/server/utils/emailService');
+    await expect(
+      sendInvitationEmail(
+        'alice@example.com',
+        'Marc',
+        'Promo Automne 2026',
+        'http://evil.com/invite/abc',
+      ),
+    ).rejects.toBeInstanceOf(EmailServiceError);
+  });
+
+  it('envoie en locale EN — couvre les branches EN de sendInvitationEmail', async () => {
+    mockFetch.mockResolvedValueOnce(resendOkResponse());
+    const { sendInvitationEmail } = await import('~~/server/utils/emailService');
+
+    await sendInvitationEmail(
+      'alice@example.com',
+      'Marc',
+      'Promo Automne 2026',
+      'https://cursus.app/invite/abc123',
+      'en',
+    );
+
+    const call = mockFetch.mock.calls[0]?.[1] as { body: string } | undefined;
+    const body = JSON.parse(call?.body ?? '{}') as { subject: string; html: string };
+    expect(body.subject).toContain('Marc');
+    expect(body.html).toContain('You are invited');
+  });
 });

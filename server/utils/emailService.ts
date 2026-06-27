@@ -198,9 +198,7 @@ export async function sendWelcomeEmail(
   const safeName = escHtml(name);
 
   const heading =
-    locale === 'en'
-      ? `Welcome to Cursus, ${safeName}!`
-      : `Bienvenue sur Cursus, ${safeName} !`;
+    locale === 'en' ? `Welcome to Cursus, ${safeName}!` : `Bienvenue sur Cursus, ${safeName} !`;
   const body1 =
     locale === 'en'
       ? 'Your account is ready. You can now access your courses, submit your deliverables and track your progress week after week.'
@@ -209,16 +207,13 @@ export async function sendWelcomeEmail(
     locale === 'en'
       ? 'The automatic validation harness will check each of your deliverables and give you immediate feedback on the quality of your work.'
       : 'Le harnais de validation automatique vérifiera chacun de tes livrables et te donnera un retour immédiat sur la qualité de ton travail.';
-  const cta =
-    locale === 'en' ? 'Access my workspace →' : 'Accéder à mon espace →';
+  const cta = locale === 'en' ? 'Access my workspace →' : 'Accéder à mon espace →';
   const preheader =
     locale === 'en'
       ? 'Your Cursus account is ready — access your courses'
       : 'Ton compte Cursus est prêt — accède à tes cursus';
   const subject =
-    locale === 'en'
-      ? `Welcome to Cursus, ${name}!`
-      : `Bienvenue sur Cursus, ${name} !`;
+    locale === 'en' ? `Welcome to Cursus, ${name}!` : `Bienvenue sur Cursus, ${name} !`;
 
   const content = `
     <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
@@ -271,8 +266,7 @@ export async function sendWeekReminderEmail(
   const safeWeekTitle = escHtml(weekTitle);
 
   const heading = tServer(locale, 'email.subject.weekReminder');
-  const cta =
-    locale === 'en' ? 'Submit my deliverable →' : 'Soumettre mon livrable →';
+  const cta = locale === 'en' ? 'Submit my deliverable →' : 'Soumettre mon livrable →';
   const deadlineLabel =
     locale === 'en' ? '<strong>Remaining time:</strong>' : '<strong>Délai restant :</strong>';
   const deadlineText =
@@ -436,8 +430,7 @@ export async function sendHarnessResultEmail(
     })
     .join('');
 
-  const heading =
-    locale === 'en' ? 'Harness result' : 'Résultat du harnais';
+  const heading = locale === 'en' ? 'Harness result' : 'Résultat du harnais';
   const scoreLabel = locale === 'en' ? 'Score:' : 'Score :';
   const checksPassedLabel =
     locale === 'en'
@@ -513,8 +506,7 @@ export async function sendInvitationEmail(
   const safeCohorteName = escHtml(cohorteName);
   const safeInviteUrl = safeHttpsUrl(inviteUrl);
 
-  const heading =
-    locale === 'en' ? 'You are invited to Cursus' : 'Tu es invité sur Cursus';
+  const heading = locale === 'en' ? 'You are invited to Cursus' : 'Tu es invité sur Cursus';
   const body1 =
     locale === 'en'
       ? `<strong>${safeInviterName}</strong> invites you to join the cohort <strong>${safeCohorteName}</strong> on Cursus.`
