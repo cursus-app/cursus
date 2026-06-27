@@ -1,14 +1,15 @@
-// Types partagés pour le harnais de validation automatique (EP-06).
-// Utilisés côté server (handler webhook, utils) ET côté client (affichage résultats).
-// ST-06.3 : types enrichis pour le rapport lisible (cartes par check).
+/**
+ * Types partagés pour le harnais de validation Cursus.
+ * Consommés côté server (parsing du webhook GitHub Actions) et côté client
+ * (affichage des résultats dans le dashboard formateur / profil stagiaire).
+ */
 
-/** Statut d'un check individuel. */
+// ─── Statuts d'un check individuel ────────────────────────────────────────────
+
 export type CheckStatus = 'success' | 'failure' | 'error' | 'skipped' | 'pending';
 
-/**
- * Résultat d'un check individuel retourné par le runner GitHub Actions.
- * Stocké dans HarnessRun.checksJson.checks[].
- */
+// ─── Résultat structuré d'un check ────────────────────────────────────────────
+
 export interface CheckResult {
   /** Identifiant technique du check (ex : "repo_exists_public"). */
   check_id: string;
@@ -17,38 +18,60 @@ export interface CheckResult {
   /** Message humain fourni par le harnais. */
   message: string;
   /** Détails techniques bruts (JSON freeform). */
-  details?: unknown;
+  details?: Record<string, unknown> | undefined;
   /** Durée d'exécution en millisecondes. */
-  durationMs?: number;
+  durationMs?: number | undefined;
 }
 
-/**
- * Forme attendue de HarnessRun.checksJson en DB.
- */
+// ─── Forme attendue de HarnessRun.checksJson en DB ────────────────────────────
+
 export interface ChecksJson {
   checks: CheckResult[];
 }
 
-/**
- * Payload envoyé à GitHub Actions via workflow_dispatch.
- */
+// ─── Rapport complet d'un HarnessRun (côté affichage) ────────────────────────
+
+export interface HarnessReport {
+  checks: CheckResult[];
+  summary: {
+    passed: number;
+    failed: number;
+    skipped: number;
+    total: number;
+  };
+  /** ISO 8601 — renseigné quand le rapport est finalisé */
+  completedAt?: string | undefined;
+}
+
+// ─── Catalogue des check IDs connus au MVP ────────────────────────────────────
+
+export const KNOWN_CHECK_IDS = [
+  'repo_exists_public',
+  'branch_exists',
+  'pr_merged',
+  'file_exists',
+  'tests_pass',
+  'linter_pass',
+  'url_responds',
+  'lighthouse_min',
+  'commits_signed',
+] as const;
+
+export type KnownCheckId = (typeof KNOWN_CHECK_IDS)[number];
+
+// ─── Types du système de dispatch/webhook (ST-06.1) ───────────────────────────
+
 export interface HarnessDispatchPayload {
   submission_id: string;
   repo_url: string;
-  deploy_url?: string;
+  deploy_url?: string | undefined;
   criteria_json: string; // JSON sérialisé de CriteriaJson
 }
 
-/**
- * Critères transmis au runner pour déterminer quels checks exécuter.
- */
 export interface CriteriaJson {
   checks: string[];
 }
 
-/**
- * Payload reçu depuis le webhook GitHub Actions une fois le run terminé.
- */
 export interface HarnessWebhookPayload {
   /** run_id GitHub Actions — clé d'idempotence. */
   run_id: string;
@@ -63,19 +86,4 @@ export interface HarnessWebhookPayload {
   started_at: string;
   /** Timestamp ISO 8601 de la fin du run. */
   finished_at: string;
-}
-
-/** Rapport complet d'un run harnais. */
-export interface HarnessReport {
-  /** Liste des résultats par check. */
-  checks: CheckResult[];
-  /** Récapitulatif global. */
-  summary: {
-    passed: number;
-    failed: number;
-    skipped: number;
-    total: number;
-  };
-  /** Date de fin d'exécution ISO 8601. */
-  completedAt?: string;
 }

@@ -68,11 +68,7 @@ const statusAriaLabels: Record<CheckStatus, string> = {
 };
 
 const hasDetails = computed(
-  () =>
-    props.check.details !== undefined &&
-    props.check.details !== null &&
-    typeof props.check.details === 'object' &&
-    Object.keys(props.check.details as Record<string, unknown>).length > 0,
+  () => props.check.details !== undefined && Object.keys(props.check.details).length > 0,
 );
 
 const detailsJson = computed(() =>
