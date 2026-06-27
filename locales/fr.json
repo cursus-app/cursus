@@ -959,5 +959,77 @@
         "upcoming": "À venir"
       }
     }
+  },
+  "submission": {
+    "fields": {
+      "repoUrl": "URL du dépôt GitHub",
+      "repoUrlHint": "Doit appartenir à votre compte @{handle}",
+      "repoUrlPlaceholder": "https://github.com/{handle}/mon-projet",
+      "deployUrl": "URL de déploiement (optionnel)",
+      "deployUrlHint": "Doit commencer par https://",
+      "deployUrlPlaceholder": "https://mon-projet.vercel.app"
+    },
+    "actions": {
+      "submit": "Soumettre le livrable"
+    },
+    "success": {
+      "title": "Soumission enregistrée",
+      "description": "Le harnais va analyser votre repo. Résultat dans quelques minutes."
+    },
+    "spamBlocked": {
+      "title": "Limite de soumissions atteinte",
+      "description": "Vous avez atteint la limite de 10 soumissions échouées cette semaine. Demandez l'aide de votre formateur."
+    },
+    "githubRequired": {
+      "title": "Compte GitHub non lié",
+      "description": "Liez votre compte GitHub dans vos paramètres avant de soumettre un livrable."
+    },
+    "alreadyRunning": {
+      "title": "Analyse en cours",
+      "description": "Une analyse est déjà en cours pour ce module. Patientez la fin avant de soumettre à nouveau."
+    },
+    "validated": {
+      "title": "Module validé",
+      "description": "Ce module est déjà validé. Bravo !"
+    },
+    "status": {
+      "loading": "Chargement du statut...",
+      "fetchError": "Impossible de charger le statut de l'analyse. Réessayez.",
+      "queued": "En attente",
+      "running": "En cours d'analyse",
+      "success": "Validé",
+      "failure": "Échoué",
+      "timeout": "Timeout",
+      "cancelled": "Annulé",
+      "queuedDescription": "Votre soumission est en file d'attente. L'analyse va démarrer dans un instant.",
+      "runningDescription": "Analyse en cours... Les résultats arrivent.",
+      "successDescription": "Tous les checks ont passé. Excellent travail !",
+      "failureDescription": "Des checks ont échoué. Consultez le rapport ci-dessous et corrigez votre code.",
+      "checksTitle": "Résultats des checks",
+      "checkPassed": "Check réussi",
+      "checkFailed": "Check échoué",
+      "analysisInProgress": "Analyse en cours...",
+      "startedAt": "Démarré à {time}",
+      "finishedAt": "Terminé à {time}",
+      "timeoutWarning": {
+        "title": "L'analyse prend plus de temps que prévu",
+        "description": "Le harnais est toujours en cours après 10 minutes. Contactez votre formateur si ce délai persiste."
+      }
+    },
+    "errors": {
+      "repoUrlRequired": "L'URL du dépôt GitHub est requise",
+      "notGithubUrl": "L'URL doit être un dépôt GitHub valide (https://github.com/...)",
+      "deployNotHttps": "L'URL de déploiement doit commencer par https://",
+      "repoNotOwned": "Le dépôt doit appartenir à votre compte GitHub (@{handle})",
+      "githubHandleRequired": "Liez votre compte GitHub avant de soumettre",
+      "alreadyRunning": "Une analyse est déjà en cours pour ce module",
+      "alreadyValidated": "Ce module est déjà validé",
+      "spamBlocked": "Limite de soumissions atteinte. Contactez votre formateur.",
+      "progressionNotFound": "Progression introuvable",
+      "invalidProgressionId": "Identifiant de progression invalide",
+      "invalidSubmissionId": "Identifiant de soumission invalide",
+      "notFound": "Soumission introuvable",
+      "invalidBody": "Données de soumission invalides"
+    }
   }
 }

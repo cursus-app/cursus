@@ -959,5 +959,77 @@
         "upcoming": "Upcoming"
       }
     }
+  },
+  "submission": {
+    "fields": {
+      "repoUrl": "GitHub Repository URL",
+      "repoUrlHint": "Must belong to your @{handle} account",
+      "repoUrlPlaceholder": "https://github.com/{handle}/my-project",
+      "deployUrl": "Deployment URL (optional)",
+      "deployUrlHint": "Must start with https://",
+      "deployUrlPlaceholder": "https://my-project.vercel.app"
+    },
+    "actions": {
+      "submit": "Submit deliverable"
+    },
+    "success": {
+      "title": "Submission recorded",
+      "description": "The harness will analyze your repo. Results in a few minutes."
+    },
+    "spamBlocked": {
+      "title": "Submission limit reached",
+      "description": "You have reached the limit of 10 failed submissions this week. Ask your trainer for help."
+    },
+    "githubRequired": {
+      "title": "GitHub account not linked",
+      "description": "Link your GitHub account in your settings before submitting a deliverable."
+    },
+    "alreadyRunning": {
+      "title": "Analysis in progress",
+      "description": "An analysis is already running for this module. Wait for it to finish before submitting again."
+    },
+    "validated": {
+      "title": "Module validated",
+      "description": "This module is already validated. Well done!"
+    },
+    "status": {
+      "loading": "Loading status...",
+      "fetchError": "Unable to load analysis status. Please try again.",
+      "queued": "Queued",
+      "running": "Analyzing",
+      "success": "Validated",
+      "failure": "Failed",
+      "timeout": "Timeout",
+      "cancelled": "Cancelled",
+      "queuedDescription": "Your submission is queued. Analysis will start shortly.",
+      "runningDescription": "Analysis in progress... Results are on the way.",
+      "successDescription": "All checks passed. Excellent work!",
+      "failureDescription": "Some checks failed. Review the report below and fix your code.",
+      "checksTitle": "Check results",
+      "checkPassed": "Check passed",
+      "checkFailed": "Check failed",
+      "analysisInProgress": "Analysis in progress...",
+      "startedAt": "Started at {time}",
+      "finishedAt": "Finished at {time}",
+      "timeoutWarning": {
+        "title": "Analysis is taking longer than expected",
+        "description": "The harness is still running after 10 minutes. Contact your trainer if this persists."
+      }
+    },
+    "errors": {
+      "repoUrlRequired": "GitHub repository URL is required",
+      "notGithubUrl": "URL must be a valid GitHub repository (https://github.com/...)",
+      "deployNotHttps": "Deployment URL must start with https://",
+      "repoNotOwned": "The repository must belong to your GitHub account (@{handle})",
+      "githubHandleRequired": "Link your GitHub account before submitting",
+      "alreadyRunning": "An analysis is already running for this module",
+      "alreadyValidated": "This module is already validated",
+      "spamBlocked": "Submission limit reached. Contact your trainer.",
+      "progressionNotFound": "Progression not found",
+      "invalidProgressionId": "Invalid progression ID",
+      "invalidSubmissionId": "Invalid submission ID",
+      "notFound": "Submission not found",
+      "invalidBody": "Invalid submission data"
+    }
   }
 }
