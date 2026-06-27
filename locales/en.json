@@ -628,6 +628,32 @@
       "noModulesAvailable": "No modules available for this curriculum",
       "empty": "No co-instructors yet"
     },
+    "schedule": {
+      "shiftButton": "Shift schedule",
+      "modalTitle": "Shift schedule",
+      "modalDescription": "Shift all deadlines of cohort \"{name}\" by N days. Trainees will be notified.",
+      "daysLabel": "Number of days (negative = move earlier)",
+      "daysPlaceholder": "E.g. 7",
+      "daysHint": "Between -30 and +30 days. Positive = postpone, negative = move earlier.",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "E.g. Public holiday, collective event…",
+      "previewButton": "Preview",
+      "previewTitle": "New schedule preview",
+      "previewModule": "Module",
+      "previewCurrentDate": "Current date",
+      "previewNewDate": "New date",
+      "previewEmpty": "No modules to shift for this cohort",
+      "confirmButton": "Apply shift",
+      "warningBackward": "You are moving deadlines earlier. Trainees might be surprised.",
+      "confirmWarning": "I confirm I want to move deadlines earlier",
+      "success": "Schedule shifted by {days} days. Trainees have been notified.",
+      "errors": {
+        "daysRequired": "Number of days is required",
+        "daysZero": "Number of days cannot be zero",
+        "daysOutOfRange": "Shift must be between -30 and 30 days",
+        "confirmRequired": "Confirm the backward shift to proceed"
+      }
+    },
     "errors": {
       "nameTooShort": "Name must be at least 2 characters",
       "nameTooLong": "Name cannot exceed 100 characters",
@@ -765,6 +791,31 @@
       "notFound": "Invitation not found",
       "alreadyAccepted": "This invitation has already been accepted",
       "revoked": "This invitation has been revoked"
+    }
+  },
+  "email": {
+    "subject": {
+      "welcome": "Welcome to Cursus, {name}!",
+      "invitation": "{inviterName} invites you to join {cohorteName} on Cursus",
+      "weekReminder": "Reminder: deliverable to submit",
+      "harnessResult": "Harness result",
+      "alertLate": "Alert: intern late on \"{moduleName}\""
+    },
+    "footer": {
+      "copyright": "© {year} Cursus. All rights reserved.",
+      "member": "You received this email because you are a member of the Cursus platform.",
+      "expiry": "This link expires in 7 days. If you didn't request this invitation, ignore this email."
+    }
+  },
+  "server": {
+    "errors": {
+      "unauthorized": "Unauthorized.",
+      "forbidden": "You do not have permission to perform this action.",
+      "notFound": "Resource not found.",
+      "badRequest": "Invalid request.",
+      "conflict": "Data conflict.",
+      "internalError": "An internal error occurred. Please try again later.",
+      "invalidLocale": "Unsupported locale. Use 'fr' or 'en'."
     }
   }
 }

@@ -40,6 +40,7 @@ const invitations = ref<InvitationItem[]>([]);
 const isLoadingPage = ref(true);
 const showDeleteModal = ref(false);
 const showInviteModal = ref(false);
+const showShiftModal = ref(false);
 const isDeleting = ref(false);
 const actionError = ref<string | null>(null);
 
@@ -446,6 +447,14 @@ function memberDisplayName(member: CohorteMember): string {
           <!-- ACTIVE -->
           <template v-else-if="cohorte.status === 'ACTIVE'">
             <UButton
+              icon="i-tabler-calendar-event"
+              color="neutral"
+              variant="outline"
+              @click="showShiftModal = true"
+            >
+              {{ t('cohortes.schedule.shiftButton') }}
+            </UButton>
+            <UButton
               icon="i-tabler-flag-check"
               color="neutral"
               :loading="loading"
@@ -708,6 +717,16 @@ function memberDisplayName(member: CohorteMember): string {
       :open="showInviteModal"
       @update:open="showInviteModal = $event"
       @invited="loadInvitations"
+    />
+
+    <!-- ShiftScheduleModal -->
+    <ShiftScheduleModal
+      v-if="canManage && cohorte"
+      :cohorte-id="cohorteId"
+      :cohorte-name="cohorte.name"
+      :open="showShiftModal"
+      @update:open="showShiftModal = $event"
+      @shifted="loadCohorte"
     />
 
     <!-- Modal suppression cohorte -->

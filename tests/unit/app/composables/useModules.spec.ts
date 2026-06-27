@@ -178,6 +178,17 @@ describe('useModules — updateModule()', () => {
     await updateModule(MODULE_ID, { title: 'New' });
     expect(isDirty.value).toBe(false);
   });
+
+  it("sets saveError et propage l'erreur si updateModule echoue", async () => {
+    mockFetch.mockRejectedValueOnce({ data: { message: 'modules.errors.notFound' } });
+
+    const cursusId = computed(() => CURSUS_ID);
+    const { useModules } = await import('~/composables/useModules');
+    const { updateModule, saveError } = useModules(cursusId);
+
+    await expect(updateModule(MODULE_ID, { title: 'Fail' })).rejects.toBeDefined();
+    expect(saveError.value).toBe('modules.errors.notFound');
+  });
 });
 
 describe('useModules — deleteModule()', () => {
@@ -270,5 +281,51 @@ describe('useModules — markDirty() & isDirty', () => {
     expect(isDirty.value).toBe(false);
     markDirty();
     expect(isDirty.value).toBe(true);
+  });
+});
+
+describe('useModules — deleteModule() error path', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("propage l'erreur et pose saveError si deleteModule echoue", async () => {
+    mockFetch
+      .mockResolvedValueOnce([SAMPLE_MODULE]) // fetchModules
+      .mockRejectedValueOnce({ data: { message: 'Not found' } }); // deleteModule fails
+
+    const cursusId = computed(() => CURSUS_ID);
+    const { useModules } = await import('~/composables/useModules');
+    const { modules, fetchModules, deleteModule, saveError } = useModules(cursusId);
+
+    await fetchModules();
+    expect(modules.value).toHaveLength(1);
+
+    await expect(deleteModule(MODULE_ID)).rejects.toBeDefined();
+    expect(saveError.value).toBe('Not found');
+    // Module still in list since deletion failed
+    expect(modules.value).toHaveLength(1);
+  });
+});
+
+describe('useModules — autosave', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('appelle updateModule via autosave (debounce synchrone en tests)', async () => {
+    const updatedModule = { ...SAMPLE_MODULE, title: 'Updated' };
+    mockFetch
+      .mockResolvedValueOnce([SAMPLE_MODULE]) // fetchModules → array
+      .mockResolvedValueOnce(updatedModule); // updateModule → single item
+
+    const cursusId = computed(() => CURSUS_ID);
+    const { useModules } = await import('~/composables/useModules');
+    const { fetchModules, autosave, modules } = useModules(cursusId);
+
+    await fetchModules();
+    expect(modules.value).toHaveLength(1);
+    await autosave(MODULE_ID, { title: 'Updated' });
+    expect(modules.value[0]?.title).toBe('Updated');
   });
 });
