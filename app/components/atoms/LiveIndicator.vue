@@ -26,8 +26,12 @@ const { t } = useI18n();
 const reducedMotion = useReducedMotion();
 
 const label = computed(() => {
-  if (connected) {return t('realtime.live');}
-  if (polling) {return t('realtime.polling');}
+  if (connected) {
+    return t('realtime.live');
+  }
+  if (polling) {
+    return t('realtime.polling');
+  }
   return t('realtime.disconnected');
 });
 </script>

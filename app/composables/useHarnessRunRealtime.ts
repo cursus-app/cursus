@@ -69,7 +69,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
   /** Méthode de polling : interroge l'API pour récupérer le statut actuel. */
   async function pollCurrentStatus() {
     const id = runId.value;
-    if (!id || isUnmounted) {return;}
+    if (!id || isUnmounted) {
+      return;
+    }
 
     try {
       const data = await $fetch<SubmissionApiResponse>(`/api/me/harness-runs/${id}`);
@@ -91,7 +93,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
 
   /** Démarre le fallback polling. */
   function startFallbackPolling() {
-    if (pollingInterval !== null || isUnmounted) {return;}
+    if (pollingInterval !== null || isUnmounted) {
+      return;
+    }
     isFallbackPolling.value = true;
     isConnected.value = false;
     connectionError.value = t('realtime.fallbackPolling');
@@ -110,7 +114,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
 
   /** Affiche un toast lors de la transition vers un état terminal. */
   function handleTerminalTransition(id: string, terminalStatus: HarnessStatus) {
-    if (toastedRunId.value === id) {return;}
+    if (toastedRunId.value === id) {
+      return;
+    }
     toastedRunId.value = id;
 
     if (terminalStatus === 'SUCCESS') {
@@ -131,7 +137,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
 
   /** Planifie une reconnexion WS avec backoff exponentiel. */
   function scheduleReconnect() {
-    if (isUnmounted) {return;}
+    if (isUnmounted) {
+      return;
+    }
 
     if (wsRetryCount >= MAX_WS_RETRIES) {
       // Trop d'échecs WS → basculer en fallback polling
@@ -159,7 +167,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
 
   /** Ouvre une subscription Realtime pour un run donné. */
   function subscribe(id: string | null) {
-    if (!id || isUnmounted) {return;}
+    if (!id || isUnmounted) {
+      return;
+    }
 
     disconnectChannel();
     stopFallbackPolling();
@@ -176,7 +186,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
         },
         (payload) => {
           const row = payload.new as HarnessRunPayload;
-          if (!row?.status) {return;}
+          if (!row?.status) {
+            return;
+          }
 
           const prevStatus = status.value;
           status.value = row.status;
@@ -188,7 +200,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
         },
       )
       .subscribe((channelStatus) => {
-        if (isUnmounted) {return;}
+        if (isUnmounted) {
+          return;
+        }
 
         if (channelStatus === 'SUBSCRIBED') {
           isConnected.value = true;
@@ -214,7 +228,9 @@ export function useHarnessRunRealtime(runId: Ref<string | null>) {
   watch(
     runId,
     (newId, oldId) => {
-      if (newId === oldId) {return;}
+      if (newId === oldId) {
+        return;
+      }
 
       cancelReconnect();
       stopFallbackPolling();

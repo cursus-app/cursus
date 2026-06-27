@@ -363,7 +363,7 @@ describe('useHarnessRunRealtime — reconnexion et fallback polling', () => {
     expect(mockFetch.mock.calls.length).toBeGreaterThan(callsAfterFallback);
   });
 
-  it("planifie une reconnexion avec backoff après CHANNEL_ERROR", async () => {
+  it('planifie une reconnexion avec backoff après CHANNEL_ERROR', async () => {
     await buildComposable('run-abc');
     await nextTick();
 
@@ -377,7 +377,7 @@ describe('useHarnessRunRealtime — reconnexion et fallback polling', () => {
     expect(mockSupabaseClient.channel.mock.calls.length).toBeGreaterThan(initialChannelCalls);
   });
 
-  it("planifie une reconnexion avec backoff après CLOSED", async () => {
+  it('planifie une reconnexion avec backoff après CLOSED', async () => {
     await buildComposable('run-abc');
     await nextTick();
 
@@ -390,7 +390,7 @@ describe('useHarnessRunRealtime — reconnexion et fallback polling', () => {
     expect(mockSupabaseClient.channel.mock.calls.length).toBeGreaterThan(initialChannelCalls);
   });
 
-  it("connectionError est défini après CHANNEL_ERROR", async () => {
+  it('connectionError est défini après CHANNEL_ERROR', async () => {
     const { connectionError } = await buildComposable('run-abc');
     await nextTick();
 
@@ -400,7 +400,7 @@ describe('useHarnessRunRealtime — reconnexion et fallback polling', () => {
     expect(connectionError.value).toBe('realtime.connectionError');
   });
 
-  it("isConnected passe à false après CHANNEL_ERROR", async () => {
+  it('isConnected passe à false après CHANNEL_ERROR', async () => {
     const { isConnected } = await buildComposable('run-abc');
     await nextTick();
 

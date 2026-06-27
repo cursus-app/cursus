@@ -22,8 +22,12 @@ function createLiveIndicator(reducedMotion = false) {
       const isReducedMotion = ref(reducedMotion);
 
       const label = computed(() => {
-        if (props.connected) {return 'En direct';}
-        if (props.polling) {return 'Mise à jour toutes les 10s';}
+        if (props.connected) {
+          return 'En direct';
+        }
+        if (props.polling) {
+          return 'Mise à jour toutes les 10s';
+        }
         return 'Déconnecté';
       });
 
