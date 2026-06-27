@@ -33,7 +33,15 @@ const config: StorybookConfig = {
         vue(),
         tailwindcss(),
         autoImport({
-          imports: ['vue', 'vue-router'],
+          imports: [
+            'vue',
+            'vue-router',
+            // Réplique l'auto-import Nuxt de vue-i18n (useI18n) pour les composants
+            // qui appellent useI18n() sans import explicite.
+            { 'vue-i18n': ['useI18n'] },
+          ],
+          // useToast() de @nuxt/ui n'est pas disponible hors Nuxt — on fournit un mock.
+          dirs: [`${worktreeRoot}/.storybook/mocks`],
           dts: false,
         }),
       ],
