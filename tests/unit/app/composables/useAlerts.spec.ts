@@ -124,7 +124,7 @@ describe('useAlerts — fetch', () => {
     expect(error.value).toBe('Network error');
   });
 
-  it("capture un message générique si $fetch rejette sans Error", async () => {
+  it('capture un message générique si $fetch rejette sans Error', async () => {
     mockFetch.mockRejectedValueOnce('some string error');
 
     const { fetch, error } = await buildComposable();
@@ -168,7 +168,7 @@ describe('useAlerts — resolve', () => {
     vi.stubGlobal('$fetch', mockFetch);
   });
 
-  it('retire l\'alerte de la liste (optimistic) quand status=open', async () => {
+  it("retire l'alerte de la liste (optimistic) quand status=open", async () => {
     mockFetch.mockResolvedValueOnce(makeDefaultResponse()); // fetch
     mockFetch.mockResolvedValueOnce({ id: 'a1', resolvedAt: new Date().toISOString() }); // resolve
 
