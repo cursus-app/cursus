@@ -963,7 +963,7 @@
   "submission": {
     "fields": {
       "repoUrl": "GitHub Repository URL",
-      "repoUrlHint": "Must belong to your @{handle} account",
+      "repoUrlHint": "Must belong to your {'@'}{handle} account",
       "repoUrlPlaceholder": "https://github.com/{handle}/my-project",
       "deployUrl": "Deployment URL (optional)",
       "deployUrlHint": "Must start with https://",
@@ -1020,7 +1020,7 @@
       "repoUrlRequired": "GitHub repository URL is required",
       "notGithubUrl": "URL must be a valid GitHub repository (https://github.com/...)",
       "deployNotHttps": "Deployment URL must start with https://",
-      "repoNotOwned": "The repository must belong to your GitHub account (@{handle})",
+      "repoNotOwned": "The repository must belong to your GitHub account ({'@'}{handle})",
       "githubHandleRequired": "Link your GitHub account before submitting",
       "alreadyRunning": "An analysis is already running for this module",
       "alreadyValidated": "This module is already validated",
