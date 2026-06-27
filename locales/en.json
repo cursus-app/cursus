@@ -928,6 +928,19 @@
       "duration": "Duration: {s}s"
     }
   },
+  "realtime": {
+    "live": "Live",
+    "polling": "Updates every 10s",
+    "disconnected": "Disconnected",
+    "connectionError": "Connection lost — reconnecting…",
+    "fallbackPolling": "WebSocket unavailable — auto-refresh mode",
+    "toast": {
+      "success": "Submission validated",
+      "successDescription": "Your submission passed all harness checks.",
+      "failure": "Submission rejected",
+      "failureDescription": "Your submission did not pass all checks. Review the report."
+    }
+  },
   "week": {
     "pageTitle": "This week — Cursus",
     "hero": {

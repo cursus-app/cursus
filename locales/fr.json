@@ -928,6 +928,19 @@
       "duration": "Durée : {s}s"
     }
   },
+  "realtime": {
+    "live": "En direct",
+    "polling": "Mise à jour toutes les 10s",
+    "disconnected": "Déconnecté",
+    "connectionError": "Connexion interrompue — tentative de reconnexion…",
+    "fallbackPolling": "WebSocket indisponible — mode rafraîchissement automatique",
+    "toast": {
+      "success": "Livrable validé",
+      "successDescription": "Votre livrable a passé toutes les vérifications du harnais.",
+      "failure": "Livrable refusé",
+      "failureDescription": "Votre livrable n'a pas passé toutes les vérifications. Consultez le rapport."
+    }
+  },
   "week": {
     "pageTitle": "Cette semaine — Cursus",
     "hero": {
