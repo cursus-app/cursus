@@ -49,3 +49,31 @@
 **Impact** : ST-04.4 ne peut pas démarrer ce sprint. 1 story (2 SP) reportée.
 
 **Statut** : 🔴 Open
+
+---
+
+## [2026-06-27 09:45] 💡 AMÉLIORATION — HarnessStatus ↔ useHarnessRunRealtime : duplication subscription
+
+**Contexte** : `HarnessStatus.vue` (ST-05.2) implémente sa propre subscription Supabase Realtime inline + polling fallback. `useHarnessRunRealtime` (ST-06.4) fait la même chose en composable. Les deux coexistent sans se partager la logique.
+
+**Risque** : une future modification Realtime (nouveau statut, changement de table) devra être faite dans les deux endroits. Risque de dérive silencieuse.
+
+**Action suggérée** : créer une story de refacto (1-2 SP) dans EP-06 pour migrer `HarnessStatus.vue` vers `useHarnessRunRealtime`. Non urgent — aucun bug fonctionnel.
+
+**Priorité** : basse — à planifier en Sprint 4 ou 5.
+
+**Statut** : 💡 Improvement (non bloquant)
+
+---
+
+## [2026-06-27 09:45] 💡 AMÉLIORATION — Double source de vérité check labels
+
+**Contexte** : `server/utils/harnessReport.ts` a `CHECK_I18N` hardcodé (labels/messages côté server), et `locales/en.json` + `locales/fr.json` ont `harness.checks.*.label/help` (côté client via `HarnessReport.vue`). Ces deux jeux de données doivent rester synchronisés manuellement.
+
+**Risque** : dérive silencieuse — un check ajouté ou renommé dans le harnais pourrait avoir des labels incohérents entre les logs serveur et l'affichage client.
+
+**Action suggérée** : ajouter un test de cohérence automatique (unit, ~30 min de travail) qui vérifie que chaque `check_id` dans `CHECK_I18N` a une entrée correspondante dans les locales, et vice versa. Non urgent — à déclencher si des checks sont ajoutés en Sprint 4+.
+
+**Priorité** : basse — à planifier quand le harnais sera utilisé en prod ou qu'un nouveau check sera ajouté.
+
+**Statut** : 💡 Improvement (non bloquant)
