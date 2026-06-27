@@ -4,11 +4,18 @@
  * Toutes les méthodes sont async et lèvent une EmailServiceError en cas
  * d'échec API. Les erreurs "Resend down" sont propagées pour retry en queue.
  *
- * Cf. ST-12.2, TT-12.2.3 — service email.ts avec types stricts.
+ * La locale du destinataire (optionnelle, défaut 'fr') permet de localiser
+ * les sujets et corps des emails. Elle est passée explicitement plutôt que
+ * lue depuis event.context pour permettre l'appel depuis les jobs Inngest
+ * qui n'ont pas de contexte HTTP.
+ *
+ * Cf. ST-12.2, TT-12.2.3, ST-19.4 / TT-19.4.2
  */
 
 import { getEnv } from '~~/server/utils/env';
 import { logger } from '~~/server/utils/logger';
+import { tServer } from '~~/server/utils/i18n';
+import type { SupportedLocale } from '~~/shared/types/locale';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -116,9 +123,18 @@ function safeHttpsUrl(raw: string): string {
   return escHtml(parsed.toString());
 }
 
-function wrapHtml(content: string, preheader = ''): string {
+function wrapHtml(content: string, preheader = '', locale: SupportedLocale = 'fr'): string {
+  const footerCopyright =
+    locale === 'en'
+      ? `© ${new Date().getFullYear()} Cursus. All rights reserved.`
+      : `© ${new Date().getFullYear()} Cursus. Tous droits réservés.`;
+  const footerMember =
+    locale === 'en'
+      ? 'You received this email because you are a member of the Cursus platform.'
+      : 'Tu reçois cet email car tu es membre de la plateforme Cursus.';
+
   return `<!DOCTYPE html>
-<html lang="fr">
+<html lang="${locale}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -148,8 +164,8 @@ function wrapHtml(content: string, preheader = ''): string {
           <!-- Footer -->
           <tr>
             <td style="padding-top:24px;text-align:center;font-size:12px;color:#6b7280;">
-              <p style="margin:0 0 8px 0;">© ${new Date().getFullYear()} Cursus. Tous droits réservés.</p>
-              <p style="margin:0;">Tu reçois cet email car tu es membre de la plateforme Cursus.</p>
+              <p style="margin:0 0 8px 0;">${footerCopyright}</p>
+              <p style="margin:0;">${footerMember}</p>
             </td>
           </tr>
         </table>
@@ -172,49 +188,81 @@ function plainText(content: string): string {
 
 /**
  * Email de bienvenue envoyé à la création de compte.
+ * @param locale - Locale du destinataire ('fr' | 'en'). Défaut : 'fr'.
  */
-export async function sendWelcomeEmail(to: string, name: string): Promise<EmailSendResult> {
+export async function sendWelcomeEmail(
+  to: string,
+  name: string,
+  locale: SupportedLocale = 'fr',
+): Promise<EmailSendResult> {
   const safeName = escHtml(name);
+
+  const heading =
+    locale === 'en'
+      ? `Welcome to Cursus, ${safeName}!`
+      : `Bienvenue sur Cursus, ${safeName} !`;
+  const body1 =
+    locale === 'en'
+      ? 'Your account is ready. You can now access your courses, submit your deliverables and track your progress week after week.'
+      : 'Ton compte est prêt. Tu peux dès maintenant accéder à tes cursus, soumettre tes livrables et suivre ta progression semaine après semaine.';
+  const body2 =
+    locale === 'en'
+      ? 'The automatic validation harness will check each of your deliverables and give you immediate feedback on the quality of your work.'
+      : 'Le harnais de validation automatique vérifiera chacun de tes livrables et te donnera un retour immédiat sur la qualité de ton travail.';
+  const cta =
+    locale === 'en' ? 'Access my workspace →' : 'Accéder à mon espace →';
+  const preheader =
+    locale === 'en'
+      ? 'Your Cursus account is ready — access your courses'
+      : 'Ton compte Cursus est prêt — accède à tes cursus';
+  const subject =
+    locale === 'en'
+      ? `Welcome to Cursus, ${name}!`
+      : `Bienvenue sur Cursus, ${name} !`;
+
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Bienvenue sur Cursus, ${safeName} !</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Ton compte est prêt. Tu peux dès maintenant accéder à tes cursus, soumettre tes livrables
-      et suivre ta progression semaine après semaine.
+      ${body1}
     </p>
     <p style="margin:0 0 24px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Le harnais de validation automatique vérifiera chacun de tes livrables et te donnera
-      un retour immédiat sur la qualité de ton travail.
+      ${body2}
     </p>
     <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
           <a href="https://cursus.app/dashboard" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
-            Accéder à mon espace →
+            ${cta}
           </a>
         </td>
       </tr>
     </table>
   `;
 
+  logger.info({ surface: 'email', locale, template: 'welcome' }, 'i18n.server.render');
+
   return sendViaResend({
     from: getFrom(),
     to,
-    subject: `Bienvenue sur Cursus, ${name} !`, // subject is plain text, no escaping needed
-    html: wrapHtml(content, `Ton compte Cursus est prêt — accède à tes cursus`),
+    subject,
+    html: wrapHtml(content, preheader, locale),
     text: plainText(content),
   });
 }
 
 /**
  * Rappel de fin de semaine pour un module.
+ * @param locale - Locale du destinataire ('fr' | 'en'). Défaut : 'fr'.
  */
 export async function sendWeekReminderEmail(
   to: string,
   name: string,
   weekTitle: string,
   dueDate: Date,
+  locale: SupportedLocale = 'fr',
 ): Promise<EmailSendResult> {
-  const dueDateStr = dueDate.toLocaleDateString('fr-FR', {
+  const intlLocale = locale === 'en' ? 'en-US' : 'fr-FR';
+  const dueDateStr = dueDate.toLocaleDateString(intlLocale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -222,93 +270,148 @@ export async function sendWeekReminderEmail(
   const safeName = escHtml(name);
   const safeWeekTitle = escHtml(weekTitle);
 
+  const heading = tServer(locale, 'email.subject.weekReminder');
+  const cta =
+    locale === 'en' ? 'Submit my deliverable →' : 'Soumettre mon livrable →';
+  const deadlineLabel =
+    locale === 'en' ? '<strong>Remaining time:</strong>' : '<strong>Délai restant :</strong>';
+  const deadlineText =
+    locale === 'en'
+      ? `submit your work before ${dueDateStr}.`
+      : `soumets ton travail avant le ${dueDateStr}.`;
+  const body1 =
+    locale === 'en'
+      ? `The module <strong>${safeWeekTitle}</strong> is due on <strong>${dueDateStr}</strong>. Remember to submit your deliverable before the deadline so the harness can evaluate it.`
+      : `Le module <strong>${safeWeekTitle}</strong> arrive à échéance le <strong>${dueDateStr}</strong>. Pense à soumettre ton livrable avant la date limite pour que le harnais puisse l'évaluer.`;
+  const preheader =
+    locale === 'en'
+      ? `Deadline: ${dueDateStr} — don't miss the deadline`
+      : `Délai : ${dueDateStr} — ne rate pas la date limite`;
+
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Rappel : livrable à soumettre</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${safeName},
+      ${locale === 'en' ? 'Hello' : 'Bonjour'} ${safeName},
     </p>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Le module <strong>${safeWeekTitle}</strong> arrive à échéance le <strong>${dueDateStr}</strong>.
-      Pense à soumettre ton livrable avant la date limite pour que le harnais puisse l'évaluer.
+      ${body1}
     </p>
     <div style="background-color:#fef3c7;border-left:4px solid #f59e0b;border-radius:4px;padding:16px;margin:24px 0;">
       <p style="margin:0;font-size:14px;color:#92400e;">
-        <strong>Délai restant :</strong> soumets ton travail avant le ${dueDateStr}.
+        ${deadlineLabel} ${deadlineText}
       </p>
     </div>
     <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
           <a href="https://cursus.app/dashboard" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
-            Soumettre mon livrable →
+            ${cta}
           </a>
         </td>
       </tr>
     </table>
   `;
 
+  const subject =
+    locale === 'en'
+      ? `Reminder: deliverable "${weekTitle}" to submit`
+      : `Rappel : livrable "${weekTitle}" à soumettre`;
+
+  logger.info({ surface: 'email', locale, template: 'week-reminder' }, 'i18n.server.render');
+
   return sendViaResend({
     from: getFrom(),
     to,
-    subject: `Rappel : livrable "${weekTitle}" à soumettre`,
-    html: wrapHtml(content, `Délai : ${dueDateStr} — ne rate pas la date limite`),
+    subject,
+    html: wrapHtml(content, preheader, locale),
     text: plainText(content),
   });
 }
 
 /**
  * Alerte formateur — un stagiaire est en difficulté.
+ * @param locale - Locale du destinataire ('fr' | 'en'). Défaut : 'fr'.
  */
 export async function sendAlertEmail(
   to: string,
   name: string,
   moduleName: string,
   daysLate: number,
+  locale: SupportedLocale = 'fr',
 ): Promise<EmailSendResult> {
   const safeName = escHtml(name);
   const safeModuleName = escHtml(moduleName);
+
+  const dayUnit =
+    locale === 'en'
+      ? `${daysLate} day${daysLate > 1 ? 's' : ''}`
+      : `${daysLate} jour${daysLate > 1 ? 's' : ''}`;
+
+  const heading =
+    locale === 'en' ? 'Alert: intern in difficulty' : 'Alerte : stagiaire en difficulté';
+  const body1 =
+    locale === 'en'
+      ? `One of your interns has not yet submitted their deliverable for the module <strong>${safeModuleName}</strong>, which is <strong>${dayUnit}</strong> late.`
+      : `Un de tes stagiaires n'a pas encore soumis son livrable pour le module <strong>${safeModuleName}</strong>, qui est en retard de <strong>${dayUnit}</strong>.`;
+  const recommendation =
+    locale === 'en'
+      ? '<strong>Recommended action:</strong> contact this intern to help them unblock their situation.'
+      : "<strong>Action recommandée :</strong> prends contact avec ce stagiaire pour l'aider à débloquer sa situation.";
+  const cta = locale === 'en' ? 'View alerts →' : 'Voir les alertes →';
+  const preheader =
+    locale === 'en'
+      ? `An intern is ${dayUnit} late on ${safeModuleName}`
+      : `Un stagiaire est en retard de ${daysLate}j sur ${safeModuleName}`;
+  const subject =
+    locale === 'en'
+      ? `Alert: intern late on "${moduleName}"`
+      : `Alerte : stagiaire en retard sur "${moduleName}"`;
+
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Alerte : stagiaire en difficulté</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${safeName},
+      ${locale === 'en' ? 'Hello' : 'Bonjour'} ${safeName},
     </p>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Un de tes stagiaires n'a pas encore soumis son livrable pour le module
-      <strong>${safeModuleName}</strong>, qui est en retard de <strong>${daysLate} jour${daysLate > 1 ? 's' : ''}</strong>.
+      ${body1}
     </p>
     <div style="background-color:#fee2e2;border-left:4px solid #ef4444;border-radius:4px;padding:16px;margin:24px 0;">
       <p style="margin:0;font-size:14px;color:#991b1b;">
-        <strong>Action recommandée :</strong> prends contact avec ce stagiaire pour l'aider à débloquer sa situation.
+        ${recommendation}
       </p>
     </div>
     <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
           <a href="https://cursus.app/dashboard" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
-            Voir les alertes →
+            ${cta}
           </a>
         </td>
       </tr>
     </table>
   `;
 
+  logger.info({ surface: 'email', locale, template: 'alert' }, 'i18n.server.render');
+
   return sendViaResend({
     from: getFrom(),
     to,
-    subject: `Alerte : stagiaire en retard sur "${moduleName}"`,
-    html: wrapHtml(content, `Un stagiaire est en retard de ${daysLate}j sur ${safeModuleName}`),
+    subject,
+    html: wrapHtml(content, preheader, locale),
     text: plainText(content),
   });
 }
 
 /**
  * Résultat de validation du harnais.
+ * @param locale - Locale du destinataire ('fr' | 'en'). Défaut : 'fr'.
  */
 export async function sendHarnessResultEmail(
   to: string,
   name: string,
   score: number,
   checks: HarnessCheck[],
+  locale: SupportedLocale = 'fr',
 ): Promise<EmailSendResult> {
   const passed = checks.filter((c) => c.passed).length;
   const total = checks.length;
@@ -316,7 +419,14 @@ export async function sendHarnessResultEmail(
 
   const statusColor = isPassing ? '#059669' : '#dc2626';
   const statusBg = isPassing ? '#d1fae5' : '#fee2e2';
-  const statusText = isPassing ? 'Livrable validé !' : 'Des corrections sont nécessaires';
+  const statusText =
+    locale === 'en'
+      ? isPassing
+        ? 'Deliverable validated!'
+        : 'Corrections needed'
+      : isPassing
+        ? 'Livrable validé !'
+        : 'Des corrections sont nécessaires';
 
   const safeName = escHtml(name);
   const checksHtml = checks
@@ -326,19 +436,32 @@ export async function sendHarnessResultEmail(
     })
     .join('');
 
+  const heading =
+    locale === 'en' ? 'Harness result' : 'Résultat du harnais';
+  const scoreLabel = locale === 'en' ? 'Score:' : 'Score :';
+  const checksPassedLabel =
+    locale === 'en'
+      ? `<strong>${String(passed)}/${String(total)}</strong> checks passed:`
+      : `<strong>${String(passed)}/${String(total)}</strong> vérifications passées :`;
+  const cta = locale === 'en' ? 'View details →' : 'Voir le détail →';
+  const preheader =
+    locale === 'en'
+      ? `Score ${String(score)}/100 — ${String(passed)}/${String(total)} checks`
+      : `Score ${String(score)}/100 — ${String(passed)}/${String(total)} vérifications`;
+
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Résultat du harnais</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Bonjour ${safeName},
+      ${locale === 'en' ? 'Hello' : 'Bonjour'} ${safeName},
     </p>
     <div style="background-color:${statusBg};border-left:4px solid ${statusColor};border-radius:4px;padding:16px;margin:0 0 24px 0;text-align:center;">
       <p style="margin:0 0 8px 0;font-size:20px;font-weight:700;color:${statusColor};">
-        Score : ${String(score)}/100
+        ${scoreLabel} ${String(score)}/100
       </p>
       <p style="margin:0;font-size:16px;color:${statusColor};">${statusText}</p>
     </div>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;">
-      <strong>${String(passed)}/${String(total)}</strong> vérifications passées :
+      ${checksPassedLabel}
     </p>
     <ul style="margin:0 0 24px 0;padding-left:24px;">
       ${checksHtml}
@@ -347,69 +470,102 @@ export async function sendHarnessResultEmail(
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
           <a href="https://cursus.app/dashboard" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
-            Voir le détail →
+            ${cta}
           </a>
         </td>
       </tr>
     </table>
   `;
 
-  const subject = isPassing
-    ? `Livrable validé — score ${String(score)}/100`
-    : `Action requise — score ${String(score)}/100 — ${String(total - passed)} vérification${total - passed > 1 ? 's' : ''} en échec`;
+  const failedCount = total - passed;
+  const subject =
+    locale === 'en'
+      ? isPassing
+        ? `Deliverable validated — score ${String(score)}/100`
+        : `Action required — score ${String(score)}/100 — ${String(failedCount)} check${failedCount > 1 ? 's' : ''} failed`
+      : isPassing
+        ? `Livrable validé — score ${String(score)}/100`
+        : `Action requise — score ${String(score)}/100 — ${String(failedCount)} vérification${failedCount > 1 ? 's' : ''} en échec`;
+
+  logger.info({ surface: 'email', locale, template: 'harness-result' }, 'i18n.server.render');
 
   return sendViaResend({
     from: getFrom(),
     to,
     subject,
-    html: wrapHtml(
-      content,
-      `Score ${String(score)}/100 — ${String(passed)}/${String(total)} vérifications`,
-    ),
+    html: wrapHtml(content, preheader, locale),
     text: plainText(content),
   });
 }
 
 /**
  * Email d'invitation à rejoindre une cohorte.
+ * @param locale - Locale du destinataire ('fr' | 'en'). Défaut : 'fr'.
  */
 export async function sendInvitationEmail(
   to: string,
   inviterName: string,
   cohorteName: string,
   inviteUrl: string,
+  locale: SupportedLocale = 'fr',
 ): Promise<EmailSendResult> {
   const safeInviterName = escHtml(inviterName);
   const safeCohorteName = escHtml(cohorteName);
   const safeInviteUrl = safeHttpsUrl(inviteUrl);
+
+  const heading =
+    locale === 'en' ? 'You are invited to Cursus' : 'Tu es invité sur Cursus';
+  const body1 =
+    locale === 'en'
+      ? `<strong>${safeInviterName}</strong> invites you to join the cohort <strong>${safeCohorteName}</strong> on Cursus.`
+      : `<strong>${safeInviterName}</strong> t'invite à rejoindre la cohorte <strong>${safeCohorteName}</strong> sur Cursus.`;
+  const body2 =
+    locale === 'en'
+      ? 'Cursus is an internship tracking platform that lets you submit your deliverables, have them validated automatically, and track your progress week after week.'
+      : 'Cursus est une plateforme de suivi de stage qui te permet de soumettre tes livrables, les faire valider automatiquement, et suivre ta progression semaine après semaine.';
+  const cta = locale === 'en' ? 'Accept the invitation →' : "Accepter l'invitation →";
+  const expiry =
+    locale === 'en'
+      ? "This link expires in 7 days. If you didn't request this invitation, ignore this email."
+      : "Ce lien expire dans 7 jours. Si tu n'as pas demandé cette invitation, ignore cet email.";
+  const preheader =
+    locale === 'en'
+      ? `Invitation from ${safeInviterName} to join ${safeCohorteName}`
+      : `Invitation de ${safeInviterName} pour rejoindre ${safeCohorteName}`;
+  const subject =
+    locale === 'en'
+      ? `${inviterName} invites you to join ${cohorteName} on Cursus`
+      : `${inviterName} t'invite à rejoindre ${cohorteName} sur Cursus`;
+
   const content = `
-    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">Tu es invité sur Cursus</h1>
+    <h1 style="margin:0 0 16px 0;font-size:24px;font-weight:700;color:#111827;">${heading}</h1>
     <p style="margin:0 0 16px 0;font-size:16px;color:#374151;line-height:1.6;">
-      <strong>${safeInviterName}</strong> t'invite à rejoindre la cohorte <strong>${safeCohorteName}</strong> sur Cursus.
+      ${body1}
     </p>
     <p style="margin:0 0 24px 0;font-size:16px;color:#374151;line-height:1.6;">
-      Cursus est une plateforme de suivi de stage qui te permet de soumettre tes livrables,
-      les faire valider automatiquement, et suivre ta progression semaine après semaine.
+      ${body2}
     </p>
     <table cellpadding="0" cellspacing="0" role="presentation" style="margin:0 auto;">
       <tr>
         <td style="background-color:#4f46e5;border-radius:8px;padding:12px 24px;">
           <a href="${safeInviteUrl}" style="color:#ffffff;text-decoration:none;font-size:16px;font-weight:600;">
-            Accepter l'invitation →
+            ${cta}
           </a>
         </td>
       </tr>
     </table>
     <p style="margin:24px 0 0 0;font-size:12px;color:#6b7280;text-align:center;">
-      Ce lien expire dans 7 jours. Si tu n'as pas demandé cette invitation, ignore cet email.
+      ${expiry}
     </p>
   `;
+
+  logger.info({ surface: 'email', locale, template: 'invitation' }, 'i18n.server.render');
 
   return sendViaResend({
     from: getFrom(),
     to,
-    subject: `${inviterName} t'invite à rejoindre ${cohorteName} sur Cursus`,
-    html: wrapHtml(content, `Invitation de ${safeInviterName} pour rejoindre ${safeCohorteName}`),
+    subject,
+    html: wrapHtml(content, preheader, locale),
     text: plainText(content),
   });
 }
