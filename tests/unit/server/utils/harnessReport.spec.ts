@@ -132,9 +132,7 @@ describe('parseHarnessReport', () => {
 
     it('retourne un rapport vide si un check a un statut invalide', () => {
       const input = {
-        checks: [
-          { checkId: 'repo_exists_public', status: 'invalid_status', message: 'bad' },
-        ],
+        checks: [{ checkId: 'repo_exists_public', status: 'invalid_status', message: 'bad' }],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
 
@@ -156,9 +154,7 @@ describe('parseHarnessReport', () => {
 
     it('retourne un rapport vide si durationMs est négatif', () => {
       const input = {
-        checks: [
-          { checkId: 'tests_pass', status: 'success', message: 'OK', durationMs: -100 },
-        ],
+        checks: [{ checkId: 'tests_pass', status: 'success', message: 'OK', durationMs: -100 }],
         summary: { passed: 0, failed: 0, skipped: 0, total: 0 },
       };
 

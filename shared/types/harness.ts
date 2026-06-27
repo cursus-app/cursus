@@ -18,9 +18,9 @@ export interface CheckResult {
   /** Message lisible décrivant le résultat */
   message: string;
   /** Données additionnelles (seuils, valeurs mesurées, etc.) */
-  details?: Record<string, unknown>;
+  details?: Record<string, unknown> | undefined;
   /** Durée d'exécution en millisecondes */
-  durationMs?: number;
+  durationMs?: number | undefined;
 }
 
 // ─── Rapport complet d'un HarnessRun ─────────────────────────────────────────

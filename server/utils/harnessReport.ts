@@ -130,7 +130,7 @@ const CHECK_I18N: Record<KnownCheckId, CheckI18n> = {
       en: 'Required branches present',
     },
     help: {
-      fr: "Vérifiez que toutes les branches demandées existent dans votre dépôt (ex : main, feature/login). Vous pouvez les créer avec `git checkout -b <nom-branche>` puis `git push origin <nom-branche>`.",
+      fr: 'Vérifiez que toutes les branches demandées existent dans votre dépôt (ex : main, feature/login). Vous pouvez les créer avec `git checkout -b <nom-branche>` puis `git push origin <nom-branche>`.',
       en: 'Check that all required branches exist in your repository (e.g. main, feature/login). Create them with `git checkout -b <branch-name>` then `git push origin <branch-name>`.',
     },
   },
@@ -200,7 +200,7 @@ const CHECK_I18N: Record<KnownCheckId, CheckI18n> = {
       en: 'Signed commits (GPG)',
     },
     help: {
-      fr: "Configurez la signature GPG de vos commits : `git config commit.gpgsign true`. Assurez-vous que votre clé GPG est bien liée à votre compte GitHub. Le nombre minimum de commits signés est indiqué dans le livrable.",
+      fr: 'Configurez la signature GPG de vos commits : `git config commit.gpgsign true`. Assurez-vous que votre clé GPG est bien liée à votre compte GitHub. Le nombre minimum de commits signés est indiqué dans le livrable.',
       en: 'Configure GPG commit signing: `git config commit.gpgsign true`. Make sure your GPG key is linked to your GitHub account. The minimum number of signed commits is specified in the deliverable.',
     },
   },
@@ -229,4 +229,3 @@ export function getCheckHelpMessage(checkId: string, locale: SupportedLocale): s
   }
   return entry.help[locale];
 }
-
