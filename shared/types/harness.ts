@@ -11,15 +11,15 @@ export type CheckStatus = 'success' | 'failure' | 'error' | 'skipped' | 'pending
 // ─── Résultat structuré d'un check ────────────────────────────────────────────
 
 export interface CheckResult {
-  /** Identifiant technique du check (ex. 'repo_exists_public', 'tests_pass'). */
+  /** Identifiant technique du check (ex : "repo_exists_public"). */
   check_id: string;
-  /** Statut final du check */
+  /** Statut du check. */
   status: CheckStatus;
-  /** Message lisible décrivant le résultat */
+  /** Message humain fourni par le harnais. */
   message: string;
-  /** Données additionnelles (seuils, valeurs mesurées, etc.) */
+  /** Détails techniques bruts (JSON freeform). */
   details?: Record<string, unknown> | undefined;
-  /** Durée d'exécution en millisecondes */
+  /** Durée d'exécution en millisecondes. */
   durationMs?: number | undefined;
 }
 

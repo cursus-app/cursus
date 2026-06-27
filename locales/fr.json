@@ -796,6 +796,29 @@
       "runNotFound": "Run de harnais introuvable.",
       "invalidPayload": "Payload invalide."
     },
+    "report": {
+      "title": "Rapport de validation",
+      "queued": "En attente de démarrage…",
+      "running": "Vérifications en cours…",
+      "timeoutTitle": "Délai dépassé",
+      "timeoutDescription": "Le harnais a mis trop de temps à répondre. Contacte ton formateur si le problème persiste.",
+      "cancelled": "Ce run a été annulé.",
+      "noChecks": "Aucune vérification à afficher.",
+      "noData": "Rapport non disponible.",
+      "summaryAllPassed": "Bravo ! Tous les checks sont réussis.",
+      "summaryAllFailed": "Aucun check réussi. Relis les consignes et réessaie !",
+      "summaryMix": "{passed}/{total} checks réussis",
+      "viewDetails": "Voir les détails techniques",
+      "duration": "{ms} ms",
+      "unknownCheckHelp": "Ce check n'est pas documenté. Contacte ton formateur.",
+      "statusLabel": {
+        "success": "Réussi",
+        "failure": "Échoué",
+        "error": "Erreur",
+        "skipped": "Ignoré",
+        "pending": "En attente"
+      }
+    },
     "checks": {
       "repo_exists_public": {
         "label": "Dépôt public accessible",
@@ -804,6 +827,10 @@
       "branch_exists": {
         "label": "Branches requises présentes",
         "help": "Vérifiez que toutes les branches demandées existent dans votre dépôt (ex : main, feature/login). Vous pouvez les créer avec `git checkout -b <nom-branche>` puis `git push origin <nom-branche>`."
+      },
+      "branches": {
+        "label": "Branches requises présentes",
+        "help": "Toutes les branches demandées doivent exister dans votre dépôt."
       },
       "pr_merged": {
         "label": "Pull Request fusionnée",
@@ -825,13 +852,29 @@
         "label": "URL de déploiement accessible",
         "help": "Vérifiez que votre application est bien déployée et accessible publiquement à l'URL fournie. Attendez quelques minutes si vous venez de déployer, puis re-soumettez."
       },
+      "deploy_up": {
+        "label": "Déploiement accessible",
+        "help": "L'URL de déploiement doit répondre et être accessible."
+      },
       "lighthouse_min": {
         "label": "Score Lighthouse minimum",
         "help": "Votre application doit atteindre les seuils Lighthouse indiqués (Performance, Accessibilité, Bonnes pratiques, SEO). Utilisez DevTools Chrome → Onglet Lighthouse pour analyser et corriger les points en échec."
       },
+      "lighthouse_score": {
+        "label": "Score Lighthouse",
+        "help": "Le score Lighthouse de votre application doit atteindre le seuil minimum requis."
+      },
       "commits_signed": {
         "label": "Commits signés (GPG)",
         "help": "Configurez la signature GPG de vos commits : `git config commit.gpgsign true`. Assurez-vous que votre clé GPG est bien liée à votre compte GitHub. Le nombre minimum de commits signés est indiqué dans le livrable."
+      },
+      "signed_commits": {
+        "label": "Commits signés (GPG)",
+        "help": "Vos commits doivent être signés avec GPG. Consultez la documentation GitHub."
+      },
+      "readme_present": {
+        "label": "README présent",
+        "help": "Un fichier README.md doit être présent à la racine de votre dépôt."
       }
     }
   },
