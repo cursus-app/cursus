@@ -280,7 +280,7 @@ const statusIconClass = computed<string>(() => {
 
       <!-- Liste des checks -->
       <div class="space-y-3">
-        <template v-for="(check, index) in checksToRender" :key="check.checkId">
+        <template v-for="(check, index) in checksToRender" :key="check.check_id">
           <!-- Sentinelle pour l'Intersection Observer (virtualisation) -->
           <div
             v-if="useVirtualization"
@@ -295,8 +295,8 @@ const statusIconClass = computed<string>(() => {
             <CheckCard
               v-if="isCheckVisible(index)"
               :check="check"
-              :label="getCheckMeta(check.checkId).label"
-              :help-message="getCheckMeta(check.checkId).help"
+              :label="getCheckMeta(check.check_id).label"
+              :help-message="getCheckMeta(check.check_id).help"
               :index="index"
             />
           </div>
@@ -305,8 +305,8 @@ const statusIconClass = computed<string>(() => {
           <CheckCard
             v-else
             :check="check"
-            :label="getCheckMeta(check.checkId).label"
-            :help-message="getCheckMeta(check.checkId).help"
+            :label="getCheckMeta(check.check_id).label"
+            :help-message="getCheckMeta(check.check_id).help"
             :index="index"
           />
         </template>

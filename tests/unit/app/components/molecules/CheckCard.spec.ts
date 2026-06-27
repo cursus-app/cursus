@@ -37,7 +37,7 @@ const STATUS_LABELS: Record<CheckStatus, string> = {
 };
 
 interface CheckResult {
-  checkId: string;
+  check_id: string;
   status: CheckStatus;
   message: string;
   details?: Record<string, unknown>;
@@ -112,7 +112,7 @@ const CheckCard = {
 
 function makeCheck(overrides: Partial<CheckResult> = {}): CheckResult {
   return {
-    checkId: 'tests_pass',
+    check_id: 'tests_pass',
     status: 'success',
     message: 'All tests passed.',
     ...overrides,

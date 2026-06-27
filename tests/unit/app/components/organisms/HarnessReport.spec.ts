@@ -86,12 +86,12 @@ const HarnessReportStub = {
         </div>
         <div
           v-for="(check, index) in report.checks"
-          :key="check.checkId"
+          :key="check.check_id"
           data-testid="check-card-wrapper"
-          :data-check-id="check.checkId"
+          :data-check-id="check.check_id"
           :data-status="check.status"
         >
-          <span>{{ check.checkId }}</span>
+          <span>{{ check.check_id }}</span>
         </div>
         <div
           v-if="report.checks.length === 0"
@@ -113,7 +113,7 @@ const HarnessReportStub = {
 
 function makeCheck(overrides: Partial<CheckResult> = {}): CheckResult {
   return {
-    checkId: 'tests_pass',
+    check_id: 'tests_pass',
     status: 'success',
     message: 'All tests passed.',
     ...overrides,
@@ -122,8 +122,8 @@ function makeCheck(overrides: Partial<CheckResult> = {}): CheckResult {
 
 function makeReport(overrides: Partial<HarnessReport> = {}): HarnessReport {
   const checks: CheckResult[] = overrides.checks ?? [
-    makeCheck({ checkId: 'tests_pass', status: 'success' }),
-    makeCheck({ checkId: 'linter_pass', status: 'failure' }),
+    makeCheck({ check_id: 'tests_pass', status: 'success' }),
+    makeCheck({ check_id: 'linter_pass', status: 'failure' }),
   ];
   const passed = checks.filter((c) => c.status === 'success').length;
   const failed = checks.filter((c) => c.status === 'failure').length;
@@ -237,9 +237,9 @@ describe('HarnessReport — état SUCCESS', () => {
   it('affiche une carte par check', () => {
     const report = makeReport({
       checks: [
-        makeCheck({ checkId: 'tests_pass', status: 'success' }),
-        makeCheck({ checkId: 'linter_pass', status: 'success' }),
-        makeCheck({ checkId: 'readme_present', status: 'success' }),
+        makeCheck({ check_id: 'tests_pass', status: 'success' }),
+        makeCheck({ check_id: 'linter_pass', status: 'success' }),
+        makeCheck({ check_id: 'readme_present', status: 'success' }),
       ],
     });
     const wrapper = mountReport({ report, status: 'SUCCESS' });
@@ -284,8 +284,8 @@ describe('HarnessReport — état FAILURE', () => {
   it('affiche les cartes de checks avec le bon statut', () => {
     const report = makeReport({
       checks: [
-        makeCheck({ checkId: 'tests_pass', status: 'success' }),
-        makeCheck({ checkId: 'linter_pass', status: 'failure' }),
+        makeCheck({ check_id: 'tests_pass', status: 'success' }),
+        makeCheck({ check_id: 'linter_pass', status: 'failure' }),
       ],
     });
     const wrapper = mountReport({ report, status: 'FAILURE' });
