@@ -282,6 +282,19 @@ describe('useModules — markDirty() & isDirty', () => {
     markDirty();
     expect(isDirty.value).toBe(true);
   });
+
+  it('calls preventDefault on beforeunload when isDirty is true', async () => {
+    const cursusId = computed(() => CURSUS_ID);
+    const { useModules } = await import('~/composables/useModules');
+    const { markDirty } = useModules(cursusId);
+    markDirty();
+
+    const event = new Event('beforeunload', { cancelable: true });
+    const spy = vi.spyOn(event, 'preventDefault');
+    window.dispatchEvent(event);
+
+    expect(spy).toHaveBeenCalled();
+  });
 });
 
 describe('useModules — deleteModule() error path', () => {
