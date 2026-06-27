@@ -27,8 +27,18 @@ useSeoMeta({
   robots: 'noindex',
 });
 
-const { cohort, module, progression, allModules, totalModules, isLate, hasSubmitted, isLoading, error, refresh } =
-  useCurrentWeek();
+const {
+  cohort,
+  module,
+  progression,
+  allModules,
+  totalModules,
+  isLate,
+  hasSubmitted,
+  isLoading,
+  error,
+  refresh,
+} = useCurrentWeek();
 
 // Repo URL pour la soumission du livrable (placeholder ST-05.2)
 const repoUrl = ref('');
@@ -163,12 +173,15 @@ function resourceIcon(type: string): string {
         role="alert"
         aria-live="polite"
       >
-        <span class="i-tabler-clock-exclamation size-5 shrink-0 text-danger-fg" aria-hidden="true" />
+        <span
+          class="i-tabler-clock-exclamation size-5 shrink-0 text-danger-fg"
+          aria-hidden="true"
+        />
         <div class="flex-1">
           <p class="text-sm font-medium text-danger-fg">
             {{ t('week.lateWarning.title', { days: Math.abs(module.daysLeft) }) }}
           </p>
-          <p class="text-xs text-danger-fg/80 mt-0.5">
+          <p class="mt-0.5 text-xs text-danger-fg/80">
             {{ t('week.lateWarning.description') }}
           </p>
         </div>
@@ -183,13 +196,19 @@ function resourceIcon(type: string): string {
           <!-- ── Hero : module de la semaine ───────────────────────── -->
           <div v-if="module" class="rounded-xl border border-border-subtle bg-surface p-6">
             <!-- Fil d'Ariane -->
-            <p class="text-xs font-medium text-text-muted uppercase tracking-wide">
+            <p class="text-xs font-medium tracking-wide text-text-muted uppercase">
               {{ t('week.hero.breadcrumb', { cohort: cohort.name }) }}
             </p>
 
             <!-- Titre + numéro de semaine -->
             <h1 class="mt-2 text-2xl font-semibold tracking-tight text-text-strong">
-              {{ t('week.hero.title', { week: module.week, total: totalModules, moduleTitle: module.title }) }}
+              {{
+                t('week.hero.title', {
+                  week: module.week,
+                  total: totalModules,
+                  moduleTitle: module.title,
+                })
+              }}
             </h1>
 
             <!-- Statut + compte à rebours -->
@@ -199,7 +218,7 @@ function resourceIcon(type: string): string {
                 v-if="progression"
                 class="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
                 :class="statusColor(progression.status)"
-                :aria-label="t('week.status.' + progression.status as any)"
+                :aria-label="t(('week.status.' + progression.status) as any)"
               >
                 <span :class="[statusIcon(progression.status), 'size-3']" aria-hidden="true" />
                 {{ t(`week.status.${progression.status}` as any) }}
@@ -212,7 +231,7 @@ function resourceIcon(type: string): string {
             <!-- Objectifs -->
             <div v-if="module.objectives" class="mt-4">
               <p class="text-sm font-medium text-text-default">{{ t('week.hero.objectives') }}</p>
-              <p class="mt-1 text-sm text-text-muted leading-relaxed whitespace-pre-line">
+              <p class="mt-1 text-sm leading-relaxed whitespace-pre-line text-text-muted">
                 {{ module.objectives }}
               </p>
             </div>
@@ -225,10 +244,7 @@ function resourceIcon(type: string): string {
           </div>
 
           <!-- Pas de module en cours (entre cohortes ou tous terminés) -->
-          <div
-            v-else
-            class="rounded-xl border border-border-subtle bg-surface p-6 text-center"
-          >
+          <div v-else class="rounded-xl border border-border-subtle bg-surface p-6 text-center">
             <span class="i-tabler-confetti size-12 text-text-subtle" aria-hidden="true" />
             <h2 class="mt-3 text-lg font-semibold text-text-strong">
               {{ t('week.noModule.title') }}
@@ -245,25 +261,27 @@ function resourceIcon(type: string): string {
               {{ t('week.resources.title') }}
             </h2>
             <ul class="mt-4 space-y-2" :aria-label="t('week.resources.ariaLabel')">
-              <li
-                v-for="resource in module.resources"
-                :key="resource.url"
-              >
+              <li v-for="resource in module.resources" :key="resource.url">
                 <a
                   :href="resource.url"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="flex items-center gap-3 rounded-lg border border-border-subtle bg-subtle p-3 transition-colors hover:bg-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  class="flex items-center gap-3 rounded-lg border border-border-subtle bg-subtle p-3 transition-colors hover:bg-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 >
                   <span
                     :class="[resourceIcon(resource.type), 'size-5 shrink-0 text-accent']"
                     aria-hidden="true"
                   />
                   <div class="min-w-0 flex-1">
-                    <p class="text-sm font-medium text-text-default truncate">{{ resource.title }}</p>
-                    <p class="text-xs text-text-muted truncate">{{ resource.url }}</p>
+                    <p class="truncate text-sm font-medium text-text-default">
+                      {{ resource.title }}
+                    </p>
+                    <p class="truncate text-xs text-text-muted">{{ resource.url }}</p>
                   </div>
-                  <span class="i-tabler-external-link size-4 shrink-0 text-text-subtle" aria-hidden="true" />
+                  <span
+                    class="i-tabler-external-link size-4 shrink-0 text-text-subtle"
+                    aria-hidden="true"
+                  />
                 </a>
               </li>
             </ul>
@@ -275,7 +293,10 @@ function resourceIcon(type: string): string {
               {{ t('week.deliverable.title') }}
             </h2>
 
-            <p v-if="module.deliverable.description" class="mt-2 text-sm text-text-muted leading-relaxed">
+            <p
+              v-if="module.deliverable.description"
+              class="mt-2 text-sm leading-relaxed text-text-muted"
+            >
               {{ module.deliverable.description }}
             </p>
 
@@ -285,7 +306,9 @@ function resourceIcon(type: string): string {
               class="mt-4 flex items-center gap-2 rounded-lg bg-success-bg p-3"
             >
               <span class="i-tabler-circle-check size-5 text-success-fg" aria-hidden="true" />
-              <p class="text-sm font-medium text-success-fg">{{ t('week.deliverable.submitted') }}</p>
+              <p class="text-sm font-medium text-success-fg">
+                {{ t('week.deliverable.submitted') }}
+              </p>
             </div>
 
             <!-- Formulaire de soumission (placeholder ST-05.2) -->
@@ -323,7 +346,7 @@ function resourceIcon(type: string): string {
             class="rounded-xl border border-accent-border bg-accent-subtle p-6"
           >
             <div class="flex items-start gap-4">
-              <span class="i-tabler-help-hexagon size-8 text-accent shrink-0" aria-hidden="true" />
+              <span class="i-tabler-help-hexagon size-8 shrink-0 text-accent" aria-hidden="true" />
               <div class="flex-1">
                 <h2 class="text-base font-semibold text-text-strong">
                   {{ t('week.quiz.title') }}
@@ -354,7 +377,14 @@ function resourceIcon(type: string): string {
               {{ t('week.timeline.title') }}
             </h2>
             <p class="mt-0.5 text-xs text-text-muted">
-              {{ t('week.timeline.subtitle', { done: allModules.filter(m => m.status === 'VALIDE' || m.status === 'VALIDE_OVERRIDE').length, total: totalModules }) }}
+              {{
+                t('week.timeline.subtitle', {
+                  done: allModules.filter(
+                    (m) => m.status === 'VALIDE' || m.status === 'VALIDE_OVERRIDE',
+                  ).length,
+                  total: totalModules,
+                })
+              }}
             </p>
             <div class="mt-4">
               <WeekTimeline

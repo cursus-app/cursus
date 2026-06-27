@@ -91,7 +91,10 @@ function isCurrentModule(module: TimelineModule): boolean {
             :class="dotColorClass(mod.status, isCurrentModule(mod))"
             :aria-label="statusLabel(mod.status)"
           >
-            <span :class="[statusIcon(mod.status), 'size-3 text-text-on-accent']" aria-hidden="true" />
+            <span
+              :class="[statusIcon(mod.status), 'size-3 text-text-on-accent']"
+              aria-hidden="true"
+            />
           </div>
         </div>
 
@@ -100,17 +103,17 @@ function isCurrentModule(module: TimelineModule): boolean {
           class="min-w-0 flex-1 rounded-lg p-3 transition-colors"
           :class="
             isCurrentModule(mod)
-              ? 'bg-accent-subtle border border-accent-border'
+              ? 'border border-accent-border bg-accent-subtle'
               : 'hover:bg-subtle'
           "
         >
           <div class="flex items-start justify-between gap-2">
             <div class="min-w-0">
-              <p class="text-xs font-medium text-text-muted uppercase tracking-wide">
+              <p class="text-xs font-medium tracking-wide text-text-muted uppercase">
                 {{ t('week.timeline.week', { n: mod.week }) }}
               </p>
               <p
-                class="mt-0.5 text-sm font-medium truncate"
+                class="mt-0.5 truncate text-sm font-medium"
                 :class="isCurrentModule(mod) ? 'text-accent-text' : 'text-text-default'"
               >
                 {{ mod.title }}
@@ -118,12 +121,15 @@ function isCurrentModule(module: TimelineModule): boolean {
             </div>
             <!-- Badge de statut textuel pour les lecteurs d'écran et affichage -->
             <span
-              class="shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+              class="inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
               :class="{
-                'bg-success-bg text-success-fg': mod.status === 'VALIDE' || mod.status === 'VALIDE_OVERRIDE',
-                'bg-accent-subtle text-accent-text': mod.status === 'SOUMIS' || mod.status === 'EN_COURS',
+                'bg-success-bg text-success-fg':
+                  mod.status === 'VALIDE' || mod.status === 'VALIDE_OVERRIDE',
+                'bg-accent-subtle text-accent-text':
+                  mod.status === 'SOUMIS' || mod.status === 'EN_COURS',
                 'bg-warning-bg text-warning-fg': mod.status === 'EN_ALERTE',
-                'bg-danger-bg text-danger-fg': mod.status === 'EN_RETARD' || mod.status === 'BLOQUE',
+                'bg-danger-bg text-danger-fg':
+                  mod.status === 'EN_RETARD' || mod.status === 'BLOQUE',
                 'bg-muted text-text-muted': mod.status === 'A_VENIR',
               }"
             >
@@ -136,9 +142,10 @@ function isCurrentModule(module: TimelineModule): boolean {
             v-if="isCurrentModule(mod) || mod.status === 'EN_RETARD'"
             class="mt-1 text-xs text-text-muted"
           >
-            {{ mod.isLate
-              ? t('week.timeline.lateDays', { days: Math.abs(mod.daysLeft) })
-              : t('week.timeline.daysLeft', { days: mod.daysLeft })
+            {{
+              mod.isLate
+                ? t('week.timeline.lateDays', { days: Math.abs(mod.daysLeft) })
+                : t('week.timeline.daysLeft', { days: mod.daysLeft })
             }}
           </p>
         </div>

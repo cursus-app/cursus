@@ -10,7 +10,9 @@ import type { CurrentWeekResponse } from '~/composables/useCurrentWeek';
 
 // ─── Factories ────────────────────────────────────────────────────────────────
 
-function makeModule(overrides: Partial<CurrentWeekResponse['currentModule']> = {}): NonNullable<CurrentWeekResponse['currentModule']> {
+function makeModule(
+  overrides: Partial<CurrentWeekResponse['currentModule']> = {},
+): NonNullable<CurrentWeekResponse['currentModule']> {
   const tomorrow = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString();
   return {
     cohortModuleId: 'cm-1',
@@ -18,9 +20,7 @@ function makeModule(overrides: Partial<CurrentWeekResponse['currentModule']> = {
     week: 3,
     title: 'Introduction à Git',
     objectives: 'Maîtriser les bases de Git',
-    resources: [
-      { url: 'https://example.com/git', title: 'Git Tutorial', type: 'article' },
-    ],
+    resources: [{ url: 'https://example.com/git', title: 'Git Tutorial', type: 'article' }],
     deliverable: {
       description: 'Créer un dépôt GitHub avec 5 commits signés.',
       repoRequired: true,
@@ -263,9 +263,7 @@ describe('useCurrentWeek — hasSubmitted', () => {
   });
 
   it('hasSubmitted = false quand status EN_COURS', async () => {
-    mockFetch.mockResolvedValueOnce(
-      makeResponse({ progression: makeProgression('EN_COURS') }),
-    );
+    mockFetch.mockResolvedValueOnce(makeResponse({ progression: makeProgression('EN_COURS') }));
 
     const { refresh, hasSubmitted } = await buildComposable();
     await refresh();
@@ -274,9 +272,7 @@ describe('useCurrentWeek — hasSubmitted', () => {
   });
 
   it('hasSubmitted = true quand status SOUMIS', async () => {
-    mockFetch.mockResolvedValueOnce(
-      makeResponse({ progression: makeProgression('SOUMIS') }),
-    );
+    mockFetch.mockResolvedValueOnce(makeResponse({ progression: makeProgression('SOUMIS') }));
 
     const { refresh, hasSubmitted } = await buildComposable();
     await refresh();
@@ -285,9 +281,7 @@ describe('useCurrentWeek — hasSubmitted', () => {
   });
 
   it('hasSubmitted = true quand status VALIDE', async () => {
-    mockFetch.mockResolvedValueOnce(
-      makeResponse({ progression: makeProgression('VALIDE') }),
-    );
+    mockFetch.mockResolvedValueOnce(makeResponse({ progression: makeProgression('VALIDE') }));
 
     const { refresh, hasSubmitted } = await buildComposable();
     await refresh();

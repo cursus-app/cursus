@@ -35,7 +35,7 @@ test.describe('Page /cette-semaine — stagiaire authentifié (ST-05.1)', () => 
     await page.goto('/cette-semaine');
 
     // Soit un module est affiché, soit un état vide
-    const hasModule = await page.locator('h1').count() > 0;
+    const hasModule = (await page.locator('h1').count()) > 0;
     const hasNoCohort = await page
       .getByText(/aucune cohorte active|no active cohort/i)
       .isVisible()
