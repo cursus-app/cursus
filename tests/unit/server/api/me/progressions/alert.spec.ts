@@ -107,8 +107,7 @@ function makeEvent() {
   return { node: { req: {}, res: {} } };
 }
 
-const importHandler = () =>
-  import('~~/server/api/me/progressions/[progressionId]/alert.post');
+const importHandler = () => import('~~/server/api/me/progressions/[progressionId]/alert.post');
 
 // ─── Tests — Auth ─────────────────────────────────────────────────────────────
 

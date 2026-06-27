@@ -47,7 +47,9 @@ const toastVariant = ref<'success' | 'danger'>('success');
 // Désactivé 24h après un envoi réussi (stocké en localStorage)
 const sentAt = useLocalStorage<number | null>(`blocked-sent:${props.progressionId}`, null);
 const isAlreadySent = computed(() => {
-  if (sentAt.value === null) {return false;}
+  if (sentAt.value === null) {
+    return false;
+  }
   return Date.now() - sentAt.value < 24 * 60 * 60 * 1_000;
 });
 
@@ -80,12 +82,13 @@ const charCountLabel = computed(() => {
 const openButtonRef = ref<HTMLButtonElement | null>(null);
 const modalRef = ref<HTMLDivElement | null>(null);
 const firstFocusableRef = ref<HTMLTextAreaElement | null>(null);
-const cancelButtonRef = ref<HTMLButtonElement | null>(null);
 
 // ─── Modal open / close ───────────────────────────────────────────────────────
 
 function openModal() {
-  if (isButtonDisabled.value) {return;}
+  if (isButtonDisabled.value) {
+    return;
+  }
   message.value = '';
   isOpen.value = true;
   nextTick(() => {
@@ -109,10 +112,14 @@ function handleKeydown(event: KeyboardEvent) {
     return;
   }
 
-  if (event.key !== 'Tab') {return;}
+  if (event.key !== 'Tab') {
+    return;
+  }
 
   const modal = modalRef.value;
-  if (!modal) {return;}
+  if (!modal) {
+    return;
+  }
 
   const focusable = modal.querySelectorAll<HTMLElement>(
     'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
@@ -136,7 +143,9 @@ function handleKeydown(event: KeyboardEvent) {
 // ─── Soumission ───────────────────────────────────────────────────────────────
 
 async function submit() {
-  if (!isValid.value || isSubmitting.value) {return;}
+  if (!isValid.value || isSubmitting.value) {
+    return;
+  }
 
   isSubmitting.value = true;
   toastMessage.value = null;
@@ -194,9 +203,7 @@ watch(toastMessage, (val) => {
       color="warning"
       variant="soft"
       :disabled="isButtonDisabled"
-      :aria-label="
-        isAlreadySent ? t('blocked.button.alreadySentLabel') : t('blocked.button.label')
-      "
+      :aria-label="isAlreadySent ? t('blocked.button.alreadySentLabel') : t('blocked.button.label')"
       class="min-h-[44px]"
       @click="openModal"
     >
@@ -211,7 +218,7 @@ watch(toastMessage, (val) => {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      class="fixed bottom-6 right-6 z-[60] max-w-sm"
+      class="fixed right-6 bottom-6 z-[60] max-w-sm"
     >
       <Transition
         enter-active-class="transition duration-200 ease-out"
@@ -248,11 +255,7 @@ watch(toastMessage, (val) => {
           @keydown="handleKeydown"
         >
           <!-- Backdrop -->
-          <div
-            class="absolute inset-0 bg-black/50"
-            aria-hidden="true"
-            @click="closeModal"
-          />
+          <div class="absolute inset-0 bg-black/50" aria-hidden="true" @click="closeModal" />
 
           <!-- Panel -->
           <div
@@ -260,21 +263,15 @@ watch(toastMessage, (val) => {
             role="dialog"
             aria-labelledby="blocked-modal-title"
             aria-describedby="blocked-modal-desc"
-            class="relative z-10 w-full max-w-md rounded-2xl bg-surface p-6 shadow-2xl border border-border-subtle"
+            class="relative z-10 w-full max-w-md rounded-2xl border border-border-subtle bg-surface p-6 shadow-2xl"
           >
             <!-- En-tête -->
             <div class="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2
-                  id="blocked-modal-title"
-                  class="text-lg font-semibold text-text-strong"
-                >
+                <h2 id="blocked-modal-title" class="text-lg font-semibold text-text-strong">
                   {{ t('blocked.modal.title') }}
                 </h2>
-                <p
-                  id="blocked-modal-desc"
-                  class="mt-1 text-sm text-text-muted"
-                >
+                <p id="blocked-modal-desc" class="mt-1 text-sm text-text-muted">
                   {{ t('blocked.modal.subtitle', { module: props.moduleTitle }) }}
                 </p>
               </div>
@@ -289,7 +286,7 @@ watch(toastMessage, (val) => {
             </div>
 
             <!-- Textarea -->
-            <label for="blocked-message" class="block text-sm font-medium text-text-default mb-1">
+            <label for="blocked-message" class="mb-1 block text-sm font-medium text-text-default">
               {{ t('blocked.modal.label') }}
             </label>
             <textarea
@@ -300,7 +297,7 @@ watch(toastMessage, (val) => {
               :maxlength="MAX_LENGTH + 50"
               :aria-describedby="`blocked-char-count ${!isValid && message.length > 0 ? 'blocked-error' : ''}`"
               :aria-invalid="message.length > 0 && !isValid"
-              class="mt-1 w-full rounded-lg border border-border-subtle bg-app px-3 py-2 text-sm text-text-default placeholder:text-text-subtle focus:outline-none focus:ring-2 focus:ring-ring resize-none transition"
+              class="mt-1 w-full resize-none rounded-lg border border-border-subtle bg-app px-3 py-2 text-sm text-text-default transition placeholder:text-text-subtle focus:ring-2 focus:ring-ring focus:outline-none"
               rows="4"
             />
 
@@ -321,8 +318,8 @@ watch(toastMessage, (val) => {
                 aria-live="polite"
                 aria-atomic="true"
                 :class="[
-                  'text-xs shrink-0',
-                  isOverMax ? 'text-danger-fg font-medium' : 'text-text-subtle',
+                  'shrink-0 text-xs',
+                  isOverMax ? 'font-medium text-danger-fg' : 'text-text-subtle',
                 ]"
               >
                 {{ charCountLabel }}
@@ -332,7 +329,6 @@ watch(toastMessage, (val) => {
             <!-- Actions -->
             <div class="mt-6 flex justify-end gap-3">
               <UButton
-                ref="cancelButtonRef"
                 color="neutral"
                 variant="ghost"
                 :label="t('common.cancel')"

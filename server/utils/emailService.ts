@@ -610,10 +610,7 @@ export async function sendBlockedAlertEmail(
     from: getFrom(),
     to,
     subject: `${stagiaireName} est bloqué sur "${moduleTitle}"`,
-    html: wrapHtml(
-      content,
-      `${safeStagiaireName} a besoin d'aide sur ${safeModuleTitle}`,
-    ),
+    html: wrapHtml(content, `${safeStagiaireName} a besoin d'aide sur ${safeModuleTitle}`),
     text: plainText(content),
   });
 }

@@ -100,10 +100,7 @@ export default defineEventHandler(async (event) => {
 
   // ── Autorisation : uniquement le propriétaire ──────────────────────────────
   if (progression.userId !== dbUser.id) {
-    logger.warn(
-      { progressionId, userIdHash: hashId(dbUser.id) },
-      'blocked.alert.forbidden',
-    );
+    logger.warn({ progressionId, userIdHash: hashId(dbUser.id) }, 'blocked.alert.forbidden');
     throw createError({ statusCode: 403, message: 'blocked.errors.forbidden' });
   }
 
