@@ -105,10 +105,14 @@ export function useAlerts() {
    */
   async function resolve(id: string) {
     const index = alerts.value.findIndex((a) => a.id === id);
-    if (index === -1) {return;}
+    if (index === -1) {
+      return;
+    }
 
     const prev = alerts.value[index];
-    if (!prev || prev.resolvedAt !== null) {return;}
+    if (!prev || prev.resolvedAt !== null) {
+      return;
+    }
 
     // Optimistic update
     const now = new Date().toISOString();
@@ -137,10 +141,7 @@ export function useAlerts() {
   /**
    * Modifie un filtre et réinitialise la page à 1.
    */
-  function setFilter<K extends keyof Omit<AlertFilters, 'page'>>(
-    key: K,
-    value: AlertFilters[K],
-  ) {
+  function setFilter<K extends keyof Omit<AlertFilters, 'page'>>(key: K, value: AlertFilters[K]) {
     filters[key] = value;
     filters.page = 1;
   }

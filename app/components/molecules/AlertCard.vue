@@ -78,9 +78,15 @@ const isResolved = computed(() => props.resolvedAt !== null);
 
 /** Extrait lisible du contexte JSON. */
 const contextSnippet = computed<string>(() => {
-  if (!props.context) {return '';}
-  if (typeof props.context['message'] === 'string') {return props.context['message'];}
-  if (typeof props.context['reason'] === 'string') {return props.context['reason'];}
+  if (!props.context) {
+    return '';
+  }
+  if (typeof props.context['message'] === 'string') {
+    return props.context['message'];
+  }
+  if (typeof props.context['reason'] === 'string') {
+    return props.context['reason'];
+  }
   return '';
 });
 
@@ -88,11 +94,17 @@ const contextSnippet = computed<string>(() => {
 function relativeTime(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
   const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) {return t('alerts.time.justNow');}
+  if (seconds < 60) {
+    return t('alerts.time.justNow');
+  }
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {return t('alerts.time.minutesAgo', { n: minutes });}
+  if (minutes < 60) {
+    return t('alerts.time.minutesAgo', { n: minutes });
+  }
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) {return t('alerts.time.hoursAgo', { n: hours });}
+  if (hours < 24) {
+    return t('alerts.time.hoursAgo', { n: hours });
+  }
   const days = Math.floor(hours / 24);
   return t('alerts.time.daysAgo', { n: days });
 }
@@ -117,7 +129,9 @@ const traineeInitials = computed(() => {
       severityBorderClass,
       isResolved ? 'opacity-60' : '',
     ]"
-    :aria-label="t('alerts.card.ariaLabel', { name: traineeName, kind: t(`alerts.kinds.${props.kind}`) })"
+    :aria-label="
+      t('alerts.card.ariaLabel', { name: traineeName, kind: t(`alerts.kinds.${props.kind}`) })
+    "
     role="article"
     tabindex="0"
     @click="emit('click', props.id)"
@@ -126,17 +140,13 @@ const traineeInitials = computed(() => {
   >
     <!-- En-tête -->
     <div class="flex items-start justify-between gap-2">
-      <div class="flex items-center gap-3 min-w-0">
+      <div class="flex min-w-0 items-center gap-3">
         <!-- Avatar / initiales -->
         <div
           v-if="props.user.avatarUrl"
           class="size-8 shrink-0 overflow-hidden rounded-full border border-border-subtle"
         >
-          <img
-            :src="props.user.avatarUrl"
-            :alt="traineeName"
-            class="size-full object-cover"
-          >
+          <img :src="props.user.avatarUrl" :alt="traineeName" class="size-full object-cover" />
         </div>
         <div
           v-else
@@ -172,7 +182,11 @@ const traineeInitials = computed(() => {
       <div v-if="isResolved" class="flex items-center gap-1 text-xs text-text-subtle">
         <UIcon name="i-tabler-check" class="size-3 text-success-fg" />
         <span v-if="props.resolvedById">
-          {{ t('alerts.resolvedBy', { name: props.resolvedBy?.fullName ?? t('alerts.resolvedBySystem') }) }}
+          {{
+            t('alerts.resolvedBy', {
+              name: props.resolvedBy?.fullName ?? t('alerts.resolvedBySystem'),
+            })
+          }}
         </span>
         <span v-else>{{ t('alerts.autoResolved') }}</span>
       </div>

@@ -196,10 +196,7 @@ export default defineEventHandler(async (event) => {
     }),
   ]);
 
-  logger.info(
-    { uid: hashId(dbUser.id), total, page, kind, status },
-    'alerts.list',
-  );
+  logger.info({ uid: hashId(dbUser.id), total, page, kind, status }, 'alerts.list');
 
   return {
     data: alerts,

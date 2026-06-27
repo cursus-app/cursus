@@ -81,7 +81,7 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('retourne 404 si l\'alerte est introuvable', async () => {
+  it("retourne 404 si l'alerte est introuvable", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);
     mockPrismaAlert.findUnique.mockResolvedValue(null);
@@ -90,7 +90,7 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 404 });
   });
 
-  it('retourne 409 si l\'alerte est déjà résolue', async () => {
+  it("retourne 409 si l'alerte est déjà résolue", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);
     mockPrismaAlert.findUnique.mockResolvedValue(mockAlertAlreadyResolved);
@@ -99,7 +99,7 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 409 });
   });
 
-  it('retourne 403 si le stagiaire n\'est pas dans une cohorte du formateur (RLS)', async () => {
+  it("retourne 403 si le stagiaire n'est pas dans une cohorte du formateur (RLS)", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);
     mockPrismaAlert.findUnique.mockResolvedValue({
@@ -108,9 +108,7 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     });
 
     // Cohortes du formateur
-    mockPrismaMembership.findMany.mockResolvedValue([
-      { cohorteId: COHORTE_ID },
-    ]);
+    mockPrismaMembership.findMany.mockResolvedValue([{ cohorteId: COHORTE_ID }]);
 
     // Pas de membership du stagiaire dans ces cohortes
     mockPrismaMembership.findFirst.mockResolvedValue(null);
@@ -119,15 +117,13 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     await expect(() => handler({})).rejects.toMatchObject({ statusCode: 403 });
   });
 
-  it('résout l\'alerte et retourne les données mises à jour', async () => {
+  it("résout l'alerte et retourne les données mises à jour", async () => {
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);
     mockPrismaAlert.findUnique.mockResolvedValue(mockAlert);
 
     // Cohortes du formateur
-    mockPrismaMembership.findMany.mockResolvedValue([
-      { cohorteId: COHORTE_ID },
-    ]);
+    mockPrismaMembership.findMany.mockResolvedValue([{ cohorteId: COHORTE_ID }]);
 
     // Le stagiaire est dans la cohorte du formateur
     mockPrismaMembership.findFirst.mockResolvedValue({
@@ -161,7 +157,7 @@ describe('PATCH /api/alerts/:id/resolve', () => {
     expect(updateCall?.data?.resolvedAt).toBeInstanceOf(Date);
   });
 
-  it('retourne 400 si l\'id est manquant', async () => {
+  it("retourne 400 si l'id est manquant", async () => {
     mockGetRouterParam.mockReturnValue(undefined);
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);

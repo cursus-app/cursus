@@ -120,9 +120,7 @@ describe('GET /api/me/alerts', () => {
     ]);
 
     // Stagiaires dans la cohorte
-    mockPrismaMembership.findMany.mockResolvedValueOnce([
-      { userId: STAGIAIRE_ID },
-    ]);
+    mockPrismaMembership.findMany.mockResolvedValueOnce([{ userId: STAGIAIRE_ID }]);
 
     // Alertes
     mockPrismaAlert.count.mockResolvedValue(1);
@@ -137,7 +135,10 @@ describe('GET /api/me/alerts', () => {
   });
 
   it('filtre par kind si spécifié', async () => {
-    vi.stubGlobal('getQuery', vi.fn().mockReturnValue({ kind: 'STAGIAIRE_BLOCKED', status: 'open' }));
+    vi.stubGlobal(
+      'getQuery',
+      vi.fn().mockReturnValue({ kind: 'STAGIAIRE_BLOCKED', status: 'open' }),
+    );
     mockServerSupabaseUser.mockResolvedValue({ id: FORMATEUR_ID });
     mockPrismaUser.findUnique.mockResolvedValue(mockFormateur);
 
