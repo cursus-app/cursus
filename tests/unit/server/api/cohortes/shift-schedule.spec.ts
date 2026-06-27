@@ -209,8 +209,7 @@ describe('addDays utility (via preview mode)', () => {
 
     // Both items should have exactly 3 days added
     for (const item of result.items) {
-      const diff =
-        new Date(item.newDueDate).getTime() - new Date(item.currentDueDate).getTime();
+      const diff = new Date(item.newDueDate).getTime() - new Date(item.currentDueDate).getTime();
       expect(diff).toBe(3 * 24 * 60 * 60 * 1000);
     }
   });

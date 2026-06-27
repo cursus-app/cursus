@@ -249,12 +249,7 @@ function formatDate(dateStr: string | Date): string {
               {{ t('cohortes.schedule.warningBackward') }}
             </p>
             <div class="mt-2 flex items-center gap-2">
-              <input
-                id="shift-confirm"
-                v-model="confirmed"
-                type="checkbox"
-                class="accent-accent"
-              >
+              <input id="shift-confirm" v-model="confirmed" type="checkbox" class="accent-accent" />
               <label for="shift-confirm" class="cursor-pointer text-sm text-text-default">
                 {{ t('cohortes.schedule.confirmWarning') }}
               </label>
@@ -278,7 +273,9 @@ function formatDate(dateStr: string | Date): string {
           <div v-else class="max-h-56 overflow-y-auto rounded-lg border border-border-subtle">
             <table class="w-full text-sm" role="table">
               <caption class="sr-only">
-                {{ t('cohortes.schedule.previewTitle') }}
+                {{
+                  t('cohortes.schedule.previewTitle')
+                }}
               </caption>
               <thead class="sticky top-0 bg-muted">
                 <tr>

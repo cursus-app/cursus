@@ -127,9 +127,7 @@ export default defineEventHandler(async (event) => {
   });
 
   // Construire la liste des stagiaires à notifier
-  const stagiaires = cohorte.memberships
-    .filter((m) => m.role === 'STAGIAIRE')
-    .map((m) => m.userId);
+  const stagiaires = cohorte.memberships.filter((m) => m.role === 'STAGIAIRE').map((m) => m.userId);
 
   // Appliquer le décalage en transaction atomique
   const result = await prisma.$transaction(async (tx) => {
@@ -151,9 +149,7 @@ export default defineEventHandler(async (event) => {
 
     // 3. Créer des notifications pour chaque stagiaire
     const notificationTitle =
-      days > 0
-        ? `Planning décalé de +${days} jours`
-        : `Planning avancé de ${Math.abs(days)} jours`;
+      days > 0 ? `Planning décalé de +${days} jours` : `Planning avancé de ${Math.abs(days)} jours`;
     const notificationBody =
       reason != null && reason.length > 0
         ? `La cohorte "${cohorte.name}" a eu son planning ajusté. Raison : ${reason}`
