@@ -1,0 +1,164 @@
+# Cursus Harness — Workflow GitHub Actions (PoC ST-01.6)
+#
+# Ce fichier est déployé sur le repo cursus-harness-runner.
+# Il est déclenché via workflow_dispatch par le serveur Cursus.
+#
+# Inputs :
+#   - submission_id  : identifiant unique de la soumission Cursus
+#   - repo_url       : URL du repo étudiant à vérifier
+#   - deploy_url     : URL de déploiement (optionnel)
+#   - criteria_json  : JSON encodé des critères à vérifier
+#
+# Output :
+#   - Poste le rapport JSON via le webhook CURSUS_WEBHOOK_URL
+
+name: Cursus Harness Runner
+
+on:
+  workflow_dispatch:
+    inputs:
+      submission_id:
+        description: 'Cursus submission ID'
+        required: true
+      repo_url:
+        description: 'Student repo URL (https://github.com/org/repo)'
+        required: true
+      deploy_url:
+        description: 'Deployment URL to check (optional)'
+        required: false
+        default: ''
+      criteria_json:
+        description: 'JSON criteria object'
+        required: true
+        default: '{}'
+
+env:
+  SUBMISSION_ID: ${{ inputs.submission_id }}
+  REPO_URL: ${{ inputs.repo_url }}
+  DEPLOY_URL: ${{ inputs.deploy_url }}
+  CRITERIA_JSON: ${{ inputs.criteria_json }}
+
+jobs:
+  harness:
+    name: harness
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      # ── Setup ────────────────────────────────────────────────────────────────
+
+      - name: Checkout harness-runner
+        uses: actions/checkout@v4
+
+      - name: Parse inputs
+        id: parse
+        run: |
+          echo "repo_owner=$(echo "$REPO_URL" | sed 's|https://github.com/||' | cut -d'/' -f1)" >> "$GITHUB_OUTPUT"
+          echo "repo_name=$(echo "$REPO_URL" | sed 's|https://github.com/||' | cut -d'/' -f2)" >> "$GITHUB_OUTPUT"
+
+      # ── Check 1 : repo_exists ────────────────────────────────────────────────
+
+      - name: check — repo_exists
+        id: repo_exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          STATUS=$(gh api "repos/${{ steps.parse.outputs.repo_owner }}/${{ steps.parse.outputs.repo_name }}" \
+            --silent --jq '.full_name' 2>/dev/null && echo "ok" || echo "fail")
+          echo "result=$STATUS" >> "$GITHUB_OUTPUT"
+          if [ "$STATUS" = "fail" ]; then
+            echo "::error::repo_exists — Repo ${REPO_URL} introuvable ou privé."
+            exit 1
+          fi
+          echo "✅ repo_exists OK"
+
+      # ── Check 2 : branch_exists ──────────────────────────────────────────────
+
+      - name: check — branch_exists
+        id: branch_exists
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_BRANCH: ${{ fromJson(env.CRITERIA_JSON).branch_exists || 'main' }}
+        run: |
+          STATUS=$(gh api \
+            "repos/${{ steps.parse.outputs.repo_owner }}/${{ steps.parse.outputs.repo_name }}/branches/${TARGET_BRANCH}" \
+            --silent --jq '.name' 2>/dev/null && echo "ok" || echo "fail")
+          echo "result=$STATUS" >> "$GITHUB_OUTPUT"
+          if [ "$STATUS" = "fail" ]; then
+            echo "::error::branch_exists — Branche '${TARGET_BRANCH}' introuvable."
+            exit 1
+          fi
+          echo "✅ branch_exists (${TARGET_BRANCH}) OK"
+
+      # ── Check 3 : file_exists ────────────────────────────────────────────────
+
+      - name: check — file_exists
+        id: file_exists
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_FILE: ${{ fromJson(env.CRITERIA_JSON).file_exists || 'README.md' }}
+          TARGET_BRANCH: ${{ fromJson(env.CRITERIA_JSON).branch_exists || 'main' }}
+        run: |
+          STATUS=$(gh api \
+            "repos/${{ steps.parse.outputs.repo_owner }}/${{ steps.parse.outputs.repo_name }}/contents/${TARGET_FILE}?ref=${TARGET_BRANCH}" \
+            --silent --jq '.name' 2>/dev/null && echo "ok" || echo "fail")
+          echo "result=$STATUS" >> "$GITHUB_OUTPUT"
+          if [ "$STATUS" = "fail" ]; then
+            echo "::error::file_exists — Fichier '${TARGET_FILE}' introuvable dans la branche '${TARGET_BRANCH}'."
+            exit 1
+          fi
+          echo "✅ file_exists (${TARGET_FILE}) OK"
+
+      # ── Rapport final ────────────────────────────────────────────────────────
+
+      - name: Build & post report
+        if: always()
+        env:
+          WEBHOOK_URL: ${{ secrets.CURSUS_WEBHOOK_URL }}
+          WEBHOOK_SECRET: ${{ secrets.CURSUS_WEBHOOK_SECRET }}
+          REPO_EXISTS: ${{ steps.repo_exists.outputs.result || 'skipped' }}
+          BRANCH_EXISTS: ${{ steps.branch_exists.outputs.result || 'skipped' }}
+          FILE_EXISTS: ${{ steps.file_exists.outputs.result || 'skipped' }}
+          OVERALL: ${{ job.status }}
+        run: |
+          REPORT=$(jq -n \
+            --arg submission_id "$SUBMISSION_ID" \
+            --arg status "$OVERALL" \
+            --arg repo_exists "$REPO_EXISTS" \
+            --arg branch_exists "$BRANCH_EXISTS" \
+            --arg file_exists "$FILE_EXISTS" \
+            --arg run_id "$GITHUB_RUN_ID" \
+            --arg run_url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            '{
+              submission_id: $submission_id,
+              status: (if $status == "success" then "validated" else "failed" end),
+              github_run_id: $run_id,
+              github_run_url: $run_url,
+              checks: {
+                repo_exists:    { result: $repo_exists },
+                branch_exists:  { result: $branch_exists },
+                file_exists:    { result: $file_exists }
+              }
+            }')
+
+          echo "Report: $REPORT"
+
+          # HMAC-SHA256 signature du payload
+          SIG=$(echo -n "$REPORT" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | awk '{print $2}')
+
+          # POST webhook avec retry (3 essais)
+          for i in 1 2 3; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+              -X POST "$WEBHOOK_URL" \
+              -H "Content-Type: application/json" \
+              -H "X-Cursus-Signature: sha256=${SIG}" \
+              -d "$REPORT")
+            if [[ "$HTTP_CODE" =~ ^2 ]]; then
+              echo "✅ Webhook posté (HTTP $HTTP_CODE)"
+              break
+            fi
+            echo "⚠️  Webhook tentative $i échouée (HTTP $HTTP_CODE) — retry..."
+            sleep $((i * 5))
+          done

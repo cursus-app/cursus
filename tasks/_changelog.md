@@ -22,3 +22,6 @@
 ---
 
 <!-- Les événements apparaîtront ci-dessous, plus récent en bas -->
+
+[2026-06-30T16:00:00Z] STARTED ST-01.6 — Spike PoC harnais GitHub Actions
+[2026-06-30T16:15:00Z] REVIEW ST-01.6 — PR #83 ouverte (feat/ST-01.6-spike-poc-harness)

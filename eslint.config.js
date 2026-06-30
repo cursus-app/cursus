@@ -26,6 +26,11 @@ export default withNuxt({
     curly: ['error', 'all'],
     'vue/multi-word-component-names': 'off',
     'vue/no-v-html': 'warn',
+    // Align with Prettier: void elements use self-closing />
+    'vue/html-self-closing': [
+      'warn',
+      { html: { void: 'always', normal: 'always', component: 'always' } },
+    ],
     'vue/component-name-in-template-casing': ['error', 'PascalCase'],
     'vue/define-macros-order': [
       'error',
@@ -56,4 +61,8 @@ export default withNuxt({
   // eslint.config.js qui importe .nuxt/eslint.config.mjs (non généré → crash).
   .append({
     ignores: ['.claude/worktrees/**'],
+  })
+  // Spike code (spikes/) = scripts jetables JS pur, pas soumis aux règles app.
+  .append({
+    ignores: ['spikes/**'],
   });
