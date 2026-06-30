@@ -255,7 +255,7 @@ function backToCredentials() {
               class="w-full rounded-md border border-border-default bg-surface px-3 py-2 text-center font-mono text-lg tracking-[0.5em] text-text-strong placeholder:text-text-subtle focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               aria-required="true"
               autofocus
-            >
+            />
           </div>
 
           <UButton
