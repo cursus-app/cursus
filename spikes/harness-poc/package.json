@@ -1,0 +1,15 @@
+{
+  "name": "cursus-harness-poc",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Spike PoC — validation faisabilité harnais GitHub Actions (ST-01.6)",
+  "type": "module",
+  "scripts": {
+    "start": "node trigger.js",
+    "bench": "node bench.js",
+    "webhook-server": "node webhook-server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

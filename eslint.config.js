@@ -56,4 +56,8 @@ export default withNuxt({
   // eslint.config.js qui importe .nuxt/eslint.config.mjs (non généré → crash).
   .append({
     ignores: ['.claude/worktrees/**'],
+  })
+  // Spike code (spikes/) = scripts jetables JS pur, pas soumis aux règles app.
+  .append({
+    ignores: ['spikes/**'],
   });
