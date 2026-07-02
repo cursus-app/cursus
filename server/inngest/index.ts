@@ -1,6 +1,7 @@
 export { alertHarnessLatency } from './alerts/harness-latency';
 export { alertAuthFailure } from './alerts/auth-failure';
 export { archiveCompletedCohortes } from './archiveCompletedCohortes';
+export { auditRetentionFunction } from './audit-retention';
 export { checkBrokenLinksFunction } from './check-broken-links';
 export { detectProgressionAlerts } from './detectProgressionAlerts';
 export { triggerGithubHarness } from './triggerGithubHarness';

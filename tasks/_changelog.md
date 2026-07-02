@@ -26,3 +26,4 @@
 [2026-06-30T16:00:00Z] STARTED ST-01.6 — Spike PoC harnais GitHub Actions
 [2026-06-30T16:15:00Z] REVIEW ST-01.6 — PR #83 ouverte (feat/ST-01.6-spike-poc-harness)
 [2026-06-30T20:30:00Z] DONE ST-01.6 — Spike PoC harnais GitHub Actions (PR #83 mergée)
+[2026-07-02T13:37:27Z] REVIEW ST-07.1 — PR #86 ouverte — quiz builder CRUD + QuizEditor
