@@ -11,10 +11,12 @@
  *
  * Cf. ST-06.1 — TT-06.1.6.
  */
+import * as Sentry from '@sentry/nuxt';
 import { NonRetriableError } from 'inngest';
 import { inngest } from '~~/server/inngest/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
+import { sendSlackAlert } from '~~/server/utils/alerts';
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const HARNESS_ORG = process.env['GITHUB_HARNESS_ORG'] ?? 'cursus-dev';
@@ -231,6 +233,21 @@ export const triggerGithubHarness = inngest.createFunction(
           { harnessRunId, submissionId: data.submissionId },
           'harness.dlq.marked_timeout',
         );
+
+        // Alertes critiques : Sentry + Slack
+        Sentry.captureException(error, {
+          level: 'fatal',
+          tags: { component: 'harness-trigger', event: 'dlq_exhausted' },
+          extra: { harnessRunId, submissionId: data.submissionId },
+        });
+        await sendSlackAlert({
+          name: 'Harnais: DLQ — retries épuisées',
+          severity: 'critical',
+          message: `Le job harness pour la soumission ${data.submissionId} a épuisé toutes ses tentatives.\nErreur : ${error.message}`,
+          currentValue: 'TIMEOUT',
+          threshold: 'SUCCESS',
+          runbookUrl: 'https://github.com/cursus-app/cursus/blob/main/docs/runbooks/harness-dlq.md',
+        });
       } catch (dbError) {
         logger.error({ harnessRunId, dbError }, 'harness.dlq.update_failed');
       }
