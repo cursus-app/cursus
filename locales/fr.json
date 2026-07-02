@@ -1360,5 +1360,10 @@
     "monthlyProgress": "Objectif mensuel",
     "monthlyProgressAriaLabel": "Progression XP mensuelle : {progress}% de l'objectif {objective} XP",
     "objectiveMet": "Objectif mensuel atteint !"
+  },
+  "badge": {
+    "unlocked": "Badge débloqué : {name}",
+    "unlockedLabel": "Badge débloqué : {name}",
+    "lockedLabel": "Badge verrouillé : {name}"
   }
 }
