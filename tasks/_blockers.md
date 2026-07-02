@@ -77,3 +77,21 @@
 **Priorité** : basse — à planifier quand le harnais sera utilisé en prod ou qu'un nouveau check sera ajouté.
 
 **Statut** : 💡 Improvement (non bloquant)
+
+## [2026-07-02 12:10] PR-84 — Chromatic UI Tests pending (baseline acceptance)
+
+**Contexte** : PR #84 (ST-06.6 Queue Inngest) a toutes ses vérifications CI vertes (lint, typecheck, tests, E2E, build, Lighthouse, security, Chromatic visual regression) sauf "UI Tests" qui est en statut pending : "78 changes must be accepted as baselines" dans le dashboard Chromatic.
+
+**Ce que j'ai essayé** :
+
+- Vérification que ce sont des nouveaux composants (storybook build #18), pas des régressions
+- Tous les autres checks CI sont verts
+
+**Hypothèses** :
+
+- Les 78 changements sont de nouveaux baselines (1ère exécution Chromatic pour ces stories), pas des régressions visuelles — Chromatic attend validation humaine
+- Résolution : aller sur https://www.chromatic.com/build?appId=6a3f4a5c6071560d89b74a83&number=18 et accepter les baselines
+
+**Décision nécessaire** : Mohamed doit accepter les 78 baselines dans le dashboard Chromatic pour débloquer le merge de PR #84
+
+**Impact** : ST-06.6 reste en statut "review" jusqu'au merge
