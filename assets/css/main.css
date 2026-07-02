@@ -175,6 +175,7 @@
   --text-muted: var(--color-neutral-500); /* secondaire */
   --text-subtle: var(--color-neutral-400); /* placeholders, hints */
   --text-on-accent: var(--color-neutral-0);
+  --text-on-warning-solid: var(--color-neutral-0);
 
   /* Accent / primary */
   --accent: var(--color-indigo-600);
@@ -234,6 +235,7 @@
   --text-muted: oklch(0.66 0.009 268);
   --text-subtle: oklch(0.5 0.009 268);
   --text-on-accent: var(--color-neutral-0);
+  --text-on-warning-solid: var(--color-neutral-0);
 
   /* En dark, l'accent éclaircit pour garder le contraste AA sur fond sombre */
   --accent: var(--color-indigo-500);
@@ -288,6 +290,7 @@
   --color-text-muted: var(--text-muted);
   --color-text-subtle: var(--text-subtle);
   --color-text-on-accent: var(--text-on-accent);
+  --color-text-on-warning-solid: var(--text-on-warning-solid);
 
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
