@@ -147,6 +147,20 @@
   --duration-fast: 200ms;
   --duration-base: 300ms;
   --duration-slow: 500ms;
+
+  /* Animation card-flip — badge débloqué (ST-11.2) */
+  --animate-card-flip: card-flip 700ms var(--ease-out) both;
+}
+
+@keyframes card-flip {
+  from {
+    transform: rotateY(-90deg) scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+  }
 }
 
 /* ----------------------------------------------------------------------------

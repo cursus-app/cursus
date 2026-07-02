@@ -402,6 +402,10 @@ model UserBadge {
   badgeId       String   @map("badge_id") @db.Uuid
   awardedAt     DateTime @default(now()) @map("awarded_at")
   awardedByRule String?  @map("awarded_by_rule")
+  // ST-11.2 — Attribution manuelle : formateur userId (null = automatique via règle)
+  grantedBy     String?  @map("granted_by") @db.Uuid
+  // ST-11.2 — Mention optionnelle écrite par le formateur lors d'un attribution manuelle
+  mention       String?  @db.Text
 
   user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
