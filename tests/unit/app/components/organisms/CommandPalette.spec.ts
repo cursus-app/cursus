@@ -26,6 +26,7 @@ const mockClose = vi.fn();
 const mockToggle = vi.fn();
 const mockTrack = vi.fn();
 const mockReducedMotionRef = ref(false);
+const mockUserRef = ref<{ id: string } | null>(null);
 
 // ─── Nuxt auto-import mocks ───────────────────────────────────────────────────
 
@@ -48,6 +49,10 @@ mockNuxtImport('useAnalytics', () => () => ({
 
 mockNuxtImport('useRoute', () => () => ({
   path: '/test',
+}));
+
+mockNuxtImport('useAuth', () => () => ({
+  user: mockUserRef,
 }));
 
 // defineShortcuts est un auto-import @nuxt/ui enregistré via #imports
@@ -137,8 +142,9 @@ describe('CommandPalette — rendu de base', () => {
   it('passes title prop to UModal for aria-labelledby (VisuallyHidden via Reka UI)', () => {
     const wrapper = mountComponent();
     const modal = wrapper.find('[data-testid="u-modal"]');
-    // Le title prop est passé via le stub — UModal le passe à DialogTitle → aria-labelledby
-    expect(modal.exists()).toBe(true);
+    // Le stub expose data-title pour vérifier que UModal reçoit bien le prop title
+    // (UModal le passe à DialogTitle → aria-labelledby via Reka UI)
+    expect(modal.attributes('data-title')).toBe('commandPalette.ariaLabel');
   });
 
   it('renders the empty state slot content inside UCommandPalette', () => {
@@ -306,16 +312,29 @@ describe('CommandPalette — analytics (watch isOpen)', () => {
   beforeEach(() => {
     mockIsOpenRef.value = false;
     mockReducedMotionRef.value = false;
+    mockUserRef.value = null;
   });
 
-  it('tracks cmdk_opened once on first open', async () => {
+  it('tracks cmdk_opened once on first open with user_id and route', async () => {
+    mockUserRef.value = { id: 'test-user-uuid' };
     mountComponent();
     mockIsOpenRef.value = true;
     await nextTick();
     expect(mockTrack).toHaveBeenCalledOnce();
     expect(mockTrack).toHaveBeenCalledWith(
       'cmdk_opened',
-      expect.objectContaining({ route: '/test' }),
+      expect.objectContaining({ user_id: 'test-user-uuid', route: '/test' }),
+    );
+  });
+
+  it('tracks cmdk_opened with user_id=anonymous when no user is logged in', async () => {
+    mockUserRef.value = null;
+    mountComponent();
+    mockIsOpenRef.value = true;
+    await nextTick();
+    expect(mockTrack).toHaveBeenCalledWith(
+      'cmdk_opened',
+      expect.objectContaining({ user_id: 'anonymous' }),
     );
   });
 

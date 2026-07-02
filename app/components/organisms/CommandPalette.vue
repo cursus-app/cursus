@@ -16,6 +16,7 @@ const reducedMotion = useReducedMotion();
 const { t } = useI18n();
 const { track } = useAnalytics();
 const route = useRoute();
+const { user } = useAuth();
 
 // ─── Raccourcis Cmd+K / Ctrl+K ───────────────────────────────────────────────
 // usingInput: true → fonctionne même si le focus est dans un <input>/<textarea>
@@ -33,7 +34,11 @@ let hasTracked = false;
 watch(isOpen, (val) => {
   if (val && !hasTracked) {
     hasTracked = true;
-    track('cmdk_opened', { route: route.path, method: 'kbd' });
+    track('cmdk_opened', {
+      user_id: user.value?.['id'] ?? 'anonymous',
+      route: route.path,
+      method: 'kbd',
+    });
   }
 });
 

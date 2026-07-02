@@ -21,6 +21,6 @@ const pageTransition = computed(() =>
     <NuxtLayout>
       <NuxtPage :transition="pageTransition" />
     </NuxtLayout>
-    <CommandPalette />
+    <LazyCommandPalette />
   </UApp>
 </template>
