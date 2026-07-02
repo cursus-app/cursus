@@ -29,3 +29,5 @@
 [2026-07-02T13:37:27Z] REVIEW ST-07.1 — PR #86 ouverte — quiz builder CRUD + QuizEditor
 [2026-07-02T18:57:00Z] DONE ST-20.1 — Setup Command Palette (PR #88 mergée)
 [2026-07-02T20:00:00Z] DONE ST-11.1 — Attribution XP automatique (PR #89 mergée)
+[2026-07-02T21:15:00Z] DONE ST-11.2 — Système badges (PR #90 mergée)
+[2026-07-02T21:43:00Z] DONE ST-06.6 — Queue Inngest pour jobs Harness (PR #91 mergée)
