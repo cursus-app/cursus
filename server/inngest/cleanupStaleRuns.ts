@@ -53,8 +53,13 @@ export const cleanupStaleRuns = inngest.createFunction(
 
     // Marquer tous les runs expirés en TIMEOUT en une seule opération
     const ids = staleRuns.map((r) => r.id);
+    // Guard atomique sur les statuts non-terminaux : évite d'écraser un SUCCESS/FAILURE
+    // arrivé entre le findMany et le updateMany (race condition ~50ms)
     const { count } = await prisma.harnessRun.updateMany({
-      where: { id: { in: ids } },
+      where: {
+        id: { in: ids },
+        status: { in: ['QUEUED', 'RUNNING'] },
+      },
       data: {
         status: 'TIMEOUT',
         finishedAt: now,
@@ -62,13 +67,13 @@ export const cleanupStaleRuns = inngest.createFunction(
       },
     });
 
-    logger.error(
+    logger.warn(
       {
         count,
-        runIds: ids,
-        event: 'harness.cleanup.stale_runs_expired',
+        runIds: ids.slice(0, 20),
+        totalIds: ids.length,
       },
-      `${count} HarnessRun(s) expirés marqués TIMEOUT`,
+      'harness.cleanup.stale_runs_expired',
     );
 
     // Alerte si le volume dépasse le seuil

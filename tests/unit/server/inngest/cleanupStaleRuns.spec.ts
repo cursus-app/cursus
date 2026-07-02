@@ -3,7 +3,7 @@
 // Tests unitaires pour cleanupStaleRuns.ts (ST-06.6)
 // Pattern vi.hoisted() + capturedHandler — identique aux autres specs Inngest.
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // ─── Mocks hoisted ────────────────────────────────────────────────────────────
 
@@ -61,8 +61,10 @@ vi.mock('~~/server/utils/alerts', () => ({
   sendSlackAlert: mockSendSlackAlert,
 }));
 
+const mockLoggerWarn = vi.fn();
+
 vi.mock('~~/server/utils/logger', () => ({
-  logger: { info: mockLoggerInfo, error: mockLoggerError },
+  logger: { info: mockLoggerInfo, error: mockLoggerError, warn: mockLoggerWarn },
 }));
 
 // Déclenche la registration du handler
@@ -113,11 +115,14 @@ describe('cleanupStaleRuns — runs bloqués sous le seuil', () => {
     mockHarnessRunUpdateMany.mockResolvedValue({ count: 2 });
   });
 
-  it('marque les runs TIMEOUT via updateMany', async () => {
+  it('marque les runs TIMEOUT via updateMany avec guard de statut', async () => {
     await callHandler();
     expect(mockHarnessRunUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { id: { in: ['run-uuid-1', 'run-uuid-2'] } },
+        where: {
+          id: { in: ['run-uuid-1', 'run-uuid-2'] },
+          status: { in: ['QUEUED', 'RUNNING'] },
+        },
         data: expect.objectContaining({ status: 'TIMEOUT' }),
       }),
     );
@@ -158,11 +163,11 @@ describe('cleanupStaleRuns — runs bloqués au-dessus du seuil (DLQ alert)', ()
     );
   });
 
-  it('log error avec les run IDs', async () => {
+  it('log warn avec les run IDs', async () => {
     await callHandler();
-    expect(mockLoggerError).toHaveBeenCalledWith(
+    expect(mockLoggerWarn).toHaveBeenCalledWith(
       expect.objectContaining({ count: 6 }),
-      expect.stringContaining('TIMEOUT'),
+      'harness.cleanup.stale_runs_expired',
     );
   });
 });
@@ -186,13 +191,20 @@ describe('cleanupStaleRuns — runs RUNNING expirés', () => {
   });
 });
 
-describe('cleanupStaleRuns — DLQ handler de triggerGithubHarness', () => {
-  afterEach(() => {
+describe('cleanupStaleRuns — propagation exception DB', () => {
+  beforeEach(() => {
     vi.clearAllMocks();
+    mockHarnessRunFindMany.mockResolvedValue([STALE_RUN]);
+    mockHarnessRunUpdateMany.mockRejectedValue(new Error('DB connection lost'));
   });
 
-  it('vérifie que cleanupStaleRuns est une fonction Inngest cron', async () => {
-    const { cleanupStaleRuns } = await import('~~/server/inngest/cleanupStaleRuns');
-    expect(cleanupStaleRuns).toBeDefined();
+  it("propage l'exception si updateMany échoue", async () => {
+    await expect(callHandler()).rejects.toThrow('DB connection lost');
+  });
+
+  it("n'appelle pas les alertes si findMany réussit mais updateMany échoue", async () => {
+    await expect(callHandler()).rejects.toThrow();
+    expect(mockSentryCaptureException).not.toHaveBeenCalled();
+    expect(mockSendSlackAlert).not.toHaveBeenCalled();
   });
 });
