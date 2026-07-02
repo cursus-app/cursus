@@ -79,45 +79,35 @@ export default withNuxt({
       'vue-i18n/no-raw-text': [
         'warn',
         {
-          // Attributs techniques exemptés (pas affichés à l'utilisateur)
+          // Attributs contenant du texte UI visible à contrôler (en plus des text nodes).
+          // Note : `attributes` liste les attributs À VÉRIFIER, pas ceux à exempter.
+          // Les attributs non listés (class, id, data-testid…) sont ignorés par défaut.
           attributes: {
-            '/.*/': [
-              'class',
-              'style',
-              'id',
-              'name',
-              'data-testid',
-              'data-cy',
-              'href',
-              'to',
-              'src',
-              'key',
-              'value',
-            ],
+            '/.*/': ['placeholder', 'aria-label', 'title', 'alt', 'label'],
           },
-          // Strings purement techniques exemptées :
-          // - Tailwind classes (lowercase + espace + ponctuation CSS, >2 chars)
-          // - Single chars / punctuation (%, —, @, —, S, etc.)
-          // - URLs et chemins (/dashboard, https://…)
-          // - Constantes UPPER_CASE
-          // - Identifiants techniques kebab-case
+          // Patterns techniques exemptés des text nodes et attributs contrôlés :
+          // - Tailwind multi-word classes (espace obligatoire entre tokens)
+          // - camelCase avec majuscule (startDate, cursusId, repoUrl)
+          // - kebab-case / snake_case (data-testid, start_date, text-sm)
+          // - URLs, chemins, ancres, constantes UPPER_CASE, ponctuation
           // Les strings UI visibles commencent par une majuscule ou contiennent des accents.
           ignorePattern: [
-            // Tailwind CSS classes : 2+ mots lowercase séparés par espace
-            '^[a-z0-9][a-z0-9\\s:/.\\-\\[\\]!()]+$',
-            // Identifiant technique single-word kebab/snake/camelCase
-            '^[a-z0-9_-]+$',
-            '^[a-z][a-zA-Z0-9]+$',
+            // Tailwind CSS multi-word classes (au moins un espace requis)
+            '^[a-z0-9][a-z0-9:/.\\-\\[\\]!()]*(?:\\s[a-z0-9:/.\\-\\[\\]!()]+)+$',
+            // Vrai camelCase (au moins une majuscule : startDate, cursusId)
+            '^[a-z][a-zA-Z0-9]*[A-Z][a-zA-Z0-9]*$',
+            // kebab-case / snake_case (data-testid, start_date, text-sm)
+            '^[a-z0-9]+(?:[_-][a-z0-9]+)+$',
             // Liens d'ancrage HTML (#main, #content…)
             '^#[a-zA-Z0-9_-]+$',
             // URLs et chemins
             '^https?://',
             '^/',
-            // Constantes UPPER_CASE (ex: ENV_VAR)
-            '^[A-Z][A-Z0-9_]+$',
+            // Constantes UPPER_CASE avec underscore (ENV_VAR, MAX_RETRIES)
+            '^[A-Z][A-Z0-9]*_[A-Z0-9_]+$',
             // Chars spéciaux et ponctuations seules (%, —, @, ·, etc.)
             '^[^a-zA-Z]{1,5}$',
-            // Single lettre ou chiffre
+            // Caractère unique
             '^.$',
           ].join('|'),
         },
