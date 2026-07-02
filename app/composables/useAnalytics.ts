@@ -17,7 +17,8 @@ type AnalyticsEvent =
   | 'cohorte_archived'
   | 'cohorte_deleted'
   | 'cursus_roadmap_imported'
-  | 'theme_toggled';
+  | 'theme_toggled'
+  | 'cmdk_opened';
 
 type AnalyticsProps = Record<string, string | number | boolean>;
 
