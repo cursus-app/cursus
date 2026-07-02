@@ -28,6 +28,12 @@ const EventDataSchema = z.object({
   moduleId: z.string().uuid(),
 });
 
+const ChecksJsonSchema = z
+  .object({
+    checks: z.array(z.object({ check_id: z.string(), status: z.string() })).optional(),
+  })
+  .nullable();
+
 export const badgeAwardFunction = inngest.createFunction(
   {
     id: 'badge-award',
@@ -60,12 +66,6 @@ export const badgeAwardFunction = inngest.createFunction(
       }
 
       // Valider le format checksJson via Zod (frontière de données externe)
-      const ChecksJsonSchema = z
-        .object({
-          checks: z.array(z.object({ check_id: z.string(), status: z.string() })).optional(),
-        })
-        .nullable();
-
       const checksJsonParsed = ChecksJsonSchema.safeParse(harnessRun.checksJson);
       if (!checksJsonParsed.success) {
         logger.error(

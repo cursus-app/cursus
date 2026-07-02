@@ -20,10 +20,11 @@ const mockCreateError = vi.fn((opts: { statusCode: number; message: string; data
 vi.stubGlobal('createError', mockCreateError);
 vi.stubGlobal('defineEventHandler', (fn: (...args: unknown[]) => unknown) => fn);
 vi.stubGlobal('readBody', vi.fn());
-vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue('badge-uuid-1'));
+vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue('00000000-0000-0000-0000-000000000001'));
 
 // ─── Mocks DB ─────────────────────────────────────────────────────────────────
 
+const mockTransaction = vi.fn();
 const mockUserFindUnique = vi.fn();
 const mockBadgeFindUnique = vi.fn();
 const mockUserBadgeCreate = vi.fn();
@@ -37,6 +38,7 @@ vi.mock('~~/server/utils/prisma', () => ({
     userBadge: { create: mockUserBadgeCreate },
     notification: { create: mockNotificationCreate },
     membership: { findFirst: mockMembershipFindFirst },
+    $transaction: mockTransaction,
   },
 }));
 
@@ -50,6 +52,11 @@ vi.mock('~~/server/utils/hash', () => ({
 
 vi.mock('~~/server/utils/inMemoryRateLimit', () => ({
   checkRateLimit: vi.fn(),
+}));
+
+vi.mock('~~/server/utils/auditLog', () => ({
+  createAuditEntry: vi.fn().mockResolvedValue(undefined),
+  extractIp: vi.fn().mockReturnValue(null),
 }));
 
 const mockServerSupabaseUser = vi.fn();
@@ -85,8 +92,12 @@ describe('POST /api/badges/:badgeId/grant', () => {
     mockMembershipFindFirst.mockResolvedValue({ id: 'membership-1' });
     mockUserBadgeCreate.mockResolvedValue({});
     mockNotificationCreate.mockResolvedValue({});
+    mockTransaction.mockResolvedValue([{}, {}]);
     vi.stubGlobal('readBody', vi.fn().mockResolvedValue(VALID_BODY));
-    vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue('badge-uuid-1'));
+    vi.stubGlobal(
+      'getRouterParam',
+      vi.fn().mockReturnValue('00000000-0000-0000-0000-000000000001'),
+    );
   });
 
   describe('Authentification', () => {
@@ -136,6 +147,18 @@ describe('POST /api/badges/:badgeId/grant', () => {
   });
 
   describe('Validation', () => {
+    it('retourne 400 si badgeId est un non-UUID', async () => {
+      vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue('not-a-uuid'));
+      const handler = await getHandler();
+      await expect(handler({})).rejects.toMatchObject({ statusCode: 400 });
+    });
+
+    it('retourne 400 si badgeId est absent', async () => {
+      vi.stubGlobal('getRouterParam', vi.fn().mockReturnValue(undefined));
+      const handler = await getHandler();
+      await expect(handler({})).rejects.toMatchObject({ statusCode: 400 });
+    });
+
     it('retourne 404 si le badge est introuvable', async () => {
       mockBadgeFindUnique.mockResolvedValue(null);
       const handler = await getHandler();
@@ -150,12 +173,13 @@ describe('POST /api/badges/:badgeId/grant', () => {
   });
 
   describe('Happy path', () => {
-    it('crée le UserBadge et la notification', async () => {
+    it('exécute la transaction badge+notification et crée un audit log', async () => {
+      const { createAuditEntry } = await import('~~/server/utils/auditLog');
       const handler = await getHandler();
       const result = await handler({});
       expect(result).toEqual({ ok: true });
-      expect(mockUserBadgeCreate).toHaveBeenCalledOnce();
-      expect(mockNotificationCreate).toHaveBeenCalledOnce();
+      expect(mockTransaction).toHaveBeenCalledOnce();
+      expect(createAuditEntry).toHaveBeenCalledOnce();
     });
   });
 
@@ -166,14 +190,14 @@ describe('POST /api/badges/:badgeId/grant', () => {
         clientVersion: '7.8.0',
         meta: { target: ['user_id', 'badge_id'] },
       });
-      mockUserBadgeCreate.mockRejectedValue(p2002);
+      mockTransaction.mockRejectedValue(p2002);
       const handler = await getHandler();
       const result = await handler({});
       expect(result).toEqual({ ok: true });
     });
 
     it('relance une erreur DB inattendue', async () => {
-      mockUserBadgeCreate.mockRejectedValue(new Error('DB connection lost'));
+      mockTransaction.mockRejectedValue(new Error('DB connection lost'));
       const handler = await getHandler();
       await expect(handler({})).rejects.toThrow('DB connection lost');
     });

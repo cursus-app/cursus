@@ -42,6 +42,8 @@ export type AuditAction =
   | 'harness.triggered'
   // Certificats
   | 'certificate.issued'
+  // Badges
+  | 'badge.grant.manual'
   // GDPR
   | 'gdpr.export_requested'
   | 'gdpr.deletion_requested'

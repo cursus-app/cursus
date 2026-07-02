@@ -17,11 +17,14 @@ import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
 import { hashId } from '~~/server/utils/hash';
 import { checkRateLimit } from '~~/server/utils/inMemoryRateLimit';
+import { createAuditEntry, extractIp } from '~~/server/utils/auditLog';
 
 const GrantBodySchema = z.object({
   userId: z.string().uuid(),
   mention: z.string().max(500).optional(),
 });
+
+const BadgeIdSchema = z.string().uuid();
 
 const ALLOWED_ROLES = ['FORMATEUR_PRINCIPAL', 'CO_FORMATEUR', 'ADMIN'] as const;
 
@@ -55,10 +58,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // ── 4. Validation du paramètre de route ──────────────────────────────────────
-  const badgeId = getRouterParam(event, 'badgeId');
-  if (!badgeId) {
-    throw createError({ statusCode: 400, message: 'badgeId manquant.' });
+  const rawBadgeId = getRouterParam(event, 'badgeId');
+  const badgeIdResult = BadgeIdSchema.safeParse(rawBadgeId);
+  if (!badgeIdResult.success) {
+    throw createError({ statusCode: 400, message: 'badgeId invalide.' });
   }
+  const badgeId = badgeIdResult.data;
 
   // ── 5. Validation du body ────────────────────────────────────────────────────
   const rawBody = await readBody(event);
@@ -112,24 +117,38 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // ── 8. Attribution idémpotente ───────────────────────────────────────────────
+  // ── 8. Attribution idémpotente (badge + notification atomiques) ───────────────
   try {
-    await prisma.userBadge.create({
-      data: {
-        userId,
-        badgeId: badge.id,
-        grantedBy: granter.id,
+    await prisma.$transaction([
+      prisma.userBadge.create({
+        data: {
+          userId,
+          badgeId: badge.id,
+          grantedBy: granter.id,
+          mention: mention ?? null,
+        },
+      }),
+      prisma.notification.create({
+        data: {
+          userId,
+          type: 'BADGE_AWARDED',
+          title: 'Badge attribué !',
+          body: `Tu as reçu le badge "${badge.name}"${mention ? ` : ${mention}` : ''}.`,
+        },
+      }),
+    ]);
+
+    await createAuditEntry({
+      actorId: granter.id,
+      action: 'badge.grant.manual',
+      entityType: 'UserBadge',
+      entityId: badge.id,
+      metadata: {
+        badgeCode: badge.code,
+        targetUserIdHash: hashId(userId),
         mention: mention ?? null,
       },
-    });
-
-    await prisma.notification.create({
-      data: {
-        userId,
-        type: 'BADGE_AWARDED',
-        title: 'Badge attribué !',
-        body: `Tu as reçu le badge "${badge.name}"${mention ? ` : ${mention}` : ''}.`,
-      },
+      ipAddress: extractIp(event),
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
