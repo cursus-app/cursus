@@ -1,4 +1,6 @@
 // @vitest-environment node
+// PREREQUIS : pnpm prepare (génère .nuxt/eslint.config.mjs) doit précéder pnpm test
+// pour que les describes runtime s'exécutent. Sans ça, ils sont sautés silencieusement.
 //
 // Tests for ST-19.6 — verify the vue-i18n/no-raw-text lint rule
 // using the ESLint API to actually lint Vue template strings.
@@ -34,6 +36,7 @@ describe('ST-19.6 — ESLint config structure', () => {
   it('does NOT list class/id/data-testid in checked attributes (would invert exemption)', () => {
     // class, id, data-testid are NOT user-visible — must not appear in the attributes-to-check list
     const attributesBlock = eslintConfigSrc.match(/attributes:\s*\{([\s\S]*?)\},\s*\/\/ Patterns/);
+    expect(attributesBlock).not.toBeNull(); // fail loudly if comment anchor changes
     if (attributesBlock) {
       expect(attributesBlock[1]).not.toContain("'class'");
       expect(attributesBlock[1]).not.toContain("'id'");
@@ -146,10 +149,9 @@ describe.skipIf(!hasNuxtConfig)('ST-19.6 — attribute detection (runtime)', () 
 });
 
 describe.skipIf(!hasNuxtConfig)('ST-19.6 — ignorePattern (runtime)', () => {
-  it('does NOT warn on multi-word Tailwind class used as text (edge case)', async () => {
-    // If a Tailwind string somehow appears as a text node, ignorePattern covers it
-    const warnings = await lintVueTemplate('<div>{{ "flex items-center" }}</div>');
-    // Dynamic interpolation is never flagged regardless
+  it('does NOT warn on multi-word Tailwind class as literal text node', async () => {
+    // Multi-word lowercase strings matching Tailwind pattern are exempted by ignorePattern
+    const warnings = await lintVueTemplate('<div>flex items-center</div>');
     expect(warnings.length).toBe(0);
   });
 
