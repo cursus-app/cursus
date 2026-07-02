@@ -56,7 +56,9 @@ vi.mock('~~/server/utils/logger', () => ({
 
 async function runHandler() {
   const handler = capturedHandler.get();
-  if (!handler) {throw new Error('Handler not captured — import audit-retention first');}
+  if (!handler) {
+    throw new Error('Handler not captured — import audit-retention first');
+  }
 
   const mockStep = {
     run: async (_name: string, fn: () => Promise<unknown>) => fn(),
