@@ -1349,5 +1349,16 @@
       "forbidden": "You do not have permission to manually validate this deliverable.",
       "alreadyTerminal": "This deliverable is already validated, no override is possible."
     }
+  },
+  "commandPalette": {
+    "ariaLabel": "Command palette",
+    "placeholder": "Start typing…",
+    "emptyState": "Start typing to see available commands."
+  },
+  "xp": {
+    "total": "{count} XP",
+    "monthlyProgress": "Monthly objective",
+    "monthlyProgressAriaLabel": "Monthly XP progress: {progress}% of {objective} XP target",
+    "objectiveMet": "Monthly objective reached!"
   }
 }

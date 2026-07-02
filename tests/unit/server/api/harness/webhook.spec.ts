@@ -97,6 +97,10 @@ vi.mock('~~/server/utils/logger', () => ({
   logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
+vi.mock('~~/server/inngest/client', () => ({
+  inngest: { send: vi.fn().mockResolvedValue(undefined) },
+}));
+
 // ─── Payload valide par défaut ─────────────────────────────────────────────────
 
 const WEBHOOK_SECRET = 'super-secret-hmac-key-for-tests!!';

@@ -15,6 +15,7 @@ import { z } from 'zod';
 import type { Prisma } from '@prisma/client';
 import { logger } from '~~/server/utils/logger';
 import { prisma } from '~~/server/utils/prisma';
+import { inngest } from '~~/server/inngest/client';
 import type { ChecksJson } from '~~/shared/types/harness';
 
 // ─── Schéma de validation du payload ─────────────────────────────────────────
@@ -196,13 +197,19 @@ export default defineEventHandler(async (event) => {
 
 // ─── Traitement interne ───────────────────────────────────────────────────────
 
+interface ProcessResult {
+  submissionId: string;
+  userId: string | null;
+  moduleId: string | null;
+}
+
 async function processWebhook(harnessRunId: string, payload: WebhookPayload): Promise<void> {
   const harnessStatus = HARNESS_STATUS_MAP[payload.status];
   const submissionStatus = SUBMISSION_STATUS_MAP[payload.status];
 
   const checksJson: ChecksJson = { checks: payload.checks };
 
-  await prisma.$transaction(async (tx) => {
+  const result: ProcessResult = await prisma.$transaction(async (tx) => {
     // Mettre à jour le HarnessRun
     const updatedRun = await tx.harnessRun.update({
       where: { id: harnessRunId },
@@ -226,6 +233,9 @@ async function processWebhook(harnessRunId: string, payload: WebhookPayload): Pr
       },
     });
 
+    let userId: string | null = null;
+    let moduleId: string | null = null;
+
     // Mettre à jour la Progression (SOUMIS → VALIDE ou BLOQUE selon résultat)
     if (payload.status === 'success' || payload.status === 'failure') {
       const submission = await tx.submission.findUnique({
@@ -234,6 +244,9 @@ async function processWebhook(harnessRunId: string, payload: WebhookPayload): Pr
       });
 
       if (submission) {
+        userId = submission.userId;
+        moduleId = submission.moduleId;
+
         const cohortModule = await tx.cohortModule.findFirst({
           where: { moduleId: submission.moduleId },
           select: { id: true },
@@ -257,7 +270,21 @@ async function processWebhook(harnessRunId: string, payload: WebhookPayload): Pr
         }
       }
     }
+
+    return { submissionId: updatedRun.submissionId, userId, moduleId };
   });
+
+  // Émettre l'event Inngest pour l'attribution XP (ST-11.1)
+  if (payload.status === 'success' && result.userId && result.moduleId) {
+    await inngest.send({
+      name: 'submission/validated',
+      data: {
+        submissionId: result.submissionId,
+        userId: result.userId,
+        moduleId: result.moduleId,
+      },
+    });
+  }
 
   logger.info(
     {
