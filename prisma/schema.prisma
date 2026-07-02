@@ -44,6 +44,7 @@ model User {
   timezone          String            @default("Europe/Paris")
   theme             String            @default("system")
   xpTotal           Int               @default(0) @map("xp_total")
+  xpObjectiveMonthly Int?             @map("xp_objective_monthly")
   isPublic          Boolean           @default(false) @map("is_public")
   publicSlug        String?           @unique @map("public_slug")
   twoFaEnabled      Boolean           @default(false) @map("two_fa_enabled")
@@ -300,6 +301,7 @@ model Submission {
   attemptNumber   Int              @default(1) @map("attempt_number")
   submittedAt     DateTime         @default(now()) @map("submitted_at")
   validatedAt     DateTime?        @map("validated_at")
+  xpAwardedAt     DateTime?        @map("xp_awarded_at")
   overriddenById  String?          @map("overridden_by_id") @db.Uuid
   overrideReason  String?          @db.Text @map("override_reason")
 
@@ -626,6 +628,7 @@ enum NotificationType {
   INVITATION
   SUBMISSION_VALIDATED
   SUBMISSION_FAILED
+  MONTHLY_OBJECTIVE_MET
   ALERT_RAISED
   BADGE_AWARDED
   CAPSTONE_EVALUATED
