@@ -11,10 +11,34 @@
  *
  * Cf. ST-06.1 — TT-06.1.6.
  */
+import * as Sentry from '@sentry/nuxt';
 import { NonRetriableError } from 'inngest';
+import { z } from 'zod';
 import { inngest } from '~~/server/inngest/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
+
+// ─── Schémas Zod pour les réponses GitHub API ─────────────────────────────────
+
+const GitHubInstallationsSchema = z.array(
+  z.object({ id: z.number(), account: z.object({ login: z.string() }) }),
+);
+
+const GitHubTokenSchema = z.object({ token: z.string() });
+
+const GitHubWorkflowRunSchema = z.object({
+  workflow_runs: z.array(
+    z.object({ id: z.number(), html_url: z.string(), created_at: z.string() }),
+  ),
+});
+
+const HarnessTriggerEventSchema = z.object({
+  harnessRunId: z.string(),
+  submissionId: z.string(),
+  repoUrl: z.string(),
+  deployUrl: z.string().optional(),
+  criteriaJson: z.string(),
+});
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const HARNESS_ORG = process.env['GITHUB_HARNESS_ORG'] ?? 'cursus-dev';
@@ -91,10 +115,7 @@ async function getInstallationToken(appJwt: string): Promise<string> {
     throw new Error(`GitHub App installations fetch failed (${installationsRes.status}): ${body}`);
   }
 
-  const installations = (await installationsRes.json()) as Array<{
-    id: number;
-    account: { login: string };
-  }>;
+  const installations = GitHubInstallationsSchema.parse(await installationsRes.json());
 
   const installation = installations.find((i) => i.account.login === HARNESS_ORG);
   if (!installation) {
@@ -121,7 +142,7 @@ async function getInstallationToken(appJwt: string): Promise<string> {
     throw new Error(`GitHub installation token creation failed (${tokenRes.status}): ${body}`);
   }
 
-  const tokenData = (await tokenRes.json()) as { token: string };
+  const tokenData = GitHubTokenSchema.parse(await tokenRes.json());
   return tokenData.token;
 }
 
@@ -185,9 +206,7 @@ async function dispatchWorkflow(
     throw new Error(`GitHub runs list failed (${runsRes.status})`);
   }
 
-  const runsData = (await runsRes.json()) as {
-    workflow_runs: Array<{ id: number; html_url: string; created_at: string }>;
-  };
+  const runsData = GitHubWorkflowRunSchema.parse(await runsRes.json());
 
   const latestRun = runsData.workflow_runs[0];
   if (!latestRun) {
@@ -210,9 +229,13 @@ export const triggerGithubHarness = inngest.createFunction(
     triggers: [{ event: 'harness/trigger' }],
     onFailure: async ({ event, error }) => {
       // DLQ : retries épuisées → marquer le run TIMEOUT
-      const data = event.data as { harnessRunId?: string; submissionId?: string };
-      const harnessRunId = data?.harnessRunId;
+      const parsed = HarnessTriggerEventSchema.safeParse(event.data);
+      if (!parsed.success) {
+        logger.error({ error: error.message, raw: event.data }, 'harness.dlq.invalid_event_shape');
+        return;
+      }
 
+      const { harnessRunId, submissionId } = parsed.data;
       if (!harnessRunId) {
         logger.error({ error: error.message }, 'harness.dlq.no_run_id');
         return;
@@ -227,23 +250,20 @@ export const triggerGithubHarness = inngest.createFunction(
             errorMessage: `DLQ — retries épuisées : ${error.message}`,
           },
         });
-        logger.error(
-          { harnessRunId, submissionId: data.submissionId },
-          'harness.dlq.marked_timeout',
-        );
+        logger.error({ harnessRunId, submissionId }, 'harness.dlq.marked_timeout');
+        Sentry.captureException(new Error(`harness.dlq: ${error.message}`), {
+          level: 'fatal',
+          tags: { component: 'harness', event: 'dlq.exhausted' },
+          extra: { harnessRunId, submissionId },
+        });
       } catch (dbError) {
         logger.error({ harnessRunId, dbError }, 'harness.dlq.update_failed');
       }
     },
   },
   async ({ event, step }) => {
-    const { harnessRunId, submissionId, repoUrl, deployUrl, criteriaJson } = event.data as {
-      harnessRunId: string;
-      submissionId: string;
-      repoUrl: string;
-      deployUrl?: string;
-      criteriaJson: string;
-    };
+    const { harnessRunId, submissionId, repoUrl, deployUrl, criteriaJson } =
+      HarnessTriggerEventSchema.parse(event.data);
 
     // ─── Étape 1 : Vérifier l'idempotence ──────────────────────────────────
     const currentRun = await step.run('check-run-state', async () => {
