@@ -276,6 +276,11 @@ const objectivesPreview = computed(() =>
         />
       </div>
 
+      <!-- Quiz — QuizEditor (ST-07.1) -->
+      <div class="sm:col-span-2">
+        <QuizEditor :quiz-id="props.module.quizId" :module-id="props.module.id" />
+      </div>
+
       <!-- Actions -->
       <div class="flex items-center justify-between sm:col-span-2">
         <UButton

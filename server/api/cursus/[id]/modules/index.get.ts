@@ -59,6 +59,7 @@ export default defineEventHandler(async (event) => {
       objectives: true,
       resourcesJson: true,
       deliverableSpecJson: true,
+      quizId: true,
       xpReward: true,
       createdAt: true,
       updatedAt: true,

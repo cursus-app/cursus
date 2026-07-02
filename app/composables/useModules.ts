@@ -22,6 +22,8 @@ export interface ModuleItem {
   objectives: string;
   resourcesJson: ModuleResource[];
   deliverableSpecJson: DeliverableSpec;
+  /** ID du quiz attaché à ce module, null si aucun. */
+  quizId: string | null;
   xpReward: number;
   createdAt: string;
   updatedAt: string;
