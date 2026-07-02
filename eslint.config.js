@@ -1,6 +1,7 @@
 // @ts-check
 // ESLint 9 flat config. Layers : @nuxt/eslint base + overrides projet.
 import withNuxt from './.nuxt/eslint.config.mjs';
+import vueI18nPlugin from '@intlify/eslint-plugin-vue-i18n';
 
 export default withNuxt({
   rules: {
@@ -65,4 +66,74 @@ export default withNuxt({
   // Spike code (spikes/) = scripts jetables JS pur, pas soumis aux règles app.
   .append({
     ignores: ['spikes/**'],
+  })
+  // ST-19.6 — Garde-fou i18n : aucune string visible codée en dur dans les templates Vue.
+  // Niveau warn (pas error) pour ne pas bloquer les itérations rapides en local ;
+  // les nouvelles PRs UI doivent adresser les avertissements avant merge.
+  // Exemptions : tests, stories, fichiers de config serveur (logs en EN structuré).
+  .append({
+    files: ['app/**/*.vue'],
+    plugins: { 'vue-i18n': vueI18nPlugin },
+    rules: {
+      // Détecte les strings UI visibles sans $t()
+      'vue-i18n/no-raw-text': [
+        'warn',
+        {
+          // Attributs techniques exemptés (pas affichés à l'utilisateur)
+          attributes: {
+            '/.*/': [
+              'class',
+              'style',
+              'id',
+              'name',
+              'data-testid',
+              'data-cy',
+              'href',
+              'to',
+              'src',
+              'key',
+              'value',
+            ],
+          },
+          // Strings purement techniques exemptées :
+          // - Tailwind classes (lowercase + espace + ponctuation CSS, >2 chars)
+          // - Single chars / punctuation (%, —, @, —, S, etc.)
+          // - URLs et chemins (/dashboard, https://…)
+          // - Constantes UPPER_CASE
+          // - Identifiants techniques kebab-case
+          // Les strings UI visibles commencent par une majuscule ou contiennent des accents.
+          ignorePattern: [
+            // Tailwind CSS classes : 2+ mots lowercase séparés par espace
+            '^[a-z0-9][a-z0-9\\s:/.\\-\\[\\]!()]+$',
+            // Identifiant technique single-word kebab/snake/camelCase
+            '^[a-z0-9_-]+$',
+            '^[a-z][a-zA-Z0-9]+$',
+            // Liens d'ancrage HTML (#main, #content…)
+            '^#[a-zA-Z0-9_-]+$',
+            // URLs et chemins
+            '^https?://',
+            '^/',
+            // Constantes UPPER_CASE (ex: ENV_VAR)
+            '^[A-Z][A-Z0-9_]+$',
+            // Chars spéciaux et ponctuations seules (%, —, @, ·, etc.)
+            '^[^a-zA-Z]{1,5}$',
+            // Single lettre ou chiffre
+            '^.$',
+          ].join('|'),
+        },
+      ],
+    },
+    settings: {
+      'vue-i18n': {
+        localeDir: './locales/*.json',
+      },
+    },
+  })
+  // Exemption complète : tests, stories, scripts serveur (logs structurés EN)
+  .append({
+    files: ['tests/**', 'stories/**', 'server/**', 'prisma/**'],
+    plugins: { 'vue-i18n': vueI18nPlugin },
+    rules: {
+      'vue-i18n/no-raw-text': 'off',
+    },
   });
