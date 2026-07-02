@@ -1349,5 +1349,10 @@
       "forbidden": "Tu n'as pas les droits pour valider manuellement ce livrable.",
       "alreadyTerminal": "Ce livrable est déjà validé, aucun override n'est possible."
     }
+  },
+  "commandPalette": {
+    "ariaLabel": "Palette de commandes",
+    "placeholder": "Commence à taper…",
+    "emptyState": "Commence à taper pour voir les commandes disponibles."
   }
 }
