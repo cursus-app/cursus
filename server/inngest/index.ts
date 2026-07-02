@@ -1,4 +1,5 @@
 export { alertHarnessLatency } from './alerts/harness-latency';
+export { cleanupStaleRuns } from './cleanupStaleRuns';
 export { alertAuthFailure } from './alerts/auth-failure';
 export { archiveCompletedCohortes } from './archiveCompletedCohortes';
 export { auditRetentionFunction } from './audit-retention';

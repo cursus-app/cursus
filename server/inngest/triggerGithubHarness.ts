@@ -11,10 +11,27 @@
  *
  * Cf. ST-06.1 — TT-06.1.6.
  */
+import * as Sentry from '@sentry/nuxt';
 import { NonRetriableError } from 'inngest';
+import { z } from 'zod';
 import { inngest } from '~~/server/inngest/client';
 import { prisma } from '~~/server/utils/prisma';
 import { logger } from '~~/server/utils/logger';
+import { sendSlackAlert } from '~~/server/utils/alerts';
+
+// Zod schemas hoisted au niveau module pour éviter la ré-allocation à chaque appel
+const DlqEventDataSchema = z.object({
+  harnessRunId: z.string().uuid().optional(),
+  submissionId: z.string().uuid().optional(),
+});
+
+const HarnessTriggerEventSchema = z.object({
+  harnessRunId: z.string().uuid(),
+  submissionId: z.string().uuid(),
+  repoUrl: z.string().url(),
+  deployUrl: z.string().url().optional(),
+  criteriaJson: z.string().min(1),
+});
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const HARNESS_ORG = process.env['GITHUB_HARNESS_ORG'] ?? 'cursus-dev';
@@ -209,14 +226,31 @@ export const triggerGithubHarness = inngest.createFunction(
     retries: 5,
     triggers: [{ event: 'harness/trigger' }],
     onFailure: async ({ event, error }) => {
-      // DLQ : retries épuisées → marquer le run TIMEOUT
-      const data = event.data as { harnessRunId?: string; submissionId?: string };
-      const harnessRunId = data?.harnessRunId;
+      // DLQ : retries épuisées → alertes garanties avant toute tentative DB
+      const parsed = DlqEventDataSchema.safeParse(event.data);
+      const harnessRunId = parsed.success ? parsed.data.harnessRunId : undefined;
+      const submissionId = parsed.success ? parsed.data.submissionId : undefined;
 
       if (!harnessRunId) {
         logger.error({ error: error.message }, 'harness.dlq.no_run_id');
         return;
       }
+
+      // Alertes garanties : émises avant la mise à jour DB pour ne pas être perdues
+      // si la DB est down au moment du DLQ (scénario catastrophe exact)
+      Sentry.captureException(error, {
+        level: 'fatal',
+        tags: { component: 'harness-trigger', event: 'dlq_exhausted' },
+        extra: { harnessRunId, submissionId },
+      });
+      await sendSlackAlert({
+        name: 'Harnais: DLQ — retries épuisées',
+        severity: 'critical',
+        message: `Le job harness pour la soumission ${submissionId} a épuisé toutes ses tentatives.\nErreur : ${error.message}`,
+        currentValue: 'TIMEOUT',
+        threshold: 'SUCCESS',
+        runbookUrl: 'https://github.com/cursus-app/cursus/blob/main/docs/runbooks/harness-dlq.md',
+      });
 
       try {
         await prisma.harnessRun.update({
@@ -227,23 +261,15 @@ export const triggerGithubHarness = inngest.createFunction(
             errorMessage: `DLQ — retries épuisées : ${error.message}`,
           },
         });
-        logger.error(
-          { harnessRunId, submissionId: data.submissionId },
-          'harness.dlq.marked_timeout',
-        );
+        logger.error({ harnessRunId, submissionId }, 'harness.dlq.marked_timeout');
       } catch (dbError) {
         logger.error({ harnessRunId, dbError }, 'harness.dlq.update_failed');
       }
     },
   },
   async ({ event, step }) => {
-    const { harnessRunId, submissionId, repoUrl, deployUrl, criteriaJson } = event.data as {
-      harnessRunId: string;
-      submissionId: string;
-      repoUrl: string;
-      deployUrl?: string;
-      criteriaJson: string;
-    };
+    const { harnessRunId, submissionId, repoUrl, deployUrl, criteriaJson } =
+      HarnessTriggerEventSchema.parse(event.data);
 
     // ─── Étape 1 : Vérifier l'idempotence ──────────────────────────────────
     const currentRun = await step.run('check-run-state', async () => {
