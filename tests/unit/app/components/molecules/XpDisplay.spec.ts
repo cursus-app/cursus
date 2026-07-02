@@ -126,6 +126,36 @@ describe('XpDisplay — jauge mensuelle (ARIA)', () => {
   });
 });
 
+describe('XpDisplay — a11y', () => {
+  it('progressbar a role="progressbar" et les 3 attributs ARIA requis', () => {
+    const wrapper = mountComponent({ xpTotal: 250, xpObjectiveMonthly: 500, xpThisMonth: 250 });
+    const bar = wrapper.find('[role="progressbar"]');
+    expect(bar.exists()).toBe(true);
+    expect(bar.attributes('aria-valuenow')).toBeDefined();
+    expect(bar.attributes('aria-valuemin')).toBeDefined();
+    expect(bar.attributes('aria-valuemax')).toBeDefined();
+  });
+
+  it('progressbar a un aria-label non vide', () => {
+    const wrapper = mountComponent({ xpTotal: 250, xpObjectiveMonthly: 500, xpThisMonth: 250 });
+    const bar = wrapper.find('[role="progressbar"]');
+    expect(bar.attributes('aria-label')).toBeTruthy();
+  });
+
+  it("l'icône star a aria-hidden=true", () => {
+    const wrapper = mountComponent({ xpTotal: 100 });
+    const icon = wrapper.find('[data-testid="u-icon"]');
+    expect(icon.attributes('aria-hidden')).toBe('true');
+  });
+
+  it('le message de succès est un élément <p> visible (non aria-hidden)', () => {
+    const wrapper = mountComponent({ xpTotal: 500, xpObjectiveMonthly: 500, xpThisMonth: 500 });
+    const msg = wrapper.find('p');
+    expect(msg.exists()).toBe(true);
+    expect(msg.attributes('aria-hidden')).toBeUndefined();
+  });
+});
+
 describe('XpDisplay — objectif atteint', () => {
   it('affiche le message de succès quand objectif atteint', () => {
     const wrapper = mountComponent({

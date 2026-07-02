@@ -28,6 +28,7 @@ const iconByType: Record<NotificationType, string> = {
   INVITATION: 'i-tabler-mail-forward',
   SUBMISSION_VALIDATED: 'i-tabler-circle-check',
   SUBMISSION_FAILED: 'i-tabler-circle-x',
+  MONTHLY_OBJECTIVE_MET: 'i-tabler-target',
   ALERT_RAISED: 'i-tabler-alert-triangle',
   BADGE_AWARDED: 'i-tabler-award',
   CAPSTONE_EVALUATED: 'i-tabler-certificate',

@@ -131,7 +131,9 @@ describe('xpAwardFunction — idémpotence', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -217,7 +219,9 @@ describe('xpAwardFunction — idémpotence', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -257,7 +261,9 @@ describe('xpAwardFunction — objectif mensuel', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -274,15 +280,20 @@ describe('xpAwardFunction — objectif mensuel', () => {
     const result = await callHandler();
 
     expect(result).toMatchObject({ objectiveMet: true });
-    // 1 notification standard + 1 notification objectif
+    // 1 notification SUBMISSION_VALIDATED + 1 notification MONTHLY_OBJECTIVE_MET
     expect(mockNotificationCreate).toHaveBeenCalledTimes(2);
+    expect(mockNotificationCreate).toHaveBeenLastCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ type: 'MONTHLY_OBJECTIVE_MET' }) }),
+    );
   });
 
   it("ne crée pas de notification spéciale si l'objectif n'est pas encore atteint", async () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -306,7 +317,9 @@ describe('xpAwardFunction — objectif mensuel', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -332,7 +345,9 @@ describe('xpAwardFunction — objectif mensuel', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
@@ -367,7 +382,9 @@ describe('xpAwardFunction — observabilité', () => {
     mockTransaction.mockImplementation(async (fn: (tx: unknown) => Promise<unknown>) => {
       const tx = {
         submission: {
-          findUnique: vi.fn().mockResolvedValue({ id: EVENT_DATA.submissionId }),
+          findUnique: vi
+            .fn()
+            .mockResolvedValue({ id: EVENT_DATA.submissionId, userId: EVENT_DATA.userId }),
           update: vi.fn().mockResolvedValue({}),
         },
         user: {
