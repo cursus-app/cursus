@@ -5,3 +5,4 @@ export { checkBrokenLinksFunction } from './check-broken-links';
 export { detectProgressionAlerts } from './detectProgressionAlerts';
 export { triggerGithubHarness } from './triggerGithubHarness';
 export { harnessTriggerFunction } from './harnessTrigger';
+export { xpAwardFunction } from './xp-award';
